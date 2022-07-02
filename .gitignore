@@ -1,3 +1,10 @@
+# Enviroment variables
+server/*.env
+
+server/public/avatars
+
+server/package-lock.json
+
 # Logs
 logs
 *.log
