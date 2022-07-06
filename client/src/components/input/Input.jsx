@@ -12,10 +12,12 @@ function Input({ value, setValue, type, placeholder }) {
     />
   )
 }
+
+export default Input
+
 Input.propTypes = {
   value: PropTypes.string.isRequired,
   setValue: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
 }
-export default Input
