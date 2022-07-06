@@ -72,6 +72,7 @@ npm run dev // dev mode
 | /auth/signup              | POST   | SignUp            | Public route  |
 | /auth/login               | POST   | LogIn             | Public route  |
 | /auth/logout              | GET    | LogOut            | Private route |
+| /auth/current             | GET    | Get CurUser       | Private route |
 | /auth/verify/:verifyToken | GET    | Activation Link   | Public route  |
 | /auth/verify/             | POST   | Resend Activation | Public route  |
 | /auth/refresh             | GET    | Refresh Tokens    | Private route |
@@ -81,9 +82,7 @@ npm run dev // dev mode
 | Path                             | Method | Description                  | Access        |
 | -------------------------------- | ------ | ---------------------------- | ------------- |
 | /users                           | GET    | List Users                   | Admin         |
-| /users/current                   | GET    | Get CurUser                  | Authenticated |
 | /users/:id                       | GET    | Get User By Id               | Admin         |
-| /users                           | POST   | Create User                  | Authenticated |
 | /users/subscription              | PATCH  | Update CurrUser Subscription | Authenticated |
 | /users/avatars                   | PATCH  | Update CurrUser Avatar       | Authenticated |
 | /users/:id                       | PATCH  | Update User By Id            | Admin         |

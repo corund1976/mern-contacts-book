@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { configureStore } from '@reduxjs/toolkit'
+
 import userReducer from './userReducer'
 import contactReducer from './contactReducer'
 
@@ -8,7 +9,9 @@ const rootReducer = combineReducers({
   contacts: contactReducer,
 })
 
-export const store = configureStore({
+const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
 })
+
+export default store

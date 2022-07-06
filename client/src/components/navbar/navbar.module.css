@@ -1,0 +1,57 @@
+.navbar__section {
+  background-color: #fff;
+  padding: 5px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar__home {
+  color: var(--primary-text-color);
+
+  display: flex;
+  align-items: center;
+}
+
+.navbar__header {
+  font-style: 24px;
+  font-weight: 700;
+
+  margin-left: 10px;
+}
+
+.navbar__logo {
+  height: 30px;
+  /* stroke: #566885; */
+  /* color: currentColor; */
+}
+
+.navbar__login {
+  font-weight: 700;
+
+  color: var(--primary-text-color);
+
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.navbar__signup {
+  font-weight: 700;
+
+  color: var(--primary-text-color);
+}
+
+.navbar__logout {
+  font-weight: 700;
+
+  border: none;
+
+  color: var(--primary-text-color);
+  background: transparent;
+
+  margin-left: auto;
+  margin-right: 20px;
+}

@@ -1,3 +1,4 @@
+import ApiError from '../exceptions/apiError.js'
 import authService from '../service/authService.js'
 
 const signup = async (req, res, next) => {
@@ -22,7 +23,8 @@ const signup = async (req, res, next) => {
         .json({
           status: 'Created',
           code: 201,
-          data: { user }
+          message: 'Registration successful',
+          userData: user,
         })
     }
     // res.send('<h1>route = /auth/signup</h1>')
@@ -60,7 +62,8 @@ const login = async (req, res, next) => {
         .json({
           status: 'Ok',
           code: 200,
-          data: userData
+          message: 'Login successfull',
+          ...userData
         })
     }
   } catch (e) {
@@ -77,9 +80,29 @@ const logout = async (req, res, next) => {
 
     return res
       .status(204)
+      .send()
+  } catch (e) {
+    next(e)
+  }
+}
+
+const current = async (req, res, next) => {
+  const { id } = req.user
+
+  try {
+    const currentUser = await authService.current(id)
+
+    if (!currentUser) {
+      throw ApiError.BadRequest('Current User not found')
+    }
+
+    return res
+      .status(200)
       .json({
-        status: 'no content',
-        code: 204,
+        code: 200,
+        status: 'ok',
+        message: 'Successful get Current user',
+        ...currentUser
       })
   } catch (e) {
     next(e)
@@ -162,7 +185,7 @@ const refresh = async (req, res, next) => {
         .json({
           status: 'Ok',
           code: 200,
-          data: userData
+          userData: userData
         })
     }
   } catch (e) {
@@ -174,6 +197,7 @@ export default {
   signup,
   login,
   logout,
+  current,
   verify,
   resend,
   refresh

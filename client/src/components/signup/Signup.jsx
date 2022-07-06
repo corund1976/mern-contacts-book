@@ -1,16 +1,35 @@
-import React from 'react';
-import Input from '../input/Input';
-import './signup.css'
+import { useState } from 'react'
 
-const Signup = () => {
+import { signup } from '../../actions/user'
+import Input from '../input/Input'
+import s from './signup.module.css'
+
+function Signup() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
   return (
-    <div className='signup'>
-      <div className='signup__header'>Signup</div>
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-      <button className='signup__btn'>Enter</button>
+    <div className={s.signup}>
+      <div className={s.signup__header}>Signup</div>
+      <Input
+        value={email}
+        setValue={setEmail}
+        type="text"
+        placeholder="email..."
+      />
+      <Input
+        value={password}
+        setValue={setPassword}
+        type="password"
+        placeholder="password..."
+      />
+      <button
+        type="button"
+        className={s.signup__btn}
+        onClick={() => signup(email, password)}
+      >
+        Enter
+      </button>
     </div>
   )
 }

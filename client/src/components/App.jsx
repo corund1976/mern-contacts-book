@@ -1,25 +1,48 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { current } from '../actions/user'
+
+import Container from './container'
 import Navbar from './navbar/Navbar'
-import Signup from './signup/Signup';
-import Login from './login/Login';
-import Logout from './logout/Logout'
-import './app.css';
+import Login from './login'
+import Signup from './signup/Signup'
+import ContactsList from './contactsList/ContactsList'
+
+import s from './app.module.css'
 
 function App() {
+  const isAuth = useSelector((state) => state.user.isAuth)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(current())
+  }, [dispatch])
+
   return (
-    <BrowserRouter>
-      <div className='app'>
-        <Navbar />
-        <Routes>
-          <Route path='/signup' component={Signup} />
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-        </Routes>
-      </div>
-    </BrowserRouter>
-  );
+    <div className={s.app}>
+      <Navbar />
+      <Container>
+        {!isAuth ? (
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="*" element={<Login />} />
+          </Routes>
+        ) : (
+          <Routes>
+            <Route exac path="/" element={<ContactsList />} />
+            <Route
+              path="*"
+              element={<Navigate to="/" replace />}
+              // To keep the history clean, you should set replace prop. This will avoid extra redirects after the user click back.
+            />
+          </Routes>
+        )}
+      </Container>
+    </div>
+  )
 }
 
-export default App;
+export default App

@@ -1,0 +1,43 @@
+{
+  "env": {
+    "es2021": true,
+    "browser": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:import/recommended",
+    "airbnb",
+    "plugin:react/jsx-runtime",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": { "jsx": true },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "rules": {
+    "comma-dangle": "off",
+    "space-before-function-paren": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "no-restricted-exports": [
+      "error",
+      {
+        "restrictedNamedExports": [
+          "then"
+          // no "default" here
+        ],
+        "restrictDefaultExports": {
+          "direct": false, // 1. export default foo; export default 42; export default function foo() {}
+          "named": false, // 2. export { foo as default };
+          "defaultFrom": true, // 3. export { default } from "mod"; export { default as default } from "mod";
+          "namedFrom": false, // 4. export { foo as default } from "mod";
+          "namespaceFrom": true // 5. export * as default from "mod"
+        }
+      }
+    ]
+  }
+}

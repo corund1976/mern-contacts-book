@@ -1,19 +1,44 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
-import './navbar.css'
+import { logout } from '../../actions/user'
+import Container from '../container/Container'
+import s from './navbar.module.css'
 import Logo from '../../assets/img/book-open.svg'
 
-const Navbar = () => {
-  return (
-    <div className="navbar">
-      <div className="container">
-        <img src={Logo} alt="logo" className="navbar__logo" />
-        <div className="navbar__header">Contacts Book</div>
-        <div className="navbar__login"><Link to='/login'>Войти</Link></div>
-        <div className="navbar__signup"><Link to='/signup'>Регистрация</Link></div>
+function Navbar() {
+  const isAuth = useSelector((state) => state.user.isAuth)
+  const dispatch = useDispatch()
 
-      </div>
+  return (
+    <div className={s.navbar__section}>
+      <Container>
+        <nav className={s.navbar}>
+          <Link to="/" className={s.navbar__home}>
+            <img src={Logo} alt="logo" className={s.navbar__logo} />
+            <div className={s.navbar__header}>Contacts Book</div>
+          </Link>
+          {!isAuth && (
+            <Link to="/login" className={s.navbar__login}>
+              Войти
+            </Link>
+          )}
+          {!isAuth && (
+            <Link to="/signup" className={s.navbar__signup}>
+              Регистрация
+            </Link>
+          )}
+          {isAuth && (
+            <button
+              type="button"
+              className={s.navbar__logout}
+              onClick={() => dispatch(logout())}
+            >
+              Выход
+            </button>
+          )}
+        </nav>
+      </Container>
     </div>
   )
 }

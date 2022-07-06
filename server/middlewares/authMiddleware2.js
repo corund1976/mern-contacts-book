@@ -4,6 +4,10 @@ import UserDto from '../dtos/userDto.js'
 import ApiError from '../exceptions/apiError.js'
 // version without using passport
 const authenticateToken = async (req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    return next()
+  }
+
   try {
     const authHeader = req.headers['authorization'] || req.headers['Authorization']
 

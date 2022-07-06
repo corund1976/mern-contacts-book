@@ -52,6 +52,18 @@ const logout = async (userId) => {
   return await tokenService.remove(userId)
 }
 
+const current = async (userId) => {
+  const user = await User.findById(userId)
+
+  const userDto = new UserDto(user)
+
+  const payload = { ...userDto };
+  const tokens = tokenService.generate(payload)
+  await tokenService.save(user._id, tokens.refreshToken)
+
+  return { ...tokens, user: userDto }
+}
+
 const verify = async (verificationToken) => {
   const user = await User.findOne({ verificationToken })
 
@@ -105,6 +117,7 @@ export default {
   signup,
   login,
   logout,
+  current,
   verify,
   resend,
   refresh

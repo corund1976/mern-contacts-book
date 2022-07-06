@@ -11,7 +11,8 @@ const getAll = async (req, res, next) => {
         .json({
           status: 'ok',
           code: 200,
-          data: listAllUsers
+          message: 'Successful get List all user',
+          userData: listAllUsers
         })
     }
   } catch (e) {
@@ -40,23 +41,8 @@ const getById = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        data: { userById }
-      })
-  } catch (e) {
-    next(e)
-  }
-}
-
-const getCurrent = (req, res, next) => {
-  try {
-    const currentUser = req.user
-
-    return res
-      .status(200)
-      .json({
-        code: 200,
-        status: 'ok',
-        data: { currentUser }
+        message: 'Successful get User by Id',
+        userData: { userById },
       })
   } catch (e) {
     next(e)
@@ -92,7 +78,8 @@ const update = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        data: { updatedUser }
+        message: 'Successful update user',
+        userData: { updatedUser }
       })
   } catch (e) {
     next(e)
@@ -122,7 +109,7 @@ const updateSubscription = async (req, res, next) => {
         .json({
           status: 'Ok',
           code: 200,
-          data: { updatedUser }
+          userData: { updatedUser }
         })
     }
   } catch (e) {
@@ -214,7 +201,6 @@ const remove = async (req, res, next) => {
 export default {
   getAll,
   getById,
-  getCurrent,
   update,
   updateSubscription,
   updateAvatar,

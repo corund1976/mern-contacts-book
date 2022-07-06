@@ -12,7 +12,7 @@ const getAll = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        data: { contacts }
+        contacts
       })
   } catch (e) {
     next(e)
