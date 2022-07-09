@@ -1,6 +1,8 @@
 import { useState } from 'react'
 
-import { signup } from '../../actions/user'
+import { useDispatch } from 'react-redux'
+import { signup } from '../../redux/user/authOperations'
+
 import Input from '../input/Input'
 import s from './signup.module.css'
 
@@ -8,13 +10,22 @@ function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const dispatch = useDispatch()
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    dispatch(signup({ email, password }))
+    setEmail('')
+    setPassword('')
+  }
+
   return (
-    <div className={s.signup}>
-      <div className={s.signup__header}>Signup</div>
+    <form onSubmit={handleSubmit} className={s.signup}>
+      <h2 className={s.signup__header}>Signup</h2>
       <Input
         value={email}
         setValue={setEmail}
-        type="text"
+        type="email"
         placeholder="email..."
       />
       <Input
@@ -22,15 +33,12 @@ function Signup() {
         setValue={setPassword}
         type="password"
         placeholder="password..."
+        autoComplete="current-password"
       />
-      <button
-        type="button"
-        className={s.signup__btn}
-        onClick={() => signup(email, password)}
-      >
+      <button type="submit" className={s.signup__btn}>
         Enter
       </button>
-    </div>
+    </form>
   )
 }
 

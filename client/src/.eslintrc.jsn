@@ -22,18 +22,20 @@
   "rules": {
     "comma-dangle": "off",
     "space-before-function-paren": "off",
-    "react/jsx-props-no-spreading": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "no-restricted-exports": [
       "error",
       {
-        "restrictedNamedExports": ["then"],
+        "restrictedNamedExports": [
+          "then"
+          // no "default" here
+        ],
         "restrictDefaultExports": {
-          "direct": false,
-          "named": false,
-          "defaultFrom": true,
-          "namedFrom": false,
-          "namespaceFrom": true
+          "direct": false, // 1. export default foo; export default 42; export default function foo() {}
+          "named": false, // 2. export { foo as default };
+          "defaultFrom": true, // 3. export { default } from "mod"; export { default as default } from "mod";
+          "namedFrom": false, // 4. export { foo as default } from "mod";
+          "namespaceFrom": true // 5. export * as default from "mod"
         }
       }
     ]

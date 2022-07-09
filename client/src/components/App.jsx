@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { current } from '../actions/user'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchCurrentUser } from '../redux/user/authOperations'
 
 import Container from './container'
 import Navbar from './navbar/Navbar'
@@ -17,7 +17,7 @@ function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(current())
+    dispatch(fetchCurrentUser())
   }, [dispatch])
 
   return (

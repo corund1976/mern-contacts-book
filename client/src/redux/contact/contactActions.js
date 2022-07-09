@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 
+import { setContacts } from './contactReducer';
 // eslint-disable-next-line import/prefer-default-export
-export const listContacts = () => async () => {
+export const listContacts = () => async dispatch => {
   const token = localStorage.getItem('accessToken')
-
   try {
     const response = await axios
       .get(
@@ -11,10 +11,14 @@ export const listContacts = () => async () => {
         { headers: { Authorization: `Bearer ${token}` } }
       )
 
-    // eslint-disable-next-line no-console
-    console.log(response.data.contacts);
+    const { contacts } = response.data
+
+    // eslint-disable-next-line
+    console.log(contacts);
+
+    dispatch(setContacts(contacts))
   } catch (e) {
-    // eslint-disable-next-line no-alert
+    // eslint-disable-next-line
     alert(e.response.data.message)
   }
 }

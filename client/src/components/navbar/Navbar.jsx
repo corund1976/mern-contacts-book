@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { logout } from '../../actions/user'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../../redux/user/authOperations'
+
 import Container from '../container/Container'
 import s from './navbar.module.css'
 import Logo from '../../assets/img/book-open.svg'
