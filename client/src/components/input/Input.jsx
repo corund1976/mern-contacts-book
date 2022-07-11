@@ -19,11 +19,13 @@ export default Input
 Input.propTypes = {
   value: PropTypes.string.isRequired,
   setValue: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
   autoComplete: PropTypes.string,
 }
 
 Input.defaultProps = {
+  type: '',
+  placeholder: '',
   autoComplete: '',
 }

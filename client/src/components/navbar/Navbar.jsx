@@ -6,10 +6,13 @@ import { logout } from '../../redux/user/authOperations'
 import Container from '../container/Container'
 import s from './navbar.module.css'
 import Logo from '../../assets/img/book-open.svg'
+import Logout from '../../assets/img/log-out.svg'
 
 function Navbar() {
   const isAuth = useSelector((state) => state.user.isAuth)
   const dispatch = useDispatch()
+
+  const handlerLogout = () => dispatch(logout())
 
   return (
     <div className={s.navbar__section}>
@@ -33,9 +36,9 @@ function Navbar() {
             <button
               type="button"
               className={s.navbar__logout}
-              onClick={() => dispatch(logout())}
+              onClick={handlerLogout}
             >
-              Выход
+              <img src={Logout} alt="logout" />
             </button>
           )}
         </nav>

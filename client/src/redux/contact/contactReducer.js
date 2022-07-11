@@ -12,10 +12,12 @@ export const setContacts = createAction("contacts/set")
 //   { type: UNSET_CONTACTS }
 // )
 export const unsetContacts = createAction("contacts/unset")
-
+export const setNewContact = createAction("contacts/add")
+export const setDisplayPopup = createAction("contact/popup")
 // Reducer
 const defaultState = {
   contacts: [],
+  displayPopup: 'none'
 }
 // function contactReducer(state = defaultState, action) {
 //   switch (action.type) {
@@ -36,6 +38,8 @@ const defaultState = {
 const contactReducer = createReducer(defaultState, {
   [setContacts]: (state, action) => ({ ...state, contacts: action.payload }),
   [unsetContacts]: (state,) => ({ ...state, contacts: {} }),
+  [setNewContact]: (state, action) => ({ ...state, contacts: [...state.contacts, action.payload] }),
+  [setDisplayPopup]: (state, action) => ({ ...state, displayPopup: action.payload }),
 })
 
 export default contactReducer

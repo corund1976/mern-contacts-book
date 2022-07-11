@@ -45,11 +45,8 @@
 }
 
 .navbar__logout {
-  font-weight: 700;
-
   border: none;
 
-  color: var(--primary-text-color);
   background: transparent;
 
   margin-left: auto;

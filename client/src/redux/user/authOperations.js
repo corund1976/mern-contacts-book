@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setUser, unsetUser } from './userReducer';
 import { unsetContacts } from '../contact/contactReducer';
 
@@ -15,7 +14,7 @@ const tokeN = {
   },
 };
 
-export const signup = createAsyncThunk('auth/signup', async credentials => {
+export const signup = async (credentials) => {
   try {
     const response = await axios.post('/auth/signup', credentials)
     // eslint-disable-next-line no-console
@@ -25,7 +24,6 @@ export const signup = createAsyncThunk('auth/signup', async credentials => {
     alert(e.response.data.message)
   }
 }
-)
 
 export const login = credentials => async dispatch => {
   try {

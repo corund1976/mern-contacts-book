@@ -1,20 +1,17 @@
 import { useState } from 'react'
 
-import { useDispatch } from 'react-redux'
 import { signup } from '../../redux/user/authOperations'
 
-import Input from '../input/Input'
+import Input from '../input'
 import s from './signup.module.css'
 
 function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const dispatch = useDispatch()
-
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(signup({ email, password }))
+    signup({ email, password })
     setEmail('')
     setPassword('')
   }

@@ -42,7 +42,7 @@ const getById = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        data: { contactById },
+        contactById,
       })
   } catch (e) {
     next(e)
@@ -55,14 +55,14 @@ const create = async (req, res, next) => {
   // Вызывает функцию addContact(body) для сохранения контакта 
   // По результату работы функции возвращает объект с добавленным id { id, name, email, phone } и статусом 201
   try {
-    const result = await contactService.add(req.body, req.user.id)
+    const contact = await contactService.add(req.body, req.user.id)
 
     res
       .status(201)
       .json({
         status: 'Created',
         code: 201,
-        data: { contact: result }
+        contact,
       })
   } catch (e) {
     next(e)
@@ -104,7 +104,7 @@ const update = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        data: { updatedContact }
+        updatedContact
       })
   } catch (e) {
     next(e)
@@ -130,9 +130,9 @@ const updateFavorite = async (req, res, next) => {
   }
 
   try {
-    const result = await contactService.updateStatus(req.params.id, req.user.id, req.body)
+    const contactUpdStatus = await contactService.updateStatus(req.params.id, req.user.id, req.body)
 
-    if (!result) {
+    if (!contactUpdStatus) {
       return res
         .status(404)
         .json({
@@ -147,7 +147,7 @@ const updateFavorite = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        data: { contact: result }
+        contactUpdStatus
       })
   } catch (e) {
     next(e)

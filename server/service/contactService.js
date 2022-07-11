@@ -1,16 +1,25 @@
 import Contact from './models/contactSchema.js'
+import ContactDto from '../dtos/contactDto.js'
 
 const list = async (query, userId) => {
-  const { page = 1, limit = 5, favorite } = query
+  const { page = 1, limit = 10, favorite } = query
+
   const queryCriteria =
     favorite
       ? { owner: userId, favorite }
       : { owner: userId }
+
   const result = await Contact.paginate(
     queryCriteria,
     { page, limit }
   )
-  return result.docs
+
+  const contacts = result.docs.map(contact => {
+    const contactDto = new ContactDto(contact)
+    return { ...contactDto }
+  })
+
+  return contacts
 }
 
 const getById = async (contactId, userId) => {

@@ -35,9 +35,14 @@ function Login() {
         placeholder="password..."
         autoComplete="current-password"
       />
-      <button type="submit" className={s.login__btn}>
-        Enter
-      </button>
+      <div className={s.login__buttons}>
+        <a href="/signup" className={s.signupRedirect__btn}>
+          ...signup
+        </a>
+        <button type="submit" className={s.login__btn}>
+          Enter
+        </button>
+      </div>
     </form>
   )
 }

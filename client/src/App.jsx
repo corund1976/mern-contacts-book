@@ -2,13 +2,13 @@ import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchCurrentUser } from '../redux/user/authOperations'
+import { fetchCurrentUser } from './redux/user/authOperations'
 
-import Container from './container'
-import Navbar from './navbar/Navbar'
-import Login from './login'
-import Signup from './signup/Signup'
-import ContactsList from './contactsList/ContactsList'
+import Container from './components/container'
+import Navbar from './components/navbar/Navbar'
+import Login from './components/login'
+import Signup from './components/signup'
+import ContactsList from './components/contactsList'
 
 import s from './app.module.css'
 
@@ -32,7 +32,7 @@ function App() {
           </Routes>
         ) : (
           <Routes>
-            <Route exac path="/" element={<ContactsList />} />
+            <Route exact path="/" element={<ContactsList />} />
             <Route
               path="*"
               element={<Navigate to="/" replace />}

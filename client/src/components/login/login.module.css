@@ -20,6 +20,11 @@ input {
   margin-bottom: 25px;
 }
 
+.login__buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
 .login__btn {
   font-weight: 700;
 
