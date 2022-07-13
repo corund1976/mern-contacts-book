@@ -1,7 +1,15 @@
 import PropTypes from 'prop-types'
 
-function Label({ htmlFor, children }) {
-  return <label htmlFor={htmlFor}>{children}</label>
+import styles from './label.module.css'
+
+const Label = ({ htmlFor, children }) => {
+  const labelClasses = [styles.label]
+
+  return (
+    <label className={labelClasses.join(' ')} htmlFor={htmlFor}>
+      {children}
+    </label>
+  )
 }
 
 export default Label

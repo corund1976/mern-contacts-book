@@ -7,13 +7,13 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 // export const setContacts = contacts => (
 //   { type: SET_CONTACTS, payload: contacts }
 //   )
-export const setContacts = createAction("contacts/set")
+export const setContacts = createAction("contact/setContacts")
 // export const unsetContacts = () => (
 //   { type: UNSET_CONTACTS }
 // )
-export const unsetContacts = createAction("contacts/unset")
-export const setNewContact = createAction("contacts/add")
-export const setDisplayPopup = createAction("contact/popup")
+export const unsetContacts = createAction("contact/unsetContacts")
+export const setNewContact = createAction("contact/addNewContact")
+export const setDisplayPopup = createAction("contact/setDisplayPopup")
 // Reducer
 const defaultState = {
   contacts: [],

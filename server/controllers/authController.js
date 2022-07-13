@@ -24,8 +24,9 @@ const signup = async (req, res, next) => {
           status: 'Created',
           code: 201,
           message: 'Registration successful',
-          userData: user,
+          user,
         })
+      // res.send({ user, redirectPath: "/login" });
     }
     // res.send('<h1>route = /auth/signup</h1>')
   } catch (e) {

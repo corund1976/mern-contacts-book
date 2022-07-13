@@ -1,9 +1,10 @@
 import axios from 'axios'
 
+import { setIsAuth, unsetIsAuth } from '../auth/authReducer';
 import { setUser, unsetUser } from './userReducer';
 import { unsetContacts } from '../contact/contactReducer';
 
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 const tokeN = {
   set(token) {
@@ -17,6 +18,10 @@ const tokeN = {
 export const signup = async (credentials) => {
   try {
     const response = await axios.post('/auth/signup', credentials)
+
+    if (response) {
+      window.location.href = '/login';
+    }
     // eslint-disable-next-line no-console
     console.log(response.data.message)
   } catch (e) {
@@ -35,6 +40,7 @@ export const login = credentials => async dispatch => {
     localStorage.setItem('accessToken', accessToken)
 
     dispatch(setUser(user))
+    dispatch(setIsAuth())
     // eslint-disable-next-line no-console
     console.log(response.data.message);
   } catch (e) {
@@ -52,6 +58,7 @@ export const logout = () => async dispatch => {
     tokeN.unset()
     localStorage.removeItem('accessToken')
 
+    dispatch(unsetIsAuth())
     dispatch(unsetUser())
     dispatch(unsetContacts())
     // eslint-disable-next-line no-console
@@ -65,6 +72,11 @@ export const logout = () => async dispatch => {
 export const fetchCurrentUser = () => async dispatch => {
   try {
     const token = localStorage.getItem('accessToken')
+
+    if (!token) {
+      return
+    }
+
     tokeN.set(token)
 
     const response = await axios.get('/auth/current')
@@ -75,6 +87,7 @@ export const fetchCurrentUser = () => async dispatch => {
     localStorage.setItem('accessToken', accessToken)
 
     dispatch(setUser(user))
+    dispatch(setIsAuth())
     // eslint-disable-next-line no-console
     console.log(response.data.message)
   } catch (e) {

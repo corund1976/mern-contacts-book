@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { listContacts } from '../../redux/contact/contactOperations'
 import { setDisplayPopup } from '../../redux/contact/contactReducer'
+import contactSelectors from '../../redux/contact/contactSelectors'
 
 import Contact from '../contact'
 import Popup from '../popup'
@@ -11,7 +12,8 @@ import s from './contactsList.module.css'
 
 function ContactsList() {
   const dispatch = useDispatch()
-  const contacts = useSelector((state) => state.contact.contacts)
+
+  const contacts = useSelector(contactSelectors.getListContacts)
 
   useEffect(() => {
     dispatch(listContacts())

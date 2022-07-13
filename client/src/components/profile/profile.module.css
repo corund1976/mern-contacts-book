@@ -1,0 +1,57 @@
+.profile {
+  text-align: center;
+}
+
+.profile__avatar {
+  cursor: pointer;
+}
+
+.avatar__input {
+  display: none;
+}
+
+.avatar__img {
+  border-radius: 5px;
+
+  height: 100px;
+}
+
+.avatar__remove {
+  display: flex;
+  align-items: center;
+}
+
+.avatar__removeBtn {
+  border: none;
+  color: var(--primary-text-color);
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+}
+
+.profile__email {
+  text-align: left;
+}
+
+.profile__subscription {
+  text-align: left;
+}
+
+.profile__remove {
+  display: flex;
+  align-items: center;
+}
+
+.profile__removeBtn {
+  border: none;
+  color: var(--primary-text-color);
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+}
+
+.profile__removeImg {
+  height: 15px;
+}

@@ -7,15 +7,18 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 // export const setUser = user => (
 //   { type: SET_USER, payload: user }
 // )
-export const setUser = createAction("user/set")
+export const setUser = createAction("user/setCurrUser")
 // export const unsetUser = () => (
 //   { type: UNSET_USER }
 // )
-export const unsetUser = createAction("user/unset")
+export const unsetUser = createAction("user/unsetCurrUser")
+export const setAvatar = createAction('user/setAvatar')
+export const unsetAvatar = createAction('user/unsetAvatar')
+export const setSubscription = createAction('user/setSubscription')
+
 // Reducer
 const defaultState = {
   currentUser: {},
-  isAuth: false,
 }
 // function userReducer(state = defaultState, action) {
 //   switch (action.type) {
@@ -36,8 +39,11 @@ const defaultState = {
 //   }
 // }
 const userReducer = createReducer(defaultState, {
-  [setUser]: (state, action) => ({ ...state, currentUser: action.payload, isAuth: true }),
-  [unsetUser]: (state,) => ({ ...state, currentUser: {}, isAuth: false }),
+  [setUser]: (state, action) => ({ ...state, currentUser: action.payload }),
+  [unsetUser]: (state,) => ({ ...state, currentUser: {} }),
+  [setAvatar]: (state, action) => ({ ...state, currentUser: { ...state.currentUser, avatarURL: action.payload } }),
+  [unsetAvatar]: (state,) => ({ ...state, currentUser: { ...state.currentUser, avatarURL: {} } }),
+  [setSubscription]: (state, action) => ({ ...state, currentUser: { ...state.currentUser, subscription: action.payload } }),
 })
 
 export default userReducer

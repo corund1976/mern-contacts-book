@@ -2,6 +2,13 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "author": "Sergii Budak <corund1976@gmail.com>",
+  "license": "ISC",
+  "keywords": [
+    "node.js",
+    "express",
+    "mongoose"
+  ],
   "main": ".eslintrc.js",
   "bin": {
     "template": "server.js"
@@ -11,20 +18,12 @@
     "start": "cross-env NODE_ENV=production node ./bin/server.js",
     "dev": "cross-env NODE_ENV=development nodemon ./bin/server.js",
     "lint": "eslint **/*.js",
-    "lint:fix": "eslint --fix **/*.js"  
+    "lint:fix": "eslint --fix **/*.js"
   },
-  "keywords": [
-    "node.js",
-    "express",
-    "mongoose"
-  ],
-  "author": "Sergii Budak <corund1976@gmail.com>",
-  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "cross-env": "7.0.3",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "gravatar": "^1.8.2",
@@ -41,6 +40,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^7.19.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",

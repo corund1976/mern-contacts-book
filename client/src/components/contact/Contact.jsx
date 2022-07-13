@@ -4,6 +4,7 @@ import s from './contact.module.css'
 
 function Contact({ contact }) {
   const { name, email, phone, favorite } = contact
+
   return (
     <div className={s.contact}>
       <div>{name}</div>

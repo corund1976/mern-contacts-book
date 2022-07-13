@@ -5,7 +5,7 @@
 
 .navbar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -25,8 +25,6 @@
 
 .navbar__logo {
   height: 30px;
-  /* stroke: #566885; */
-  /* color: currentColor; */
 }
 
 .navbar__login {
@@ -44,11 +42,20 @@
   color: var(--primary-text-color);
 }
 
+.navbar__profile {
+  margin-left: auto;
+}
+
+.navbar__avatar {
+  border-radius: 50%;
+
+  height: 35px;
+}
+
 .navbar__logout {
   border: none;
 
   background: transparent;
 
   margin-left: auto;
-  margin-right: 20px;
 }

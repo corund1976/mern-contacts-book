@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { signup } from '../../redux/user/authOperations'
 
 import Input from '../input'
+
 import s from './signup.module.css'
 
 function Signup() {

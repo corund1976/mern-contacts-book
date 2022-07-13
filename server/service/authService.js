@@ -15,7 +15,8 @@ const signup = async (email, password) => {
   }
 
   const verifyToken = v4()
-  const avatarURL = gravatar.url(email, { s: 200, r: 'pg', d: '404' })
+  const avatarURL = gravatar.url(email, { protocol: 'http', s: '200', d: 'mp' })
+
   const user = new User({ email, verifyToken, avatarURL })
   user.setPassword(password)
   const newUser = await user.save()

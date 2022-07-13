@@ -12,7 +12,7 @@ const getAll = async (req, res, next) => {
           status: 'ok',
           code: 200,
           message: 'Successful get List all user',
-          userData: listAllUsers
+          users: [...listAllUsers]
         })
     }
   } catch (e) {
@@ -42,7 +42,7 @@ const getById = async (req, res, next) => {
         status: 'Ok',
         code: 200,
         message: 'Successful get User by Id',
-        userData: { userById },
+        userById
       })
   } catch (e) {
     next(e)
@@ -79,7 +79,7 @@ const update = async (req, res, next) => {
         status: 'Ok',
         code: 200,
         message: 'Successful update user',
-        userData: { updatedUser }
+        updatedUser
       })
   } catch (e) {
     next(e)
@@ -99,17 +99,17 @@ const updateSubscription = async (req, res, next) => {
   }
 
   try {
-    const user = await userService.update(req.user.id, req.body)
+    const userData = await userService.update(req.user.id, req.body)
 
-    if (user) {
-      const updatedUser = new UserDto(user)
+    if (userData) {
+      const user = new UserDto(userData)
 
       return res
         .status(200)
         .json({
           status: 'Ok',
           code: 200,
-          userData: { updatedUser }
+          user
         })
     }
   } catch (e) {
@@ -142,7 +142,7 @@ const updateAvatar = async (req, res, next) => {
         .json({
           status: 'Ok',
           code: 200,
-          data: { user }
+          user
         })
     }
   } catch (e) {
@@ -152,6 +152,7 @@ const updateAvatar = async (req, res, next) => {
 
 const deleteAvatar = async (req, res, next) => {
   const { id } = req.user
+
   try {
     const userData = await userService.update(id, { avatarURL: null })
 
@@ -162,7 +163,7 @@ const deleteAvatar = async (req, res, next) => {
         .json({
           status: 'ok',
           code: 200,
-          data: { user }
+          user
         })
     }
   } catch (e) {

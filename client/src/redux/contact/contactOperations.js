@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { setContacts, setNewContact } from './contactReducer';
 
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 export const listContacts = () => async dispatch => {
   try {

@@ -3,7 +3,8 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../../redux/user/authOperations'
 
-import Input from '../input/Input'
+import Input from '../input'
+
 import s from './login.module.css'
 
 function Login() {
@@ -35,14 +36,9 @@ function Login() {
         placeholder="password..."
         autoComplete="current-password"
       />
-      <div className={s.login__buttons}>
-        <a href="/signup" className={s.signupRedirect__btn}>
-          ...signup
-        </a>
-        <button type="submit" className={s.login__btn}>
-          Enter
-        </button>
-      </div>
+      <button type="submit" className={s.login__btn}>
+        Enter
+      </button>
     </form>
   )
 }

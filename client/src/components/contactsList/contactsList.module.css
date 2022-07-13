@@ -12,7 +12,7 @@
 }
 
 .tableHeader {
-  border-bottom: solid 2px #566885;
+  border-bottom: solid 1px var(--primary-text-color);
 
   margin-bottom: 10px;
 
@@ -21,11 +21,12 @@
 }
 
 .newContact__button {
-  border: none;
+  border: solid 1px var(--primary-text-color);
   border-radius: 8px;
-  background: white;
+  color: var(--primary-text-color);
+  background: transparent;
 
-  padding: 8px 15px;
+  padding: 7px 13px;
 
   margin-left: auto;
   margin-bottom: 15px;
