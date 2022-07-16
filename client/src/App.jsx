@@ -24,9 +24,12 @@ function App() {
 
   useEffect(() => {
     if (token) dispatch(refresh())
-  }, [dispatch, token])
+    // eslint-disable-next-line
+  }, [dispatch])
 
-  if (isLoading) <LoaderSpinner />
+  if (isLoading) {
+    return <LoaderSpinner />
+  }
 
   return (
     <div>

@@ -4,7 +4,7 @@ import authService from '../../services/authService';
 import { setIsAuth, unsetIsAuth } from './authReducer';
 import { setUser, unsetUser } from '../user/userReducer';
 import { unsetContacts } from '../contact/contactReducer';
-import { setIsLoading, unsetIsLoading } from '../loader/loaderReducer'
+import { loaderActions } from '../loader/loaderReducer'
 
 export const signup = async (credentials) => {
   try {
@@ -25,8 +25,8 @@ export const login = credentials => async dispatch => {
 
     localStorage.setItem('accessToken', accessToken)
 
+    dispatch(setUser(user));
     dispatch(setIsAuth())
-    dispatch(setUser(user))
 
     Notify.success(response.data.message);
   } catch (e) {
@@ -52,7 +52,7 @@ export const logout = () => async dispatch => {
 
 export const refresh = () => async dispatch => {
   try {
-    dispatch(setIsLoading())
+    dispatch(loaderActions.setIsLoading())
 
     const response = await authService.refresh()
     const { accessToken, user } = response.data
@@ -67,6 +67,6 @@ export const refresh = () => async dispatch => {
     localStorage.removeItem('accessToken')
     Notify.failure(e.response?.data?.message || "Request failure")
   } finally {
-    dispatch(unsetIsLoading())
+    dispatch(loaderActions.unsetIsLoading())
   }
 }

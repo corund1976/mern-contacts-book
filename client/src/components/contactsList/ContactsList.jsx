@@ -16,7 +16,8 @@ function ContactsList() {
 
   useEffect(() => {
     dispatch(listContacts())
-  }, [dispatch])
+    // eslint-disable-next-line
+  }, [])
 
   const handlerAddContact = () => dispatch(setDisplayPopup('flex'))
 

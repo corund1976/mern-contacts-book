@@ -1,17 +1,18 @@
 import axios from 'axios'
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-const token = localStorage.getItem('accessToken')
+axios.defaults.baseURL = process.env.REACT_APP_API_URL
+axios.defaults.withCredentials = true
 
-const axiosConfigWithAuthHeader = {
-  baseURL: process.env.REACT_APP_API_URL,
-  headers: { Authorization: `Bearer ${token}` },
-  withCredentials: true,
-}
+export const $api = axios.create()
 
-export const $api = axios.create(axiosConfigWithAuthHeader)
-
-$api.interceptors.request.use((config) => config)
+/* eslint-disable no-param-reassign */
+$api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('accessToken')
+  config.headers.common.Authorization = `Bearer ${token}`
+  return config
+})
+/* eslint-disable no-param-reassign */
 
 $api.interceptors.response.use((response) => response,
   async (error) => {
@@ -21,22 +22,19 @@ $api.interceptors.response.use((response) => response,
       originalRequest.isRetry = true
 
       try {
-        const axiosConfigWithoutAuthHeader = {
-          baseURL: process.env.REACT_APP_API_URL,
-          withCredentials: true,
-        }
-        const response = await axios.get('/auth/refresh', axiosConfigWithoutAuthHeader)
+        const response = await axios.get('/auth/refresh')
         const { accessToken } = response.data
 
         localStorage.setItem('accessToken', accessToken)
 
         $api.request(originalRequest)
       } catch (e) {
-        Notify.failure('---User is not authorized---');
+        Notify.failure(e.message || 'User is not authorized');
       }
     }
 
     throw error
   })
 
-export default $api 
+
+export default { $api }

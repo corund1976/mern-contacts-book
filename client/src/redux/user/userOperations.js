@@ -2,11 +2,11 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import userService from '../../services/userService';
 import { setAvatar, unsetAvatar, setSubscription, unsetUser } from './userReducer';
-import { setIsLoading, unsetIsLoading } from '../loader/loaderReducer'
+import { loaderActions } from '../loader/loaderReducer'
 
 export const uploadAvatar = file => async dispatch => {
-  dispatch(setIsLoading())
   try {
+    dispatch(loaderActions.setIsLoading)
     const formData = new FormData
     formData.append('avatar', file)
 
@@ -30,10 +30,9 @@ export const uploadAvatar = file => async dispatch => {
     dispatch(setAvatar(response.data.user.avatarURL))
 
     Notify.success(response.data.message);
+    dispatch(loaderActions.unsetIsLoading)
   } catch (e) {
     Notify.failure(e.response?.data?.message || "Request failure")
-  } finally {
-    dispatch(unsetIsLoading())
   }
 }
 
