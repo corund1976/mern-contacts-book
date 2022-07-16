@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { signup } from '../../redux/user/authOperations'
+import { signup } from '../../redux/auth/authOperations'
 
 import Input from '../input'
 

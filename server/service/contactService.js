@@ -28,9 +28,10 @@ const getById = async (contactId, userId) => {
 
 const add = async (newContact, userId) => {
   const { name, email, phone } = newContact
-  return await Contact.create(
+  const result = await Contact.create(
     { name, email, phone, owner: userId }
   )
+  return result
 }
 
 const update = async (contactId, userId, update) => {

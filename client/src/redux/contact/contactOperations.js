@@ -1,31 +1,31 @@
-import axios from 'axios'
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+import contactService from '../../services/contactService';
 import { setContacts, setNewContact } from './contactReducer';
-
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 export const listContacts = () => async dispatch => {
   try {
-    const response = await axios.get('/contacts')
-
+    const response = await contactService.listContacts()
     const { contacts } = response.data
 
     dispatch(setContacts(contacts))
+
+    Notify.success(response.data.message)
   } catch (e) {
-    // eslint-disable-next-line
-    alert(e.response.data.message)
+    Notify.failure(e.response?.data?.message || "Request failure")
   }
 }
 
 export const addContact = newContact => async dispatch => {
   try {
-    const response = await axios.post('/contacts', newContact)
+    const response = await contactService.addContact(newContact)
 
     const { contact } = response.data
 
     dispatch(setNewContact(contact))
+
+    Notify.success(response.data.message)
   } catch (e) {
-    // eslint-disable-next-line
-    alert(e.response.data.message)
+    Notify.failure(e.response?.data?.message || "Request failure")
   }
 }

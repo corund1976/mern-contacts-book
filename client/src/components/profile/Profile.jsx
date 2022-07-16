@@ -1,8 +1,6 @@
-import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import userSelectors from '../../redux/user/userSelectors'
-import { fetchCurrentUser } from '../../redux/user/authOperations'
 import {
   uploadAvatar,
   deleteAvatar,
@@ -17,19 +15,14 @@ import UserDelete from '../../assets/img/user-x.svg'
 
 function Profile() {
   const dispatch = useDispatch()
-
   const email = useSelector(userSelectors.getEmail)
   const subscription = useSelector(userSelectors.getSubscription)
   const avatarUrl = useSelector(userSelectors.getAvatarUrl)
 
   const avatar = avatarUrl ? `${avatarUrl}` : AvatarDefault
 
-  useEffect(() => {
-    dispatch(fetchCurrentUser())
-  }, [dispatch, avatar])
-
   const handlerUploadAvatar = (e) => dispatch(uploadAvatar(e.target.files[0]))
-  const handlerDeleteAvatar = () => dispatch(deleteAvatar())
+  const handlerDeleteAvatar = () => dispatch(deleteAvatar(AvatarDefault))
   const handlerChangeSubscription = (e) =>
     dispatch(updateSubscription(e.target.value))
   const handlerRemoveProfile = () => dispatch(deleteUser())

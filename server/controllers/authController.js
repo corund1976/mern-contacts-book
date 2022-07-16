@@ -23,7 +23,7 @@ const signup = async (req, res, next) => {
         .json({
           status: 'Created',
           code: 201,
-          message: 'Registration successful',
+          message: 'Signup successful',
           user,
         })
       // res.send({ user, redirectPath: "/login" });
@@ -51,7 +51,7 @@ const login = async (req, res, next) => {
     const user = await authService.login(email, password)
 
     if (user) {
-      const { refreshToken, ...userData } = user
+      const { refreshToken, accessToken, ...userData } = user
 
       res.cookie(
         'refreshToken',
@@ -64,7 +64,14 @@ const login = async (req, res, next) => {
           status: 'Ok',
           code: 200,
           message: 'Login successfull',
-          ...userData
+          accessToken,
+          ...userData // user = {
+          //   id: "62cf18a2defbc4941cbd50f6",
+          //   email: "test7@mail.ua",
+          //   subscription: "starter",
+          //   avatarURL: "http://localhost:5000/avatars/62cf18a2defbc4941cbd50f6-3240d8c8d5b323a6965585f8d4422260.jpeg",
+          //   role: "user",
+          //   verified: true }
         })
     }
   } catch (e) {
@@ -73,6 +80,10 @@ const login = async (req, res, next) => {
 }
 
 const logout = async (req, res, next) => {
+  if (!req.user) {
+    throw ApiError.BadRequest('Токена нет или не прошел валидацию')
+  }
+
   const { id } = req.user
 
   try {
@@ -97,13 +108,22 @@ const current = async (req, res, next) => {
       throw ApiError.BadRequest('Current User not found')
     }
 
+    const { accessToken, refreshToken, ...userData } = currentUser
+
     return res
       .status(200)
       .json({
         code: 200,
         status: 'ok',
-        message: 'Successful get Current user',
-        ...currentUser
+        message: 'Fetch Current user uccessful',
+        accessToken,
+        ...userData // user = {
+        //   id: new ObjectId("62cf18a2defbc4941cbd50f6"),
+        //   email: 'test7@mail.ua',
+        //   subscription: 'starter',
+        //   avatarURL: 'http://localhost:5000/avatars/62cf18a2defbc4941cbd50f6-3240d8c8d5b323a6965585f8d4422260.jpeg',
+        //   role: 'user',
+        //   verified: true }
       })
   } catch (e) {
     next(e)
@@ -117,14 +137,14 @@ const verify = async (req, res, next) => {
     const user = await authService.verify(verifyToken)
 
     if (user) {
-      return res
-        .status(200)
-        .json({
-          status: 'Ok',
-          code: 200,
-          message: 'Verification successful'
-        })
-      // return res.redirect(process.env.CLIENT_URL)
+      return res.redirect(process.env.CLIENT_URL)
+      // return res
+      //   .status(200)
+      //   .json({
+      //     status: 'Ok',
+      //     code: 200,
+      //     message: 'Verification successful'
+      //   })
     }
   } catch (e) {
     next(e)
@@ -174,7 +194,7 @@ const refresh = async (req, res, next) => {
     const user = await authService.refresh(refreshToken)
 
     if (user) {
-      const { refreshToken, ...userData } = user
+      const { refreshToken, accessToken, ...userData } = user
 
       res.cookie(
         'refreshToken',
@@ -186,7 +206,9 @@ const refresh = async (req, res, next) => {
         .json({
           status: 'Ok',
           code: 200,
-          userData: userData
+          message: 'Refresh token successfull',
+          accessToken,
+          ...userData
         })
     }
   } catch (e) {

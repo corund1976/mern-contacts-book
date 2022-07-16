@@ -12,7 +12,6 @@ import s from './contactsList.module.css'
 
 function ContactsList() {
   const dispatch = useDispatch()
-
   const contacts = useSelector(contactSelectors.getListContacts)
 
   useEffect(() => {

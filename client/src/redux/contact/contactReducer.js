@@ -37,7 +37,7 @@ const defaultState = {
 // }
 const contactReducer = createReducer(defaultState, {
   [setContacts]: (state, action) => ({ ...state, contacts: action.payload }),
-  [unsetContacts]: (state,) => ({ ...state, contacts: {} }),
+  [unsetContacts]: (state,) => ({ ...state, contacts: [] }),
   [setNewContact]: (state, action) => ({ ...state, contacts: [...state.contacts, action.payload] }),
   [setDisplayPopup]: (state, action) => ({ ...state, displayPopup: action.payload }),
 })

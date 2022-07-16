@@ -65,14 +65,14 @@ const current = async (userId) => {
   return { ...tokens, user: userDto }
 }
 
-const verify = async (verificationToken) => {
-  const user = await User.findOne({ verificationToken })
+const verify = async (verifyToken) => {
+  const user = await User.findOne({ verifyToken })
 
   if (!user) {
     throw ApiError.NotFound('User not found')
   }
 
-  user.verificationToken = null
+  user.verifyToken = null
   user.verified = true
 
   return await user.save()

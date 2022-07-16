@@ -17,7 +17,10 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(express.json()) // express.json({ extended: true })
 app.use(cookieParser())
-app.use(cors())
+app.use(cors({
+  credentials: true,
+  origin: process.env.CLIENT_URL
+}))
 
 const formatsLogger =
   app.get('env') === 'development'

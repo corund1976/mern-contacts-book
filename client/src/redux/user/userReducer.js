@@ -42,7 +42,7 @@ const userReducer = createReducer(defaultState, {
   [setUser]: (state, action) => ({ ...state, currentUser: action.payload }),
   [unsetUser]: (state,) => ({ ...state, currentUser: {} }),
   [setAvatar]: (state, action) => ({ ...state, currentUser: { ...state.currentUser, avatarURL: action.payload } }),
-  [unsetAvatar]: (state,) => ({ ...state, currentUser: { ...state.currentUser, avatarURL: {} } }),
+  [unsetAvatar]: (state, action) => ({ ...state, currentUser: { ...state.currentUser, avatarURL: action.payload } }),
   [setSubscription]: (state, action) => ({ ...state, currentUser: { ...state.currentUser, subscription: action.payload } }),
 })
 

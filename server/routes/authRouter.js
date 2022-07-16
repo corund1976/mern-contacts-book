@@ -12,6 +12,6 @@ router.get('/logout', auth, authCtrl.logout) // all authenticated users
 router.get('/current', auth, authCtrl.current) // all authenticated users
 router.get('/verify/:verifyToken', authCtrl.verify) // public route
 router.post('/verify', validateUser, authCtrl.resend) // public route
-router.get('/refresh', auth, authCtrl.refresh) // all authenticated users
+router.get('/refresh', authCtrl.refresh) // all authenticated users
 
 export { router }

@@ -3,8 +3,10 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import authSelectors from './redux/auth/authSelectors'
-import { fetchCurrentUser } from './redux/user/authOperations'
+import loaderSelectors from './redux/loader/loaderSelectors'
+import { refresh } from './redux/auth/authOperations'
 
+import LoaderSpinner from './components/loaderSpinner'
 import Container from './components/container'
 import Navbar from './components/navbar'
 import Login from './components/login'
@@ -16,12 +18,15 @@ import './app.module.css'
 
 function App() {
   const dispatch = useDispatch()
-
+  const isLoading = useSelector(loaderSelectors.getIsLoading)
   const isAuth = useSelector(authSelectors.getIsAuth)
+  const token = localStorage.getItem('accessToken')
 
   useEffect(() => {
-    dispatch(fetchCurrentUser())
-  }, [dispatch])
+    if (token) dispatch(refresh())
+  }, [dispatch, token])
+
+  if (isLoading) <LoaderSpinner />
 
   return (
     <div>

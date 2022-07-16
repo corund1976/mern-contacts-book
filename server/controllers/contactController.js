@@ -12,6 +12,7 @@ const getAll = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
+        message: 'Get List contacts successful',
         contacts
       })
   } catch (e) {
@@ -42,6 +43,7 @@ const getById = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
+        message: `Get Contact by Id: ${req.params.id} successful`,
         contactById,
       })
   } catch (e) {
@@ -62,6 +64,7 @@ const create = async (req, res, next) => {
       .json({
         status: 'Created',
         code: 201,
+        message: 'Add contact successful',
         contact,
       })
   } catch (e) {
@@ -104,6 +107,7 @@ const update = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
+        message: 'Update contact successful',
         updatedContact
       })
   } catch (e) {
@@ -147,6 +151,7 @@ const updateFavorite = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
+        message: 'Update ~Favorite~ contact successful',
         contactUpdStatus
       })
   } catch (e) {
@@ -177,7 +182,7 @@ const remove = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        message: `Contact id: ${req.params.id} deleted`
+        message: `Delete contact id: ${req.params.id} successful`
       })
   } catch (e) {
     next(e)

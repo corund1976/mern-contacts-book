@@ -78,7 +78,7 @@ const update = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        message: 'Successful update user',
+        message: 'Update user uccessful',
         updatedUser
       })
   } catch (e) {
@@ -109,6 +109,7 @@ const updateSubscription = async (req, res, next) => {
         .json({
           status: 'Ok',
           code: 200,
+          message: 'Update ~Subscription~ user successful',
           user
         })
     }
@@ -142,6 +143,7 @@ const updateAvatar = async (req, res, next) => {
         .json({
           status: 'Ok',
           code: 200,
+          message: 'Update ~Avatar~ user successful',
           user
         })
     }
@@ -163,6 +165,7 @@ const deleteAvatar = async (req, res, next) => {
         .json({
           status: 'ok',
           code: 200,
+          message: 'Delete ~Avatar~ user successful',
           user
         })
     }
@@ -192,7 +195,7 @@ const remove = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        message: `User id: ${id} deleted`
+        message: `Delete user id: ${id} successful`
       })
   } catch (e) {
     next(e)

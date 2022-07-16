@@ -6,7 +6,7 @@ const generate = (payload) => {
   const accessToken = jwt.sign(
     payload,
     process.env.JWT_ACCESS_SECRET,
-    { expiresIn: '30d' });
+    { expiresIn: '15m' });
 
   const refreshToken = jwt.sign(
     payload,
@@ -41,6 +41,7 @@ const validate = (token) => {
 
   try {
     const tokenData = jwt.verify(tokenValue, secret)
+
     return tokenData
   } catch (e) {
     return null

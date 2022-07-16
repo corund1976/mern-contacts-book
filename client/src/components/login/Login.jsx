@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { useDispatch } from 'react-redux'
-import { login } from '../../redux/user/authOperations'
+import { login } from '../../redux/auth/authOperations'
 
 import Input from '../input'
 
