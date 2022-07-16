@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { listContacts } from '../../redux/contact/contactOperations'
-import { setDisplayPopup } from '../../redux/contact/contactReducer'
-import contactSelectors from '../../redux/contact/contactSelectors'
+import { listContacts } from 'redux/contact/contactOperations'
+import { setDisplayPopup } from 'redux/contact/contactReducer'
+import contactSelectors from 'redux/contact/contactSelectors'
 
-import Contact from '../contact'
-import Popup from '../popup'
+import Contact from 'components/contact'
+import Popup from 'components/popup'
 
 import s from './contactsList.module.css'
 
@@ -16,8 +16,7 @@ function ContactsList() {
 
   useEffect(() => {
     dispatch(listContacts())
-    // eslint-disable-next-line
-  }, [])
+  }, [dispatch])
 
   const handlerAddContact = () => dispatch(setDisplayPopup('flex'))
 

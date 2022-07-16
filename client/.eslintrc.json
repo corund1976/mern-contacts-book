@@ -19,6 +19,13 @@
     "sourceType": "module"
   },
   "plugins": ["react"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"]
+      }
+    }
+  },
   "rules": {
     "comma-dangle": "off",
     "space-before-function-paren": "off",

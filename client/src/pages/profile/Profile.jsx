@@ -1,17 +1,18 @@
 import { useDispatch, useSelector } from 'react-redux'
 
-import userSelectors from '../../redux/user/userSelectors'
+import userSelectors from 'redux/user/userSelectors'
 import {
   uploadAvatar,
   deleteAvatar,
   updateSubscription,
   deleteUser,
-} from '../../redux/user/userOperations'
+} from 'redux/user/userOperations'
+
+import AvatarDefault from 'assets/img/user.svg'
+import AvatarDelete from 'assets/img/trash-2.svg'
+import UserDelete from 'assets/img/user-x.svg'
 
 import s from './profile.module.css'
-import AvatarDefault from '../../assets/img/user.svg'
-import AvatarDelete from '../../assets/img/trash-2.svg'
-import UserDelete from '../../assets/img/user-x.svg'
 
 function Profile() {
   const dispatch = useDispatch()

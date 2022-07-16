@@ -1,10 +1,10 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-import authService from '../../services/authService';
-import { setIsAuth, unsetIsAuth } from './authReducer';
-import { setUser, unsetUser } from '../user/userReducer';
-import { unsetContacts } from '../contact/contactReducer';
-import { loaderActions } from '../loader/loaderReducer'
+import authService from 'services/authService';
+import { setIsAuth, unsetIsAuth } from 'redux/auth/authReducer';
+import { setUser, unsetUser } from 'redux/user/userReducer';
+import { unsetContacts } from 'redux/contact/contactReducer';
+import { loaderActions } from 'redux/loader/loaderReducer'
 
 export const signup = async (credentials) => {
   try {
@@ -51,9 +51,12 @@ export const logout = () => async dispatch => {
 }
 
 export const refresh = () => async dispatch => {
-  try {
-    dispatch(loaderActions.setIsLoading())
+  const token = localStorage.getItem('accessToken')
 
+  if (!token) return
+
+  dispatch(loaderActions.setIsLoading())
+  try {
     const response = await authService.refresh()
     const { accessToken, user } = response.data
 
@@ -69,4 +72,4 @@ export const refresh = () => async dispatch => {
   } finally {
     dispatch(loaderActions.unsetIsLoading())
   }
-}
+};

@@ -1,38 +1,31 @@
-import { useEffect } from 'react'
+import { useEffect, Suspense, lazy } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import authSelectors from './redux/auth/authSelectors'
-import loaderSelectors from './redux/loader/loaderSelectors'
-import { refresh } from './redux/auth/authOperations'
+import authSelectors from 'redux/auth/authSelectors'
+import { refresh } from 'redux/auth/authOperations'
 
-import LoaderSpinner from './components/loaderSpinner'
-import Container from './components/container'
-import Navbar from './components/navbar'
-import Login from './components/login'
-import Signup from './components/signup'
-import Profile from './components/profile'
-import ContactsList from './components/contactsList'
+import LoaderSpinner from 'components/loaderSpinner'
+import Container from 'components/container'
+import Navbar from 'components/navbar'
 
-import './app.module.css'
+import 'app.module.css'
+
+const Login = lazy(() => import('pages/login'))
+const Signup = lazy(() => import('pages/signup'))
+const Profile = lazy(() => import('pages/profile'))
+const ContactsList = lazy(() => import('pages/contactsList'))
 
 function App() {
   const dispatch = useDispatch()
-  const isLoading = useSelector(loaderSelectors.getIsLoading)
   const isAuth = useSelector(authSelectors.getIsAuth)
-  const token = localStorage.getItem('accessToken')
 
   useEffect(() => {
-    if (token) dispatch(refresh())
-    // eslint-disable-next-line
+    dispatch(refresh())
   }, [dispatch])
 
-  if (isLoading) {
-    return <LoaderSpinner />
-  }
-
   return (
-    <div>
+    <Suspense fallback={<LoaderSpinner />}>
       <Navbar />
       <Container>
         {!isAuth ? (
@@ -49,7 +42,7 @@ function App() {
           </Routes>
         )}
       </Container>
-    </div>
+    </Suspense>
   )
 }
 

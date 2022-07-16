@@ -1,12 +1,12 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-import contactService from '../../services/contactService';
-import { setContacts, setNewContact } from './contactReducer';
-// import { loaderActions } from '../loader/loaderReducer'
+import contactService from 'services/contactService';
+import { setContacts, setNewContact } from 'redux/contact/contactReducer';
+import { loaderActions } from 'redux/loader/loaderReducer'
 
 export const listContacts = () => async dispatch => {
+  dispatch(loaderActions.setIsLoading())
   try {
-    // dispatch(loaderActions.setIsLoading())
     const response = await contactService.listContacts()
     const { contacts } = response.data
 
@@ -15,7 +15,7 @@ export const listContacts = () => async dispatch => {
   } catch (e) {
     Notify.failure(e.response?.data?.message || "Request failure")
   } finally {
-    // dispatch(loaderActions.unsetIsLoading())
+    dispatch(loaderActions.unsetIsLoading())
   }
 }
 

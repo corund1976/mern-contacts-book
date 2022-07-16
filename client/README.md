@@ -68,3 +68,31 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+хххххххххххххххххххххххх
+Абсолютные импорты
+https://create-react-app.dev/docs/importing-a-component/#absolute-imports
+
+1. создаем jsconfig.json
+2. наполняем, указываем относительный корень, например "src"
+   {
+   .."compilerOptions": {
+   ...."baseUrl": "src"
+   ..},
+   .."include": ["src"]
+   }
+
+3. You need to use eslint-plugin-import: https://github.com/benmosher/eslint-plugin-import
+   And configure your eslint settings in .eslintrc
+   "settings": {
+   .."import/resolver": {
+   ...."node": {
+   ......"paths": ["src"]
+   ....}
+   ..},
+   },
+
+4. теперь при импортах указываем короткий путь,
+   относительно "src"
+   вместо пути src/components/Button.js теперь пишем
+   import Button from 'components/Button';

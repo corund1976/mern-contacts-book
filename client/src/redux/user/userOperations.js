@@ -1,8 +1,8 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-import userService from '../../services/userService';
-import { setAvatar, unsetAvatar, setSubscription, unsetUser } from './userReducer';
-import { loaderActions } from '../loader/loaderReducer'
+import userService from 'services/userService';
+import { setAvatar, unsetAvatar, setSubscription, unsetUser } from 'redux/user/userReducer';
+import { loaderActions } from 'redux/loader/loaderReducer'
 
 export const uploadAvatar = file => async dispatch => {
   try {

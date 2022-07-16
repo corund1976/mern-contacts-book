@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { logout } from '../../redux/auth/authOperations'
-import authSelectors from '../../redux/auth/authSelectors'
-import userSelectors from '../../redux/user/userSelectors'
+import { logout } from 'redux/auth/authOperations'
+import authSelectors from 'redux/auth/authSelectors'
+import userSelectors from 'redux/user/userSelectors'
+import Container from 'components/container'
 
-import Container from '../container'
+import Logo from 'assets/img/book-open.svg'
+import Logout from 'assets/img/log-out.svg'
+import AvatarDefault from 'assets/img/user.svg'
 
 import s from './navbar.module.css'
-import Logo from '../../assets/img/book-open.svg'
-import Logout from '../../assets/img/log-out.svg'
-import AvatarDefault from '../../assets/img/user.svg'
 
 function Navbar() {
   const dispatch = useDispatch()
