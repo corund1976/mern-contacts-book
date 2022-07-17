@@ -1,4 +1,3 @@
-import ApiError from '../exceptions/apiError.js'
 import authService from '../service/authService.js'
 
 const signup = async (req, res, next) => {
@@ -80,10 +79,6 @@ const login = async (req, res, next) => {
 }
 
 const logout = async (req, res, next) => {
-  if (!req.user) {
-    throw ApiError.BadRequest('Токена нет или не прошел валидацию')
-  }
-
   const { id } = req.user
 
   try {
@@ -98,33 +93,29 @@ const logout = async (req, res, next) => {
   }
 }
 
-const current = async (req, res, next) => {
-  const { id } = req.user
-
+const refresh = async (req, res, next) => {
   try {
-    const currentUser = await authService.current(id)
+    const { refreshToken } = req.cookies
+    const user = await authService.refresh(refreshToken)
 
-    if (!currentUser) {
-      throw ApiError.BadRequest('Current User not found')
+    if (user) {
+      const { refreshToken, accessToken, ...userData } = user
+
+      res.cookie(
+        'refreshToken',
+        refreshToken,
+        { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+
+      return res
+        .status(200)
+        .json({
+          status: 'Ok',
+          code: 200,
+          message: 'Refresh successfull',
+          accessToken,
+          ...userData
+        })
     }
-
-    const { accessToken, refreshToken, ...userData } = currentUser
-
-    return res
-      .status(200)
-      .json({
-        code: 200,
-        status: 'ok',
-        message: 'Fetch Current user uccessful',
-        accessToken,
-        ...userData // user = {
-        //   id: new ObjectId("62cf18a2defbc4941cbd50f6"),
-        //   email: 'test7@mail.ua',
-        //   subscription: 'starter',
-        //   avatarURL: 'http://localhost:5000/avatars/62cf18a2defbc4941cbd50f6-3240d8c8d5b323a6965585f8d4422260.jpeg',
-        //   role: 'user',
-        //   verified: true }
-      })
   } catch (e) {
     next(e)
   }
@@ -187,41 +178,44 @@ const resend = async (req, res, next) => {
   }
 }
 
-const refresh = async (req, res, next) => {
-  const { refreshToken } = req.cookies
-
-  try {
-    const user = await authService.refresh(refreshToken)
-
-    if (user) {
-      const { refreshToken, accessToken, ...userData } = user
-
-      res.cookie(
-        'refreshToken',
-        refreshToken,
-        { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
-
-      return res
-        .status(200)
-        .json({
-          status: 'Ok',
-          code: 200,
-          message: 'Refresh token successfull',
-          accessToken,
-          ...userData
-        })
-    }
-  } catch (e) {
-    next(e)
-  }
-}
-
 export default {
   signup,
   login,
   logout,
-  current,
+  refresh,
   verify,
   resend,
-  refresh
 }
+
+
+// const current = async (req, res, next) => {
+//   const { id } = req.user
+
+//   try {
+//     const currentUser = await authService.current(id)
+
+//     if (!currentUser) {
+//       throw ApiError.BadRequest('Current User not found')
+//     }
+
+//     const { accessToken, refreshToken, ...userData } = currentUser
+
+//     return res
+//       .status(200)
+//       .json({
+//         code: 200,
+//         status: 'ok',
+//         message: 'Fetch Current user uccessful',
+//         accessToken,
+//         ...userData // user = {
+//         //   id: new ObjectId("62cf18a2defbc4941cbd50f6"),
+//         //   email: 'test7@mail.ua',
+//         //   subscription: 'starter',
+//         //   avatarURL: 'http://localhost:5000/avatars/62cf18a2defbc4941cbd50f6-3240d8c8d5b323a6965585f8d4422260.jpeg',
+//         //   role: 'user',
+//         //   verified: true }
+//       })
+//   } catch (e) {
+//     next(e)
+//   }
+// }

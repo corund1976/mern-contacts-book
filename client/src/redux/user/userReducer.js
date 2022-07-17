@@ -7,9 +7,7 @@ const setAvatar = createAction('user/setAvatar')
 const unsetAvatar = createAction('user/unsetAvatar')
 const setSubscription = createAction('user/setSubscription')
 
-const userActions = { setUser, unsetUser, setAvatar, unsetAvatar, setSubscription }
-
-export default userActions
+export default { setUser, unsetUser, setAvatar, unsetAvatar, setSubscription }
 
 // Reducer
 const defaultState = {

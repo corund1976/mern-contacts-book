@@ -175,6 +175,7 @@ const deleteAvatar = async (req, res, next) => {
 }
 
 const remove = async (req, res, next) => {
+  // одна функция и для самоудаления текущ.пользователя и для админа
   const id = req.params.id ? req.params.id : req.user.id
 
   try {
@@ -189,6 +190,8 @@ const remove = async (req, res, next) => {
           message: `Not found user id: ${id}`
         })
     }
+
+    res.clearCookie('refreshToken')
 
     res
       .status(200)

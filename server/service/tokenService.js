@@ -1,24 +1,24 @@
 import jwt from 'jsonwebtoken'
 
-import Token from './models/tokenSchema.js';
+import Token from './models/tokenSchema.js'
+import ApiError from '../exceptions/apiError.js';
 
 const generate = (payload) => {
   const accessToken = jwt.sign(
     payload,
     process.env.JWT_ACCESS_SECRET,
-    { expiresIn: '15m' });
+    { expiresIn: '15s' });
 
   const refreshToken = jwt.sign(
     payload,
     process.env.JWT_REFRESH_SECRET,
     { expiresIn: '30d' });
-
   return { accessToken, refreshToken }
 }
 
 const save = async (userId, refreshToken) => {
   const user = await Token.findOne({ userId })
-
+  console.log('token service save user', user);
   if (!user) {
     return await Token.create({ userId, refreshToken })
   }
@@ -42,6 +42,10 @@ const validate = (token) => {
   try {
     const tokenData = jwt.verify(tokenValue, secret)
 
+    if (!tokenData) {
+      throw ApiError.Unauthorized('Токен не валидный')
+    }
+
     return tokenData
   } catch (e) {
     return null
@@ -49,7 +53,13 @@ const validate = (token) => {
 }
 
 const search = async (refreshToken) => {
-  return await Token.findOne({ refreshToken })
+  const result = await Token.findOne({ refreshToken })
+
+  if (!result) {
+    throw ApiError.Unauthorized('Поиск токена в БД неуспешный')
+  }
+
+  return result
 }
 
 export default {

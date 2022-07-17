@@ -29,6 +29,4 @@ const addContact = newContact => async dispatch => {
   }
 }
 
-const contactOperation = { listContacts, addContact }
-
-export default contactOperation
+export default { listContacts, addContact }

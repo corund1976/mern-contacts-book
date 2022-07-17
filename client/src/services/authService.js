@@ -8,7 +8,7 @@ const signup = async (credentials) => {
 }
 
 const login = async (credentials) => {
-  const response = await axios.post('/auth/login', credentials)
+  const response = await $api.post('/auth/login', credentials)
   return response
 }
 
@@ -22,6 +22,4 @@ const refresh = async () => {
   return response
 }
 
-const authService = { signup, login, logout, refresh }
-
-export default authService;
+export default { signup, login, logout, refresh }

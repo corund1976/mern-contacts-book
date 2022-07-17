@@ -36,5 +36,4 @@ $api.interceptors.response.use((response) => response,
     throw error
   })
 
-
-export default { $api }
+export default { $api } 

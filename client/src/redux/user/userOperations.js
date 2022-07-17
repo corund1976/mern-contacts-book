@@ -71,6 +71,4 @@ const deleteUser = () => async dispatch => {
   }
 }
 
-const userOperation = { uploadAvatar, deleteAvatar, updateSubscription, deleteUser }
-
-export default userOperation
+export default { uploadAvatar, deleteAvatar, updateSubscription, deleteUser }

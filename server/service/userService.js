@@ -45,3 +45,8 @@ export default {
   update,
   remove,
 }
+
+// const remove = async (id) => {
+//   await tokenService.remove(id)  // response = { acknowledged: true, deletedCount: 1 }
+//   return await User.findByIdAndDelete(id)
+// }

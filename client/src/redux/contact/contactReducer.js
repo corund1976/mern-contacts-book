@@ -6,9 +6,7 @@ const unsetContacts = createAction("contact/unsetContacts")
 const setNewContact = createAction("contact/addNewContact")
 const setDisplayPopup = createAction("contact/setDisplayPopup")
 
-const contactAction = { setContacts, unsetContacts, setNewContact, setDisplayPopup }
-
-export default contactAction
+export default { setContacts, unsetContacts, setNewContact, setDisplayPopup }
 
 // Reducer
 const defaultState = {

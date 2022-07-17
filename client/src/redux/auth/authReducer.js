@@ -4,9 +4,7 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 const setIsAuth = createAction("auth/setIsAuth")
 const unsetIsAuth = createAction("auth/unsetIsAuth")
 
-const authAction = { setIsAuth, unsetIsAuth }
-
-export default authAction
+export default { setIsAuth, unsetIsAuth }
 
 // Reducer
 const defaultState = {

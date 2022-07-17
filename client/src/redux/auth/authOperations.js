@@ -51,11 +51,12 @@ const logout = () => async dispatch => {
 
 const refresh = () => async dispatch => {
   const token = localStorage.getItem('accessToken')
-
   if (!token) return
 
   try {
     const response = await authService.refresh()
+    // eslint-disable-next-line
+    console.log('response = ', response);
     const { accessToken, user } = response.data
 
     localStorage.setItem('accessToken', accessToken)
@@ -71,6 +72,4 @@ const refresh = () => async dispatch => {
   }
 }
 
-const authOperation = { signup, login, logout, refresh }
-
-export default authOperation
+export default { signup, login, logout, refresh }

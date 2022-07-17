@@ -50,18 +50,86 @@ const login = async (email, password) => {
 }
 
 const logout = async (userId) => {
+  if (!userId) {
+    throw ApiError.BadRequest('Токена нет или не прошел валидацию')
+  }
+
   return await tokenService.remove(userId)
 }
 
-const current = async (userId) => {
-  const user = await User.findById(userId)
+const refresh = async (refreshToken) => {
+  console.log('refreshToken', refreshToken);
+  // refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MDg4ODExLCJleHAiOjE2NjA2ODA4MTF9.0gnnvkBVf_9bJkdN5AF6A4FtRqmFEgFegLI0eoeiLcw
+  if (!refreshToken) {
+    throw ApiError.Unauthorized('Нет рефреш-токена в куках')
+  }
+  // Передаю токен как обьект, чтобы по ключу определить каким секретом пользоваться для валидации
+  const userDataFromToken = tokenService.validate({ refreshToken })
+  console.log('userDataFromToken', userDataFromToken)
+  // userDataFromToken = {
+  //   id: '62d1b0e0bfde815a5f0690d8',
+  //   email: 'test@mail.ua',
+  //   subscription: 'business',
+  //   avatarURL: 'http://localhost:5000/avatars/62d1b0e0bfde815a5f0690d8-P1050730.JPG',
+  //   role: 'user',
+  //   verified: true,
+  //   iat: 1658087344,
+  //   exp: 1660679344
+  // }
+  const tokenDataFromDB = await tokenService.search(refreshToken)
+  console.log('tokenDataFromDB', tokenDataFromDB)
+  // tokenDataFromDB = {
+  //   _id: new ObjectId("62d4619f082ddb14e59288e9"),
+  //   userId: new ObjectId("62d1b0e0bfde815a5f0690d8"),
+  //   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MDg3MzQ0LCJleHAiOjE2NjA2NzkzNDR9.ucjzr1dpQLJ4cstVS1KKXSX2BXmvL0JlFVHJkCYasUo'
+  // }
 
+  // Вытащим из БД "свежего" пользователя, т.к. за 60 дней мог "устареть"
+  const user = await User.findById(userDataFromToken.id)
+  console.log('user', user)
+  // user = {
+  //   _id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
+  //   email: 'test@mail.ua',
+  //   subscription: 'business',
+  //   avatarURL: 'http://localhost:5000/avatars/62d1b0e0bfde815a5f0690d8-P1050730.JPG',
+  //   role: 'user',
+  //   verified: true,
+  //   verifyToken: null,
+  //   password: '$2a$06$eJ9MQKVebli4l.tE9xTL7.bA2sFNjsoSYxFlpsd7sgnOz/iCbrbP6'
+  // }
   const userDto = new UserDto(user)
-
+  console.log('userDto', userDto);
+  // userDto = UserDto = {
+  //   id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
+  //   email: 'test@mail.ua',
+  //   subscription: 'business',
+  //   avatarURL: 'http://localhost:5000/avatars/62d1b0e0bfde815a5f0690d8-P1050730.JPG',
+  //   role: 'user',
+  //   verified: true
+  // }
   const payload = { ...userDto };
+  console.log('payload', payload);
+  // payload = {
+  //   id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
+  //   email: 'test@mail.ua',
+  //   subscription: 'business',
+  //   avatarURL: 'http://localhost:5000/avatars/62d1b0e0bfde815a5f0690d8-P1050730.JPG',
+  //   role: 'user',
+  //   verified: true
+  // }
   const tokens = tokenService.generate(payload)
-  await tokenService.save(user._id, tokens.refreshToken)
-
+  console.log('tokens', tokens);
+  // tokens = {
+  //   accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MDg3OTY5LCJleHAiOjE2NTgwODg4Njl9.m8VGQS2LY7rwlhzTQj4xCsdSveUHbwc25-o455HnZOk',
+  //   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MDg3OTY5LCJleHAiOjE2NjA2Nzk5Njl9.0jmuDngIovTLrfg3QL4Hg9hECN1Lp2ypfuOUeKozmJY'
+  // }
+  const res = await tokenService.save(user.id, tokens.refreshToken)
+  console.log('res', res);
+  // res = {
+  //   _id: new ObjectId("62d4691a6ccca72ea30b7b88"),
+  //   userId: new ObjectId("62d1b0e0bfde815a5f0690d8"),
+  //   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MDg4MDQyLCJleHAiOjE2NjA2ODAwNDJ9.YzB6v_HAZcT9jlHLg7b6h2MTrAa1WXCKVRfjMhus0dc'
+  // }
   return { ...tokens, user: userDto }
 }
 
@@ -91,34 +159,24 @@ const resend = async (email) => {
   return await sendVerifyMail(email, link)
 }
 
-const refresh = async (refreshToken) => {
-  if (!refreshToken) {
-    throw ApiError.Unauthorized('Нет рефреш-токена в куках')
-  }
-  // Передаю токен как обьект, чтобы по ключу определить каким секретом пользоваться для валидации
-  const userDataFromToken = tokenService.validate({ refreshToken })
-  const tokenDataFromDB = await tokenService.search(refreshToken)
-  // Проверка что и валидация, и поиск в БД прошли успешно
-  if (!userDataFromToken || !tokenDataFromDB) {
-    throw ApiError.Unauthorized('Валидация / поиск токена в БД прошли неуспешно')
-  }
-  // Вытащим из БД "свежего" пользователя, т.к. за 60 дней мог "устареть"
-  const user = await User.findById(userDataFromToken.id)
-  const userDto = new UserDto(user)
-
-  const payload = { ...userDto };
-  const tokens = tokenService.generate(payload)
-  await tokenService.save(user.id, tokens.refreshToken)
-
-  return { ...tokens, user: userDto }
-}
-
 export default {
   signup,
   login,
   logout,
-  current,
+  refresh,
   verify,
   resend,
-  refresh
 }
+
+// const current = async (userId) => {
+//   const user = await User.findById(userId)
+
+//   const userDto = new UserDto(user)
+
+//   const payload = { ...userDto };
+//   const tokens = tokenService.generate(payload)
+//   await tokenService.save(user._id, tokens.refreshToken)
+
+//   return { ...tokens, user: userDto }
+// }
+
