@@ -1,4 +1,4 @@
-# Enviroment variables
+# Environment variables
 server/*.env
 
 server/public/avatars
