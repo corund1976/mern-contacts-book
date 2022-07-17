@@ -16,7 +16,13 @@ const update = async (id, update) => {
 }
 
 const remove = async (id) => {
-  return await User.findByIdAndDelete(id)
+  await User.findByIdAndDelete(id)
+  const response = await tokenService.remove(id)
+  const { deletedCount } = response
+
+  if (!deletedCount) throw ApiError.NotFound('Token not found in DB')
+
+  return deletedCount
 }
 
 export default {
