@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { signup } from 'redux/auth/authOperations'
+import authOperation from 'redux/auth/authOperations'
 import Input from 'components/input'
 
 import s from './signup.module.css'
@@ -11,7 +11,9 @@ function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    signup({ email, password })
+
+    authOperation.signup({ email, password })
+
     setEmail('')
     setPassword('')
   }

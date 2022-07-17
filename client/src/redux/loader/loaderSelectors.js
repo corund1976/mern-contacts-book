@@ -1,5 +1,5 @@
 const getIsLoading = (state) => state.loader.isLoading
 
-const loaderSelectors = { getIsLoading }
+const loaderSelector = { getIsLoading }
 
-export default loaderSelectors
+export default loaderSelector

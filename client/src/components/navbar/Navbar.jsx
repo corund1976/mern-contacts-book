@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { logout } from 'redux/auth/authOperations'
-import authSelectors from 'redux/auth/authSelectors'
-import userSelectors from 'redux/user/userSelectors'
+import authOperation from 'redux/auth/authOperations'
+import authSelector from 'redux/auth/authSelectors'
+import userSelector from 'redux/user/userSelectors'
 import Container from 'components/container'
 
 import Logo from 'assets/img/book-open.svg'
@@ -14,13 +14,12 @@ import s from './navbar.module.css'
 
 function Navbar() {
   const dispatch = useDispatch()
-
-  const isAuth = useSelector(authSelectors.getIsAuth)
-  const avatarUrl = useSelector(userSelectors.getAvatarUrl)
+  const isAuth = useSelector(authSelector.getIsAuth)
+  const avatarUrl = useSelector(userSelector.getAvatarUrl)
 
   const avatar = avatarUrl ? `${avatarUrl}` : AvatarDefault
 
-  const handlerLogout = () => dispatch(logout())
+  const handlerLogout = () => dispatch(authOperation.logout())
 
   return (
     <div className={s.navbar__section}>

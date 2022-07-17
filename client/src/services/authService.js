@@ -22,8 +22,6 @@ const refresh = async () => {
   return response
 }
 
-const authService = {
-  signup, login, logout, refresh
-}
+const authService = { signup, login, logout, refresh }
 
 export default authService;

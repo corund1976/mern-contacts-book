@@ -1,16 +1,15 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import authService from 'services/authService';
-import { setIsAuth, unsetIsAuth } from 'redux/auth/authReducer';
-import { setUser, unsetUser } from 'redux/user/userReducer';
-import { unsetContacts } from 'redux/contact/contactReducer';
-import { loaderActions } from 'redux/loader/loaderReducer'
+import authAction from 'redux/auth/authReducer';
+import userActions from 'redux/user/userReducer';
+import contactAction from 'redux/contact/contactReducer';
 
-export const signup = async (credentials) => {
+const signup = async (credentials) => {
   try {
     const response = await authService.signup(credentials)
 
-    if (response) window.location.href = '/login'
+    if (response) { window.location.href = '/login' }
 
     Notify.success(response.data.message)
   } catch (e) {
@@ -18,15 +17,15 @@ export const signup = async (credentials) => {
   }
 }
 
-export const login = credentials => async dispatch => {
+const login = credentials => async dispatch => {
   try {
     const response = await authService.login(credentials)
     const { accessToken, user } = response.data
 
     localStorage.setItem('accessToken', accessToken)
 
-    dispatch(setUser(user));
-    dispatch(setIsAuth())
+    dispatch(userActions.setUser(user));
+    dispatch(authAction.setIsAuth())
 
     Notify.success(response.data.message);
   } catch (e) {
@@ -34,15 +33,15 @@ export const login = credentials => async dispatch => {
   }
 }
 
-export const logout = () => async dispatch => {
+const logout = () => async dispatch => {
   try {
     await authService.logout()
 
     localStorage.removeItem('accessToken')
 
-    dispatch(unsetIsAuth())
-    dispatch(unsetUser())
-    dispatch(unsetContacts())
+    dispatch(authAction.unsetIsAuth())
+    dispatch(userActions.unsetUser())
+    dispatch(contactAction.unsetContacts())
 
     Notify.success('Logout successful')
   } catch (e) {
@@ -50,26 +49,28 @@ export const logout = () => async dispatch => {
   }
 }
 
-export const refresh = () => async dispatch => {
+const refresh = () => async dispatch => {
   const token = localStorage.getItem('accessToken')
 
   if (!token) return
 
-  dispatch(loaderActions.setIsLoading())
   try {
     const response = await authService.refresh()
     const { accessToken, user } = response.data
 
     localStorage.setItem('accessToken', accessToken)
 
-    dispatch(setUser(user))
-    dispatch(setIsAuth())
+    dispatch(userActions.setUser(user))
+    dispatch(authAction.setIsAuth())
 
     Notify.success(response.data.message)
   } catch (e) {
     localStorage.removeItem('accessToken')
+
     Notify.failure(e.response?.data?.message || "Request failure")
-  } finally {
-    dispatch(loaderActions.unsetIsLoading())
   }
-};
+}
+
+const authOperation = { signup, login, logout, refresh }
+
+export default authOperation

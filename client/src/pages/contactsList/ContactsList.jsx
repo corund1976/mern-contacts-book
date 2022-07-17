@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { listContacts } from 'redux/contact/contactOperations'
-import { setDisplayPopup } from 'redux/contact/contactReducer'
+import contactOperation from 'redux/contact/contactOperations'
+import contactAction from 'redux/contact/contactReducer'
 import contactSelectors from 'redux/contact/contactSelectors'
 
 import Contact from 'components/contact'
@@ -15,10 +15,11 @@ function ContactsList() {
   const contacts = useSelector(contactSelectors.getListContacts)
 
   useEffect(() => {
-    dispatch(listContacts())
+    dispatch(contactOperation.listContacts())
   }, [dispatch])
 
-  const handlerAddContact = () => dispatch(setDisplayPopup('flex'))
+  const handlerAddContact = () =>
+    dispatch(contactAction.setDisplayPopup('flex'))
 
   return (
     <div className={s.contactsList__section}>

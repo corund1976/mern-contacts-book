@@ -20,8 +20,6 @@ const deleteUser = () => {
   return result
 }
 
-const userService = {
-  uploadAvatar, deleteAvatar, updateSubscription, deleteUser
-}
+const userService = { uploadAvatar, deleteAvatar, updateSubscription, deleteUser }
 
 export default userService

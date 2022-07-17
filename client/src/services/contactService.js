@@ -10,8 +10,6 @@ const addContact = async (newContact) => {
   return result
 }
 
-const contactService = {
-  listContacts, addContact
-}
+const contactService = { listContacts, addContact }
 
 export default contactService

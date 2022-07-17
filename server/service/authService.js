@@ -97,14 +97,13 @@ const refresh = async (refreshToken) => {
   }
   // Передаю токен как обьект, чтобы по ключу определить каким секретом пользоваться для валидации
   const userDataFromToken = tokenService.validate({ refreshToken })
-  const tokenDataFromDB = tokenService.search(refreshToken)
+  const tokenDataFromDB = await tokenService.search(refreshToken)
   // Проверка что и валидация, и поиск в БД прошли успешно
   if (!userDataFromToken || !tokenDataFromDB) {
     throw ApiError.Unauthorized('Валидация / поиск токена в БД прошли неуспешно')
   }
   // Вытащим из БД "свежего" пользователя, т.к. за 60 дней мог "устареть"
   const user = await User.findById(userDataFromToken.id)
-
   const userDto = new UserDto(user)
 
   const payload = { ...userDto };

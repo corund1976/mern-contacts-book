@@ -2,15 +2,14 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import contactSelectors from 'redux/contact/contactSelectors'
-import { setDisplayPopup } from 'redux/contact/contactReducer'
-import { addContact } from 'redux/contact/contactOperations'
+import contactAction from 'redux/contact/contactReducer'
+import contactOperation from 'redux/contact/contactOperations'
 import Input from 'components/input'
 
 import s from './popup.module.css'
 
 function Popup() {
   const dispatch = useDispatch()
-
   const displayPopup = useSelector(contactSelectors.getDisplayPopup)
 
   const [name, setName] = useState('')
@@ -19,13 +18,16 @@ function Popup() {
 
   const handlerClosePopup = (e) => {
     e.preventDefault()
-    dispatch(setDisplayPopup('none'))
+
+    dispatch(contactAction.setDisplayPopup('none'))
+
     setName('')
     setEmail('')
     setPhone('')
   }
   const handlerStopPropagation = (e) => e.stopPropagation()
-  const handlerAddContact = () => dispatch(addContact({ name, email, phone }))
+  const handlerAddContact = () =>
+    dispatch(contactOperation.addContact({ name, email, phone }))
 
   return (
     <div
