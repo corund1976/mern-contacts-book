@@ -188,7 +188,6 @@ export default {
   signup,
   login,
   logout,
-  current,
   verify,
   resend,
   refresh
