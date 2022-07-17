@@ -190,6 +190,8 @@ const remove = async (req, res, next) => {
         })
     }
 
+    res.clearCookie('refreshToken')
+    
     res
       .status(200)
       .json({

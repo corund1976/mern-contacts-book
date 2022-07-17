@@ -53,18 +53,6 @@ const logout = async (userId) => {
   return await tokenService.remove(userId)
 }
 
-const current = async (userId) => {
-  const user = await User.findById(userId)
-
-  const userDto = new UserDto(user)
-
-  const payload = { ...userDto };
-  const tokens = tokenService.generate(payload)
-  await tokenService.save(user._id, tokens.refreshToken)
-
-  return { ...tokens, user: userDto }
-}
-
 const verify = async (verifyToken) => {
   const user = await User.findOne({ verifyToken })
 
@@ -97,7 +85,7 @@ const refresh = async (refreshToken) => {
   }
   // Передаю токен как обьект, чтобы по ключу определить каким секретом пользоваться для валидации
   const userDataFromToken = tokenService.validate({ refreshToken })
-  const tokenDataFromDB = tokenService.search(refreshToken)
+  const tokenDataFromDB = await tokenService.search(refreshToken)
   // Проверка что и валидация, и поиск в БД прошли успешно
   if (!userDataFromToken || !tokenDataFromDB) {
     throw ApiError.Unauthorized('Валидация / поиск токена в БД прошли неуспешно')
