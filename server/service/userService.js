@@ -1,4 +1,5 @@
 import User from './models/userSchema.js'
+import tokenService from './tokenService.js'
 
 const listUsers = async () => {
   return await User.find()
@@ -16,13 +17,8 @@ const update = async (id, update) => {
 }
 
 const remove = async (id) => {
-  await User.findByIdAndDelete(id)
-  const response = await tokenService.remove(id)
-  const { deletedCount } = response
-
-  if (!deletedCount) throw ApiError.NotFound('Token not found in DB')
-
-  return deletedCount
+  await tokenService.remove(id)  // response = { acknowledged: true, deletedCount: 1 }
+  return await User.findByIdAndDelete(id)
 }
 
 export default {
