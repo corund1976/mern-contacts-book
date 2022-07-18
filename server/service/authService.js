@@ -58,14 +58,14 @@ const logout = async (userId) => {
 }
 
 const refresh = async (refreshToken) => {
-  console.log('refreshToken', refreshToken);
+  console.log('1. Беру refreshToken из куки', refreshToken);
   // refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MDg4ODExLCJleHAiOjE2NjA2ODA4MTF9.0gnnvkBVf_9bJkdN5AF6A4FtRqmFEgFegLI0eoeiLcw
   if (!refreshToken) {
     throw ApiError.Unauthorized('Нет рефреш-токена в куках')
   }
   // Передаю токен как обьект, чтобы по ключу определить каким секретом пользоваться для валидации
   const userDataFromToken = tokenService.validate({ refreshToken })
-  console.log('userDataFromToken', userDataFromToken)
+  console.log('2. Делаю валидацию токена и извлекаю данные из токена userDataFromToken', userDataFromToken)
   // userDataFromToken = {
   //   id: '62d1b0e0bfde815a5f0690d8',
   //   email: 'test@mail.ua',
@@ -77,7 +77,7 @@ const refresh = async (refreshToken) => {
   //   exp: 1660679344
   // }
   const tokenDataFromDB = await tokenService.search(refreshToken)
-  console.log('tokenDataFromDB', tokenDataFromDB)
+  console.log('3.5. Выполняю поиск в базе Токенов tokenDataFromDB', tokenDataFromDB)
   // tokenDataFromDB = {
   //   _id: new ObjectId("62d4619f082ddb14e59288e9"),
   //   userId: new ObjectId("62d1b0e0bfde815a5f0690d8"),
@@ -86,7 +86,7 @@ const refresh = async (refreshToken) => {
 
   // Вытащим из БД "свежего" пользователя, т.к. за 60 дней мог "устареть"
   const user = await User.findById(userDataFromToken.id)
-  console.log('user', user)
+  console.log('4. Беру в базе Юзеров по id user', user)
   // user = {
   //   _id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
   //   email: 'test@mail.ua',
@@ -98,7 +98,7 @@ const refresh = async (refreshToken) => {
   //   password: '$2a$06$eJ9MQKVebli4l.tE9xTL7.bA2sFNjsoSYxFlpsd7sgnOz/iCbrbP6'
   // }
   const userDto = new UserDto(user)
-  console.log('userDto', userDto);
+  console.log('5. Пропускаю через userDto', userDto);
   // userDto = UserDto = {
   //   id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
   //   email: 'test@mail.ua',
@@ -108,7 +108,7 @@ const refresh = async (refreshToken) => {
   //   verified: true
   // }
   const payload = { ...userDto };
-  console.log('payload', payload);
+  console.log('6. И кладу в payload', payload);
   // payload = {
   //   id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
   //   email: 'test@mail.ua',
@@ -118,13 +118,13 @@ const refresh = async (refreshToken) => {
   //   verified: true
   // }
   const tokens = tokenService.generate(payload)
-  console.log('tokens', tokens);
+  console.log('7. Генерирую новые tokens', tokens);
   // tokens = {
   //   accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MDg3OTY5LCJleHAiOjE2NTgwODg4Njl9.m8VGQS2LY7rwlhzTQj4xCsdSveUHbwc25-o455HnZOk',
   //   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MDg3OTY5LCJleHAiOjE2NjA2Nzk5Njl9.0jmuDngIovTLrfg3QL4Hg9hECN1Lp2ypfuOUeKozmJY'
   // }
-  const res = await tokenService.save(user.id, tokens.refreshToken)
-  console.log('res', res);
+  const res = await tokenService.save(user._id, tokens.refreshToken)
+  console.log('8.res', res);
   // res = {
   //   _id: new ObjectId("62d4691a6ccca72ea30b7b88"),
   //   userId: new ObjectId("62d1b0e0bfde815a5f0690d8"),

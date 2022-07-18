@@ -1,4 +1,4 @@
-import { $api } from '../http'
+import $api from '../http'
 
 const listContacts = async () => {
   const result = await $api.get('/contacts');

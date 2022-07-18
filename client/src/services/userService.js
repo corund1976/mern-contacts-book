@@ -1,4 +1,4 @@
-import { $api } from '../http'
+import $api from '../http'
 
 const uploadAvatar = async (formData) => {
   const result = await $api.patch('/users/avatars', formData);

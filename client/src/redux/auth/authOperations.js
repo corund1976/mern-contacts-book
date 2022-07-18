@@ -55,8 +55,20 @@ const refresh = () => async dispatch => {
 
   try {
     const response = await authService.refresh()
-    // eslint-disable-next-line
-    console.log('response = ', response);
+    // response.data = {
+    //   accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MTI5MzE4LCJleHAiOjE2NTgxMjkzMzN9.DCeqAyK5Zg50ZJmoj6kBUdSr-JtQleyuzbIiubp1d_4",
+    //   code: 200,
+    //   message: "Refresh successfull",
+    //   status: "Ok",
+    //   user: {
+    //     avatarURL: "http://localhost:5000/avatars/62d1b0e0bfde815a5f0690d8-P1050730.JPG",
+    //     email: "test@mail.ua",
+    //     id: "62d1b0e0bfde815a5f0690d8",
+    //     role: "user",
+    //     subscription: "business",
+    //     verified: true,
+    //   },
+    // }
     const { accessToken, user } = response.data
 
     localStorage.setItem('accessToken', accessToken)

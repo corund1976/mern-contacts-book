@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { $api } from '../http'
+import $api from '../http'
 
 const signup = async (credentials) => {
   const response = await axios.post('/auth/signup', credentials)

@@ -104,7 +104,8 @@ const refresh = async (req, res, next) => {
       res.cookie(
         'refreshToken',
         refreshToken,
-        { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+        { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+      )
 
       return res
         .status(200)
@@ -186,36 +187,3 @@ export default {
   verify,
   resend,
 }
-
-
-// const current = async (req, res, next) => {
-//   const { id } = req.user
-
-//   try {
-//     const currentUser = await authService.current(id)
-
-//     if (!currentUser) {
-//       throw ApiError.BadRequest('Current User not found')
-//     }
-
-//     const { accessToken, refreshToken, ...userData } = currentUser
-
-//     return res
-//       .status(200)
-//       .json({
-//         code: 200,
-//         status: 'ok',
-//         message: 'Fetch Current user uccessful',
-//         accessToken,
-//         ...userData // user = {
-//         //   id: new ObjectId("62cf18a2defbc4941cbd50f6"),
-//         //   email: 'test7@mail.ua',
-//         //   subscription: 'starter',
-//         //   avatarURL: 'http://localhost:5000/avatars/62cf18a2defbc4941cbd50f6-3240d8c8d5b323a6965585f8d4422260.jpeg',
-//         //   role: 'user',
-//         //   verified: true }
-//       })
-//   } catch (e) {
-//     next(e)
-//   }
-// }
