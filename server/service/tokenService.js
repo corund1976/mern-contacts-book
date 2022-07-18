@@ -13,15 +13,13 @@ const generate = (payload) => {
     payload,
     process.env.JWT_REFRESH_SECRET,
     { expiresIn: '30d' });
+
   return { accessToken, refreshToken }
 }
 
 const save = async (userId, refreshToken) => {
   console.log('7.4. userId = ', userId)
   // userId =  new ObjectId("62d1b0e0bfde815a5f0690d8")
-
-  // ВОТ ОНА ПРОБЛЕмНАЯ СТРОКА !!!!!!!!!!! ВНИЗУ !!!
-  // const user = await Token.findOne({ userId })
 
   const response = await Token.findOne({ userId })
 
@@ -32,17 +30,17 @@ const save = async (userId, refreshToken) => {
   //   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDFiMGUwYmZkZTgxNWE1ZjA2OTBkOCIsImVtYWlsIjoidGVzdEBtYWlsLnVhIiwic3Vic2NyaXB0aW9uIjoiYnVzaW5lc3MiLCJhdmF0YXJVUkwiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvYXZhdGFycy82MmQxYjBlMGJmZGU4MTVhNWYwNjkwZDgtUDEwNTA3MzAuSlBHIiwicm9sZSI6InVzZXIiLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNjU4MTUwNjk2LCJleHAiOjE2NjA3NDI2OTZ9.uuY0jFDmslu5woDZerF_rdWMCGVkYdvjnY3bkcmMIeY'
   // }
   if (!response) {
-    console.log('почему то захожу сюда и делаю новую запись');
+    console.log('почему то захожу сюда и делаю новую запись')
     return await Token.create({ userId, refreshToken })
   }
-  // user.refreshToken = refreshToken
-  // const res = await user.save()
-  const res = await Token.findOneAndUpdate(
-    { userId },
-    { refreshToken },
-    { new: true }
-  )
-  console.log('7.6. Сохраняю в базу новый токен', res);
+  response.refreshToken = refreshToken
+  const res = await response.save()
+  // const res = await Token.findOneAndUpdate(
+  //   { userId },
+  //   { refreshToken },
+  //   { new: true }
+  // )
+  console.log('7.6. Сохраняю в базу новый токен', res)
   return res
 }
 
@@ -72,18 +70,16 @@ const validate = (token) => {
 }
 
 const search = async (refreshToken) => {
-  console.log('3.1. ИЩУ В БАЗЕ ТОКЕН', refreshToken);
+  console.log('3.1. ИЩУ В БАЗЕ ТОКЕН', refreshToken)
 
   const result = await Token.findOne({ refreshToken })
-  console.log("3.2. И НАХОЖУ", result);
+  console.log("3.2. И НАХОЖУ", result)
 
   const res = await Token.find()
-  console.log("3.3. А вообще там есть", res);
-
-  // if (!result) {
-  //   throw ApiError.Unauthorized('Поиск токена в БД неуспешный')
-  // }
-
+  console.log("3.3. А вообще там есть", res)
+  if (!result) {
+    throw ApiError.Unauthorized('Поиск токена в БД неуспешный')
+  }
   return result
 }
 
@@ -92,5 +88,5 @@ export default {
   save,
   remove,
   validate,
-  search
+  search,
 }
