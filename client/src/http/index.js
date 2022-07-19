@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 axios.defaults.withCredentials = true
@@ -18,8 +18,11 @@ $api.interceptors.response.use((response) => response,
   async (error) => {
     const originalRequest = error.config
 
-    if (error.response.status === 401 && error.config && !error.config.isRetry) {
-      originalRequest.isRetry = true
+    if (error.response.status === 401
+      && error.config
+      && !error.config.isRetry) {
+
+      error.config.isRetry = true
 
       try {
         const response = await axios.get('/auth/refresh')
@@ -27,11 +30,14 @@ $api.interceptors.response.use((response) => response,
 
         localStorage.setItem('accessToken', accessToken)
 
-        $api.request(originalRequest)
+        const res = await $api.request(originalRequest)
+
+        if (res.status === 204) { // при неудаче разлогина с 1го раза из-за просроченного accessToken, после рефреша, при повторном разлогине в интерцепторе чистим localStorage от токена
+          localStorage.removeItem('accessToken')
+          Notify.success('Logout successful')
+        }
       } catch (e) {
-        // eslint-disable-next-line
-        console.log('НЕ АВТОРИЗОВАН');
-        // Notify.failure(e.message || 'User is not authorized');
+        Notify.failure(e.message || 'Not authorized. Axios response interceptor error');
       }
     }
 
@@ -39,4 +45,4 @@ $api.interceptors.response.use((response) => response,
   }
 )
 
-export default $api;
+export default $api

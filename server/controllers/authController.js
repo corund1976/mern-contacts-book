@@ -47,10 +47,10 @@ const login = async (req, res, next) => {
   const { email, password } = req.body
 
   try {
-    const user = await authService.login(email, password)
+    const userData = await authService.login(email, password)
 
-    if (user) {
-      const { refreshToken, accessToken, ...userData } = user
+    if (userData) {
+      const { refreshToken, accessToken, user } = userData
 
       res.cookie(
         'refreshToken',
@@ -64,7 +64,8 @@ const login = async (req, res, next) => {
           code: 200,
           message: 'Login successfull',
           accessToken,
-          ...userData // user = {
+          user
+          // user = {
           //   id: "62cf18a2defbc4941cbd50f6",
           //   email: "test7@mail.ua",
           //   subscription: "starter",
@@ -96,10 +97,10 @@ const logout = async (req, res, next) => {
 const refresh = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies
-    const user = await authService.refresh(refreshToken)
+    const userData = await authService.refresh(refreshToken)
 
-    if (user) {
-      const { refreshToken, accessToken, ...userData } = user
+    if (userData) {
+      const { refreshToken, accessToken, user } = userData
 
       res.cookie(
         'refreshToken',
@@ -114,7 +115,7 @@ const refresh = async (req, res, next) => {
           code: 200,
           message: 'Refresh successfull',
           accessToken,
-          ...userData
+          user
         })
     }
   } catch (e) {

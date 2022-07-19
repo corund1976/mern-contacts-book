@@ -13,7 +13,7 @@ const signup = async (credentials) => {
 
     Notify.success(response.data.message)
   } catch (e) {
-    Notify.failure(e.response?.data?.message || "Request failure")
+    Notify.failure(e.response?.data?.message || "Request Signup failure")
   }
 }
 
@@ -29,23 +29,24 @@ const login = credentials => async dispatch => {
 
     Notify.success(response.data.message);
   } catch (e) {
-    Notify.failure(e.response?.data?.message || "Request failure")
+    Notify.failure(e.response?.data?.message || "Request Login failure")
   }
 }
 
 const logout = () => async dispatch => {
   try {
-    await authService.logout()
-
-    localStorage.removeItem('accessToken')
-
-    dispatch(authAction.unsetIsAuth())
-    dispatch(userActions.unsetUser())
     dispatch(contactAction.unsetContacts())
+    dispatch(userActions.unsetUser())
+    dispatch(authAction.unsetIsAuth())
 
-    Notify.success('Logout successful')
+    const res = await authService.logout()
+
+    if (res.status === 204) {
+      localStorage.removeItem('accessToken')
+      Notify.success('Logout successful')
+    }
   } catch (e) {
-    Notify.failure(e.response?.data?.message || "Request failure")
+    Notify.failure(e.response?.data?.message || "Request Logout failure")
   }
 }
 
@@ -80,7 +81,7 @@ const refresh = () => async dispatch => {
   } catch (e) {
     localStorage.removeItem('accessToken')
 
-    Notify.failure(e.response?.data?.message || "Request failure")
+    Notify.failure(e.response?.data?.message || "Request Refresh failure")
   }
 }
 
