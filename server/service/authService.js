@@ -1,11 +1,12 @@
-import { v4 } from 'uuid'
 import gravatar from 'gravatar'
 
 import User from './models/userSchema.js'
 import UserDto from '../dtos/userDto.js'
 import sendVerifyMail from './mailService.js'
 import tokenService from './tokenService.js'
+import verifyService from './verifyService.js'
 import ApiError from '../exceptions/apiError.js'
+import Verification from './models/verifySchema.js'
 
 const signup = async (email, password) => {
   const candidate = await User.findOne({ email })
@@ -14,12 +15,14 @@ const signup = async (email, password) => {
     throw ApiError.Conflict(`Email ${email} is already in use`)
   }
 
-  const verifyToken = v4()
   const avatarURL = gravatar.url(email, { protocol: 'http', s: '200', d: 'mp' })
 
-  const user = new User({ email, verifyToken, avatarURL })
+  const user = new User({ email, avatarURL })
   user.setPassword(password)
   const newUser = await user.save()
+
+  const verifyToken = verifyService.generateToken()
+  await verifyService.saveToken(newUser._id, verifyToken)
 
   const link = `${process.env.API_URL}/auth/verify/${verifyToken}`
   await sendVerifyMail(email, link)
@@ -138,29 +141,76 @@ const refresh = async (refreshToken) => {
 }
 
 const verify = async (verifyToken) => {
-  const user = await User.findOne({ verifyToken })
+  const verification = await Verification.findOneAndDelete({ verifyToken })
+  // verification = {
+  //   _id: new ObjectId("62d6ab51ae9a3e0ca5eb5d36"),
+  //   ownerId: new ObjectId("62d6ab51ae9a3e0ca5eb5d34"),
+  //   verifyToken: '5337c30f-e48d-4867-ad53-505c7ec4b7cb'
+  // }
+  if (!verification) {
+    throw ApiError.NotFound('Verification token not found in DB')
+  }
 
+  const { ownerId } = verification
+
+  const user = await User.findByIdAndUpdate(
+    ownerId,
+    { verified: true },
+    { new: true }
+  )
+  // user = {
+  //   _id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
+  //   email: 'test@mail.ua',
+  //   subscription: 'business',
+  //   avatarURL: 'http://localhost:5000/avatars/62d1b0e0bfde815a5f0690d8-P1050730.JPG',
+  //   role: 'user',
+  //   verified: true,
+  //   password: '$2a$06$eJ9MQKVebli4l.tE9xTL7.bA2sFNjsoSYxFlpsd7sgnOz/iCbrbP6'
+  // }
   if (!user) {
     throw ApiError.NotFound('User not found')
   }
 
-  user.verifyToken = null
-  user.verified = true
-
-  return await user.save()
+  return user
 }
 
 const resend = async (email) => {
   const user = await User.findOne({ email })
-  const { verified, verifyToken } = user
+  // user = {
+  //   _id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
+  //   email: 'test@mail.ua',
+  //   subscription: 'business',
+  //   avatarURL: 'http://localhost:5000/avatars/62d1b0e0bfde815a5f0690d8-P1050730.JPG',
+  //   role: 'user',
+  //   verified: true,
+  //   password: '$2a$06$eJ9MQKVebli4l.tE9xTL7.bA2sFNjsoSYxFlpsd7sgnOz/iCbrbP6'
+  // }
+  if (!user) {
+    throw ApiError.NotFound('User not found')
+  }
+
+  const { _id, verified } = user
 
   if (verified) {
     throw ApiError.BadRequest('Verification has already been passed')
   }
 
+  const verification = await Verification.findOne({ ownerId: _id })
+  // verification = {
+  //   _id: new ObjectId("62d6ab51ae9a3e0ca5eb5d36"),
+  //   ownerId: new ObjectId("62d6ab51ae9a3e0ca5eb5d34"),
+  //   verifyToken: '5337c30f-e48d-4867-ad53-505c7ec4b7cb'
+  // }
+  if (!verification) {
+    throw ApiError.NotFound('Verification token not found in DB')
+  }
+
+  const { verifyToken } = verification
+
   const link = `${process.env.API_URL}/auth/verify/${verifyToken}`
 
-  return await sendVerifyMail(email, link)
+  await sendVerifyMail(email, link)
+  return
 }
 
 export default {

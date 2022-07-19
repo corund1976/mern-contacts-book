@@ -1,4 +1,5 @@
 import authService from '../service/authService.js'
+import verifyService from '../service/verifyService.js'
 
 const signup = async (req, res, next) => {
   if (!('email' in req.body) || !('password' in req.body)) {
@@ -49,31 +50,29 @@ const login = async (req, res, next) => {
   try {
     const userData = await authService.login(email, password)
 
-    if (userData) {
-      const { refreshToken, accessToken, user } = userData
+    const { refreshToken, accessToken, user } = userData
 
-      res.cookie(
-        'refreshToken',
-        refreshToken,
-        { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+    res.cookie(
+      'refreshToken',
+      refreshToken,
+      { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
 
-      return res
-        .status(200)
-        .json({
-          status: 'Ok',
-          code: 200,
-          message: 'Login successfull',
-          accessToken,
-          user
-          // user = {
-          //   id: "62cf18a2defbc4941cbd50f6",
-          //   email: "test7@mail.ua",
-          //   subscription: "starter",
-          //   avatarURL: "http://localhost:5000/avatars/62cf18a2defbc4941cbd50f6-3240d8c8d5b323a6965585f8d4422260.jpeg",
-          //   role: "user",
-          //   verified: true }
-        })
-    }
+    return res
+      .status(200)
+      .json({
+        status: 'Ok',
+        code: 200,
+        message: 'Login successfull',
+        accessToken,
+        user
+        // user = {
+        //   id: "62cf18a2defbc4941cbd50f6",
+        //   email: "test7@mail.ua",
+        //   subscription: "starter",
+        //   avatarURL: "http://localhost:5000/avatars/62cf18a2defbc4941cbd50f6-3240d8c8d5b323a6965585f8d4422260.jpeg",
+        //   role: "user",
+        //   verified: true }
+      })
   } catch (e) {
     next(e)
   }
@@ -96,28 +95,26 @@ const logout = async (req, res, next) => {
 
 const refresh = async (req, res, next) => {
   try {
-    const { refreshToken } = req.cookies
-    const userData = await authService.refresh(refreshToken)
+    const { refreshToken: token } = req.cookies
+    const userData = await authService.refresh(token)
 
-    if (userData) {
-      const { refreshToken, accessToken, user } = userData
+    const { refreshToken, accessToken, user } = userData
 
-      res.cookie(
-        'refreshToken',
-        refreshToken,
-        { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
-      )
+    res.cookie(
+      'refreshToken',
+      refreshToken,
+      { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+    )
 
-      return res
-        .status(200)
-        .json({
-          status: 'Ok',
-          code: 200,
-          message: 'Refresh successfull',
-          accessToken,
-          user
-        })
-    }
+    return res
+      .status(200)
+      .json({
+        status: 'Ok',
+        code: 200,
+        message: 'Refresh successfull',
+        accessToken,
+        user
+      })
   } catch (e) {
     next(e)
   }
@@ -127,9 +124,9 @@ const verify = async (req, res, next) => {
   const { verifyToken } = req.params
 
   try {
-    const user = await authService.verify(verifyToken)
+    const response = await authService.verify(verifyToken)
 
-    if (user) {
+    if (response) {
       return res.redirect(process.env.CLIENT_URL)
       // return res
       //   .status(200)
@@ -164,17 +161,17 @@ const resend = async (req, res, next) => {
 
   try {
     const { email } = req.body
+
     const sendResult = await authService.resend(email)
 
-    if (sendResult) {
-      return res
-        .status(200)
-        .json({
-          status: 'ok',
-          code: 200,
-          message: 'Verification email sent'
-        })
-    }
+    return res
+      .status(200)
+      .json({
+        status: 'ok',
+        code: 200,
+        message: 'Verification email sent',
+        sendResult
+      })
   } catch (e) {
     next(e)
   }
