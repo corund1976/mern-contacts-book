@@ -1,49 +1,28 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-
-import authOperation from 'redux/auth/authOperations'
 import Input from 'components/subcomponents/input'
 
-import s from './login.module.css'
+import s from './authForm.module.css'
 
-function Login() {
-  const dispatch = useDispatch()
-
+function AuthForm({ handlerSubmit }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [authMode, setAuthMode] = useState('login')
+  const [displayPassword, setDisplayPassword] = useState('password')
 
-  const handleSubmitLogin = (e) => {
+  const handleChangeChk = () => {
+    displayPassword === 'password'
+      ? setDisplayPassword('text')
+      : setDisplayPassword('password')
+  }
+
+  const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(authOperation.login({ email, password }))
     setEmail('')
     setPassword('')
   }
 
-  const handleSubmitSignup = (e) => {
-    e.preventDefault()
-    authOperation.signup({ email, password })
-    setEmail('')
-    setPassword('')
-  }
-
-  const resendHandler = () => {
-    authOperation.resend(email)
-  }
-
   return (
-    <form
-      onSubmit={
-        authMode === 'login'
-          ? (e) => {
-              handleSubmitLogin(e)
-            }
-          : (e) => {
-              handleSubmitSignup(e)
-            }
-      }
-      className={s.form}
-    >
+    <form onSubmit={handleSubmit} className={s.form}>
       <h2 className={s.header}>{authMode === 'login' ? 'Login' : 'Signup'}</h2>
       <Input
         value={email}
@@ -54,10 +33,13 @@ function Login() {
       <Input
         value={password}
         setValue={setPassword}
-        type="password"
+        type={displayPassword}
         placeholder="password..."
         autoComplete="current-password"
       />
+      <p>show/hide password</p>
+      <input type="checkbox" onChange={handleChangeChk} />
+
       <button type="submit" className={s.enter__btn}>
         Enter
       </button>
@@ -95,4 +77,4 @@ function Login() {
   )
 }
 
-export default Login
+export default AuthForm

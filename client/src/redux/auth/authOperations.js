@@ -85,4 +85,14 @@ const refresh = () => async dispatch => {
   }
 }
 
-export default { signup, login, logout, refresh }
+const resend = async (email) => {
+  try {
+    await authService.resend(email)
+
+    Notify.success('Resend verification email')
+  } catch (e) {
+    Notify.failure(e.response?.data?.message || "Request Resend failure")
+  }
+}
+
+export default { signup, login, logout, refresh, resend }

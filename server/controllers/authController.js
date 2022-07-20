@@ -1,5 +1,4 @@
 import authService from '../service/authService.js'
-import verifyService from '../service/verifyService.js'
 
 const signup = async (req, res, next) => {
   if (!('email' in req.body) || !('password' in req.body)) {

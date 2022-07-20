@@ -206,7 +206,6 @@ const resend = async (email) => {
   }
 
   const { verifyToken } = verification
-
   const link = `${process.env.API_URL}/auth/verify/${verifyToken}`
 
   await sendVerifyMail(email, link)

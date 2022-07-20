@@ -6,8 +6,8 @@ import authSelector from 'redux/auth/authSelectors'
 import authOperation from 'redux/auth/authOperations'
 
 import LoaderSpinner from 'components/loaderSpinner'
-import Container from 'components/container'
 import Navbar from 'components/navbar'
+import Container from 'components/subcomponents/container'
 
 import 'app.module.css'
 

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import authOperation from 'redux/auth/authOperations'
 import authSelector from 'redux/auth/authSelectors'
 import userSelector from 'redux/user/userSelectors'
-import Container from 'components/container'
+import Container from 'components/subcomponents/container'
 
 import Logo from 'assets/img/book-open.svg'
 import Logout from 'assets/img/log-out.svg'

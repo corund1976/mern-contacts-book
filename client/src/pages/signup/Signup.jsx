@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import authOperation from 'redux/auth/authOperations'
-import Input from 'components/input'
+import Input from 'components/subcomponents/input'
 
 import s from './signup.module.css'
 

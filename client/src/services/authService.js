@@ -22,4 +22,9 @@ const refresh = async () => {
   return response
 }
 
-export default { signup, login, logout, refresh }
+const resend = async (email) => {
+  const response = await axios.post('/auth/verify', { email })
+  return response
+}
+
+export default { signup, login, logout, refresh, resend, }
