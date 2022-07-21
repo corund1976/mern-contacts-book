@@ -192,7 +192,7 @@ const resend = async (email) => {
   const { _id, verified } = user
 
   if (verified) {
-    throw ApiError.BadRequest('Verification has already been passed')
+    throw ApiError.BadRequest(`Verification for ${email} has already been passed`)
   }
 
   const verification = await Verification.findOne({ ownerId: _id })

@@ -1,97 +1,30 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import authOperation from 'redux/auth/authOperations'
-import Input from 'components/subcomponents/input'
+
+import AuthForm from 'components/authForm'
 
 import s from './login.module.css'
 
 function Login() {
   const dispatch = useDispatch()
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [authMode, setAuthMode] = useState('login')
-
-  const handleSubmitLogin = (e) => {
-    e.preventDefault()
-    dispatch(authOperation.login({ email, password }))
-    setEmail('')
-    setPassword('')
+  const login = (credentials) => {
+    dispatch(authOperation.login(credentials))
   }
 
-  const handleSubmitSignup = (e) => {
-    e.preventDefault()
-    authOperation.signup({ email, password })
-    setEmail('')
-    setPassword('')
-  }
-
-  const resendHandler = () => {
-    authOperation.resend(email)
+  const forgotPassword = () => {
+    // eslint-disable-next-line
+    console.log('forgot password')
   }
 
   return (
-    <form
-      onSubmit={
-        authMode === 'login'
-          ? (e) => {
-              handleSubmitLogin(e)
-            }
-          : (e) => {
-              handleSubmitSignup(e)
-            }
-      }
-      className={s.form}
-    >
-      <h2 className={s.header}>{authMode === 'login' ? 'Login' : 'Signup'}</h2>
-      <Input
-        value={email}
-        setValue={setEmail}
-        type="email"
-        placeholder="email..."
-      />
-      <Input
-        value={password}
-        setValue={setPassword}
-        type="password"
-        placeholder="password..."
-        autoComplete="current-password"
-      />
-      <button type="submit" className={s.enter__btn}>
-        Enter
+    <div className={s.auth}>
+      <AuthForm header="Login" handlerSubmit={login} />
+      <button className={s.btn__forgot} type="button" onClick={forgotPassword}>
+        forgot password ?
       </button>
-
-      <div className={s.bottom__buttons}>
-        {authMode === 'login' && (
-          <div className={s.signupForgot__buttons}>
-            <button
-              type="button"
-              className={s.signupLogin__btn}
-              onClick={() => setAuthMode('signup')}
-            >
-              signup
-            </button>
-            <button
-              type="button"
-              className={s.forgot__btn}
-              onClick={resendHandler}
-            >
-              resend verification
-            </button>
-          </div>
-        )}
-        {authMode === 'signup' && (
-          <button
-            type="button"
-            className={s.signupLogin__btn}
-            onClick={() => setAuthMode('login')}
-          >
-            login
-          </button>
-        )}
-      </div>
-    </form>
+    </div>
   )
 }
 

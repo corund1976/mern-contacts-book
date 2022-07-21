@@ -9,7 +9,9 @@ const signup = async (credentials) => {
   try {
     const response = await authService.signup(credentials)
 
-    if (response) { window.location.href = '/login' }
+    // if (response) { window.location.href = '/login' }
+
+    Notify.success(`Verify email has been sent to ${credentials.email}`)
 
     Notify.success(response.data.message)
   } catch (e) {
@@ -87,9 +89,11 @@ const refresh = () => async dispatch => {
 
 const resend = async (email) => {
   try {
-    await authService.resend(email)
+    const response = await authService.resend(email)
 
-    Notify.success('Resend verification email')
+    if (response) { window.location.href = '/login' }
+
+    Notify.success('Resent verification email')
   } catch (e) {
     Notify.failure(e.response?.data?.message || "Request Resend failure")
   }

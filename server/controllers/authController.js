@@ -22,7 +22,7 @@ const signup = async (req, res, next) => {
         .json({
           status: 'Created',
           code: 201,
-          message: 'Signup successful',
+          message: 'Signup successful. Confirm verify email...',
           user,
         })
       // res.send({ user, redirectPath: "/login" });
@@ -95,6 +95,7 @@ const logout = async (req, res, next) => {
 const refresh = async (req, res, next) => {
   try {
     const { refreshToken: token } = req.cookies
+
     const userData = await authService.refresh(token)
 
     const { refreshToken, accessToken, user } = userData
@@ -127,6 +128,7 @@ const verify = async (req, res, next) => {
 
     if (response) {
       return res.redirect(process.env.CLIENT_URL)
+      // return res.redirect(`${process.env.CLIENT_URL}/signup`)
       // return res
       //   .status(200)
       //   .json({

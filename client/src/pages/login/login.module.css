@@ -1,4 +1,4 @@
-.form {
+.auth {
   background-color: white;
   border-radius: 20px;
 
@@ -10,51 +10,14 @@
   flex-direction: column;
 }
 
-.header {
-  text-align: center;
+.btn__forgot {
+  font-size: small;
 
-  margin-bottom: 20px;
-}
-
-input {
-  margin-bottom: 25px;
-}
-
-.enter__btn {
-  font-weight: 700;
-
-  border: none;
-  border-radius: 8px;
-
-  background-color: var(--primary-text-color);
-  color: var(--primary-bg-color);
-
-  padding: 5px 20px;
-
-  align-self: flex-end;
-}
-
-.bottom__buttons {
-  margin-top: 20px;
-
-  display: flex;
-  justify-content: space-between;
-}
-
-.signupForgot__buttons {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.signupLogin__btn {
   border: none;
   background: transparent;
   color: blue;
-}
 
-.forgot__btn {
-  border: none;
-  background: transparent;
-  color: blue;
+  margin-top: 10px;
+
+  align-self: flex-start;
 }
