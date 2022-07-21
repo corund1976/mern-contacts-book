@@ -87,16 +87,30 @@ const refresh = () => async dispatch => {
   }
 }
 
-const resend = async (email) => {
+const resendVerify = async (email) => {
   try {
-    const response = await authService.resend(email)
+    Notify.success(`Sending again Verify email to ${email} ...`)
 
-    if (response) { window.location.href = '/login' }
+    const response = await authService.resendVerify(email)
 
-    Notify.success('Resent verification email')
+    if (response) window.location.href = '/login'
+
+    Notify.success(response.data.message)
   } catch (e) {
-    Notify.failure(e.response?.data?.message || "Request Resend failure")
+    Notify.failure(e.response?.data?.message || "Request Resend verify failure")
   }
 }
 
-export default { signup, login, logout, refresh, resend }
+const resetPassword = async (credentials) => {
+  try {
+    Notify.success('Confirm email to activate new password')
+
+    const response = await authService.resetPassword(credentials)
+
+    Notify.success(response.data.message)
+  } catch (e) {
+    Notify.failure(e.response?.data?.message || "Request Reset password failure")
+  }
+}
+
+export default { signup, login, logout, refresh, resendVerify, resetPassword }

@@ -1,4 +1,5 @@
 import authService from '../service/authService.js'
+import tokenService from '../service/tokenService.js'
 
 const signup = async (req, res, next) => {
   if (!('email' in req.body) || !('password' in req.body)) {
@@ -170,9 +171,53 @@ const resend = async (req, res, next) => {
       .json({
         status: 'ok',
         code: 200,
-        message: 'Verification email sent',
+        message: `Verification email to ${email} sent again`,
         sendResult
       })
+  } catch (e) {
+    next(e)
+  }
+}
+
+const sendReset = async (req, res, next) => {
+  if (!('email' in req.body) || !('password' in req.body)) {
+    return res
+      .status(400)
+      .json({
+        status: 'Bad request',
+        code: 400,
+        message: 'Missing required fields *email* or *password*'
+      })
+  }
+
+  const { email, password } = req.body
+
+  try {
+    const sendResult = await authService.sendReset(email, password)
+
+    return res
+      .status(200)
+      .json({
+        status: 'ok',
+        code: 200,
+        message: 'Reset password email sent',
+        sendResult
+      })
+  } catch (e) {
+    next(e)
+  }
+}
+
+const resetPassword = async (req, res, next) => {
+  const { resetToken } = req.params
+
+  try {
+    const response = await authService.resetPassword(resetToken)
+
+    if (response) {
+      return res.redirect(process.env.CLIENT_URL)
+      // return res.redirect(`${process.env.CLIENT_URL}/signup`)
+    }
   } catch (e) {
     next(e)
   }
@@ -185,4 +230,6 @@ export default {
   refresh,
   verify,
   resend,
+  sendReset,
+  resetPassword,
 }

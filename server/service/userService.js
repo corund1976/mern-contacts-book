@@ -31,7 +31,7 @@ const remove = async (id) => {
   // }
   if (!result) throw ApiError.NotFound('User not found in DB')
 
-  const response = await tokenService.remove(id)  // response = { acknowledged: true, deletedCount: 1 }
+  const response = await tokenService.deleteRefresh(id)  // response = { acknowledged: true, deletedCount: 1 }
   const { deletedCount } = response
 
   if (!deletedCount) throw ApiError.NotFound('Token not found in DB')
@@ -45,8 +45,3 @@ export default {
   update,
   remove,
 }
-
-// const remove = async (id) => {
-//   await tokenService.remove(id)  // response = { acknowledged: true, deletedCount: 1 }
-//   return await User.findByIdAndDelete(id)
-// }

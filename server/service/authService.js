@@ -2,11 +2,9 @@ import gravatar from 'gravatar'
 
 import User from './models/userSchema.js'
 import UserDto from '../dtos/userDto.js'
-import sendVerifyMail from './mailService.js'
+import mailService from './mailService.js'
 import tokenService from './tokenService.js'
-import verifyService from './verifyService.js'
 import ApiError from '../exceptions/apiError.js'
-import Verification from './models/verifySchema.js'
 
 const signup = async (email, password) => {
   const candidate = await User.findOne({ email })
@@ -21,11 +19,12 @@ const signup = async (email, password) => {
   user.setPassword(password)
   const newUser = await user.save()
 
-  const verifyToken = verifyService.generateToken()
-  await verifyService.saveToken(newUser._id, verifyToken)
+  const payload = { email }
+  const verifyToken = tokenService.generate('verifyToken', payload)
+  await tokenService.saveVerification(newUser._id, verifyToken)
 
   const link = `${process.env.API_URL}/auth/verify/${verifyToken}`
-  await sendVerifyMail(email, link)
+  await mailService.sendVerify(email, link)
 
   const userDto = new UserDto(newUser)
   return userDto
@@ -45,11 +44,12 @@ const login = async (email, password) => {
   const userDto = new UserDto(user)
 
   const payload = { ...userDto };
-  const tokens = tokenService.generate(payload)
+  const accessToken = tokenService.generate('accessToken', payload)
+  const refreshToken = tokenService.generate('refreshToken', payload)
 
-  await tokenService.save(user._id, tokens.refreshToken)
+  await tokenService.saveRefresh(user._id, refreshToken)
 
-  return { ...tokens, user: userDto }
+  return { accessToken, refreshToken, user: userDto }
 }
 
 const logout = async (userId) => {
@@ -57,7 +57,7 @@ const logout = async (userId) => {
     throw ApiError.BadRequest('Токена нет или не прошел валидацию')
   }
 
-  const response = await tokenService.remove(userId)
+  const response = await tokenService.deleteRefresh(userId)
 
   return response
 }
@@ -82,7 +82,7 @@ const refresh = async (refreshToken) => {
     throw ApiError.Unauthorized('Not authorized. Refresh token is not valid')
   }
 
-  const tokenFoundInDB = await tokenService.search(refreshToken)
+  const tokenFoundInDB = await tokenService.findRefresh(refreshToken)
   // tokenDataFromDB = {
   //   _id: new ObjectId("62d4619f082ddb14e59288e9"),
   //   ownerId: new ObjectId("62d1b0e0bfde815a5f0690d8"),
@@ -125,33 +125,38 @@ const refresh = async (refreshToken) => {
   //   verified: true
   // }
 
-  const tokens = tokenService.generate(payload)
-  // tokens = {
+  const accessTokenNew = tokenService.generate('accessToken', payload)
+  const refreshTokenNew = tokenService.generate('refreshToken', payload)
   //   accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJp....nZOk',
   //   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZu...KozmJY'
-  // }
 
-  await tokenService.save(user._id, tokens.refreshToken)
+  await tokenService.saveRefresh(user._id, refreshTokenNew)
   // {
   //   _id: new ObjectId("62d4691a6ccca72ea30b7b88"),
   //   ownerId: new ObjectId("62d1b0e0bfde815a5f0690d8"),
   //   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoi...us0dc'
   // }
-  return { ...tokens, user: { ...userDto } }
+  return {
+    accessToken: accessTokenNew,
+    refreshToken: refreshTokenNew,
+    user: { ...userDto }
+  }
 }
 
 const verify = async (verifyToken) => {
-  const verification = await Verification.findOneAndDelete({ verifyToken })
+  const verificationData = await tokenService.findVerification({ verifyToken })
   // verification = {
   //   _id: new ObjectId("62d6ab51ae9a3e0ca5eb5d36"),
   //   ownerId: new ObjectId("62d6ab51ae9a3e0ca5eb5d34"),
-  //   verifyToken: '5337c30f-e48d-4867-ad53-505c7ec4b7cb'
+  //   verifyToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJl....xqh_s'
   // }
-  if (!verification) {
+  if (!verificationData) {
     throw ApiError.NotFound('Verification token not found in DB')
   }
 
-  const { ownerId } = verification
+  const { _id, ownerId } = verificationData
+
+  await tokenService.deleteVerification(_id)
 
   const user = await User.findByIdAndUpdate(
     ownerId,
@@ -195,11 +200,11 @@ const resend = async (email) => {
     throw ApiError.BadRequest(`Verification for ${email} has already been passed`)
   }
 
-  const verification = await Verification.findOne({ ownerId: _id })
+  const verification = await tokenService.findVerification({ ownerId: _id })
   // verification = {
   //   _id: new ObjectId("62d6ab51ae9a3e0ca5eb5d36"),
   //   ownerId: new ObjectId("62d6ab51ae9a3e0ca5eb5d34"),
-  //   verifyToken: '5337c30f-e48d-4867-ad53-505c7ec4b7cb'
+  //   verifyToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJl....xqh_s'
   // }
   if (!verification) {
     throw ApiError.NotFound('Verification token not found in DB')
@@ -208,8 +213,73 @@ const resend = async (email) => {
   const { verifyToken } = verification
   const link = `${process.env.API_URL}/auth/verify/${verifyToken}`
 
-  await sendVerifyMail(email, link)
+  await mailService.sendVerify(email, link)
   return
+}
+
+const sendReset = async (email, password) => {
+  const user = await User.findOne({ email })
+  // user = {
+  //   _id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
+  //   email: 'test@mail.ua',
+  //   subscription: 'business',
+  //   avatarURL: 'http://localhost:5000/avatars/62d1b0e0bfde815a5f0690d8-P1050730.JPG',
+  //   role: 'user',
+  //   verified: true,
+  //   password: '$2a$06$eJ9MQKVebli4l.tE9xTL7.bA2sFNjsoSYxFlpsd7sgnOz/iCbrbP6'
+  // }
+  if (!user) {
+    throw ApiError.NotFound('User not found')
+  }
+
+  user.setPassword(password) // делаю hash пароля, но пока не сохраняю в User
+
+  const hashPassword = user.password
+  const payload = { hashPassword }
+
+  const resetToken = tokenService.generate('resetToken', payload)
+
+  await tokenService.saveReset(user._id, resetToken)
+
+  const link = `${process.env.API_URL}/auth/reset/${resetToken}`
+  //  link = http://localhost:5000/auth/reset/6b01518b-0a85-4906-b48d-285da5df3a2d
+  await mailService.sendReset(email, link)
+  return
+}
+
+const resetPassword = async (resetToken) => {
+  const resetData = await tokenService.findReset(resetToken)
+  // resetData = {
+  //   _id: new ObjectId("62d9bb82c81426bda867719d")  
+  //   ownerId: new ObjectId("62d964e9e9461c17df990070"),
+  //   resetToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNvcnVuZDE5NzZAZ21haWwuY29tIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJpYXQiOjE2NTg0MzY0ODIsImV4cCI6MTY1ODQzNzM4Mn0.IyB7FtUcgLVyMEf5rA0Bpi3vmtEfzKRoSXl6N91Uhpg',
+  // }
+
+  if (!resetData) {
+    throw ApiError.NotFound('Reset token not found in DB')
+  }
+
+  const { _id, ownerId } = resetData
+
+  await tokenService.deleteReset(_id)
+
+  const tokenData = tokenService.validate({ resetToken })
+  // tokenData = {
+  //   password: '123456',
+  //   iat: 1658436482,
+  //   exp: 1658437382
+  // }
+  const user = await User.findByIdAndUpdate(
+    ownerId,
+    { password: tokenData.password },
+    { new: true }
+  )
+
+  if (!user) {
+    throw ApiError.NotFound('User not found')
+  }
+
+  return user
 }
 
 export default {
@@ -219,5 +289,7 @@ export default {
   refresh,
   verify,
   resend,
+  sendReset,
+  resetPassword,
 }
 

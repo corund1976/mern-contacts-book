@@ -13,16 +13,15 @@ function Login() {
     dispatch(authOperation.login(credentials))
   }
 
-  const forgotPassword = () => {
-    // eslint-disable-next-line
-    console.log('forgot password')
+  const resetPassword = () => {
+    window.location = '/resetPassword'
   }
 
   return (
     <div className={s.auth}>
       <AuthForm header="Login" handlerSubmit={login} />
-      <button className={s.btn__forgot} type="button" onClick={forgotPassword}>
-        forgot password ?
+      <button className={s.btn__forgot} type="button" onClick={resetPassword}>
+        reset password
       </button>
     </div>
   )

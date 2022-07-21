@@ -13,6 +13,7 @@ import 'app.module.css'
 
 const Login = lazy(() => import('pages/login'))
 const Signup = lazy(() => import('pages/signup'))
+const ResetPassword = lazy(() => import('pages/resetPassword'))
 const Profile = lazy(() => import('pages/profile'))
 const ContactsList = lazy(() => import('pages/contactsList'))
 
@@ -32,6 +33,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/resetPassword" element={<ResetPassword />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         ) : (

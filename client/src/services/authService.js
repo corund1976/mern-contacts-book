@@ -22,9 +22,14 @@ const refresh = async () => {
   return response
 }
 
-const resend = async (email) => {
+const resendVerify = async (email) => {
   const response = await axios.post('/auth/verify', { email })
   return response
 }
 
-export default { signup, login, logout, refresh, resend, }
+const resetPassword = async (credentials) => {
+  const response = await axios.post('/auth/reset', credentials)  // credentials = { email, password }
+  return response
+}
+
+export default { signup, login, logout, refresh, resendVerify, resetPassword }
