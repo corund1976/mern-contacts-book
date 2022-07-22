@@ -23,7 +23,6 @@ class ApiError extends Error {
   static Conflict(message) {
     return new ApiError(409, message)
   }
-
 }
 
 export default ApiError

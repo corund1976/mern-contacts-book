@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { $api } from '../http'
+import $api from '../http'
 
 const signup = async (credentials) => {
   const response = await axios.post('/auth/signup', credentials)
@@ -22,8 +22,14 @@ const refresh = async () => {
   return response
 }
 
-const authService = {
-  signup, login, logout, refresh
+const resendVerify = async (email) => {
+  const response = await axios.post('/auth/verify', { email })
+  return response
 }
 
-export default authService;
+const resetPassword = async (credentials) => {
+  const response = await axios.post('/auth/reset', credentials)  // credentials = { email, password }
+  return response
+}
+
+export default { signup, login, logout, refresh, resendVerify, resetPassword }

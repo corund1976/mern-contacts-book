@@ -4,7 +4,7 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 const setIsLoading = createAction("loader/setIsLoading")
 const unsetIsLoading = createAction("loader/unsetIsLoading")
 
-export const loaderActions = { setIsLoading, unsetIsLoading }
+export default { setIsLoading, unsetIsLoading }
 
 // Reducer
 const defaultState = {

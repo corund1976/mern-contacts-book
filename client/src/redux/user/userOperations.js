@@ -1,12 +1,10 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import userService from 'services/userService';
-import { setAvatar, unsetAvatar, setSubscription, unsetUser } from 'redux/user/userReducer';
-import { loaderActions } from 'redux/loader/loaderReducer'
+import userActions from 'redux/user/userReducer';
 
-export const uploadAvatar = file => async dispatch => {
+const uploadAvatar = file => async dispatch => {
   try {
-    dispatch(loaderActions.setIsLoading)
     const formData = new FormData
     formData.append('avatar', file)
 
@@ -27,20 +25,19 @@ export const uploadAvatar = file => async dispatch => {
     //   }
     // }
     // }
-    dispatch(setAvatar(response.data.user.avatarURL))
+    dispatch(userActions.setAvatar(response.data.user.avatarURL))
 
     Notify.success(response.data.message);
-    dispatch(loaderActions.unsetIsLoading)
   } catch (e) {
     Notify.failure(e.response?.data?.message || "Request failure")
   }
 }
 
-export const deleteAvatar = (AvatarDefault) => async dispatch => {
+const deleteAvatar = (AvatarDefault) => async dispatch => {
   try {
     const response = await userService.deleteAvatar()
 
-    dispatch(unsetAvatar(AvatarDefault))
+    dispatch(userActions.unsetAvatar(AvatarDefault))
 
     Notify.success(response.data.message);
   } catch (e) {
@@ -48,11 +45,11 @@ export const deleteAvatar = (AvatarDefault) => async dispatch => {
   }
 }
 
-export const updateSubscription = subscriptionUpdate => async dispatch => {
+const updateSubscription = subscriptionUpdate => async dispatch => {
   try {
     const response = await userService.updateSubscription({ subscription: subscriptionUpdate })
 
-    dispatch(setSubscription(response.data.user.subscription))
+    dispatch(userActions.setSubscription(response.data.user.subscription))
 
     Notify.success(response.data.message);
   } catch (e) {
@@ -60,18 +57,18 @@ export const updateSubscription = subscriptionUpdate => async dispatch => {
   }
 }
 
-export const deleteUser = () => async dispatch => {
+const deleteUser = () => async dispatch => {
   try {
     const response = await userService.deleteUser()
 
-    if (response) {
-      window.location.href = '/login';
-    }
+    if (response) { window.location.href = '/login' }
 
-    dispatch(unsetUser())
+    dispatch(userActions.unsetUser())
 
     Notify.success(response.data.message);
   } catch (e) {
     Notify.failure(e.response?.data?.message || "Request failure")
   }
 }
+
+export default { uploadAvatar, deleteAvatar, updateSubscription, deleteUser }

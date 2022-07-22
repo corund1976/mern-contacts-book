@@ -1,44 +1,29 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { login } from 'redux/auth/authOperations'
-import Input from 'components/input'
+import authOperation from 'redux/auth/authOperations'
+
+import AuthForm from 'components/authForm'
 
 import s from './login.module.css'
 
 function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
   const dispatch = useDispatch()
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(login({ email, password }))
-    setEmail('')
-    setPassword('')
+  const login = (credentials) => {
+    dispatch(authOperation.login(credentials))
+  }
+
+  const resetPassword = () => {
+    window.location = '/resetPassword'
   }
 
   return (
-    <form onSubmit={handleSubmit} className={s.login}>
-      <h2 className={s.login__header}>Login</h2>
-      <Input
-        value={email}
-        setValue={setEmail}
-        type="email"
-        placeholder="email..."
-      />
-      <Input
-        value={password}
-        setValue={setPassword}
-        type="password"
-        placeholder="password..."
-        autoComplete="current-password"
-      />
-      <button type="submit" className={s.login__btn}>
-        Enter
+    <div className={s.auth}>
+      <AuthForm header="Login" handlerSubmit={login} />
+      <button className={s.btn__forgot} type="button" onClick={resetPassword}>
+        reset password
       </button>
-    </form>
+    </div>
   )
 }
 

@@ -1,0 +1,43 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: center;
+
+  margin-bottom: 20px;
+}
+
+input {
+  margin-bottom: 25px;
+}
+
+.enter__btn {
+  font-weight: 700;
+
+  border: none;
+  border-radius: 8px;
+
+  background-color: var(--primary-text-color);
+  color: var(--primary-bg-color);
+
+  padding: 7px 25px;
+
+  align-self: flex-end;
+}
+
+.checkbox__wrapper {
+  display: flex;
+}
+
+.checkbox__input {
+  margin-bottom: unset;
+}
+
+.checkbox__placeholder {
+  font-size: small;
+
+  margin-left: 10px;
+  margin-bottom: unset;
+}

@@ -1,34 +1,32 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import contactService from 'services/contactService';
-import { setContacts, setNewContact } from 'redux/contact/contactReducer';
-import { loaderActions } from 'redux/loader/loaderReducer'
+import contactAction from 'redux/contact/contactReducer';
 
-export const listContacts = () => async dispatch => {
-  dispatch(loaderActions.setIsLoading())
+const listContacts = () => async dispatch => {
   try {
     const response = await contactService.listContacts()
     const { contacts } = response.data
 
-    dispatch(setContacts(contacts))
+    dispatch(contactAction.setContacts(contacts))
+
     Notify.success(response.data.message)
   } catch (e) {
     Notify.failure(e.response?.data?.message || "Request failure")
-  } finally {
-    dispatch(loaderActions.unsetIsLoading())
   }
 }
 
-export const addContact = newContact => async dispatch => {
+const addContact = newContact => async dispatch => {
   try {
     const response = await contactService.addContact(newContact)
-
     const { contact } = response.data
 
-    dispatch(setNewContact(contact))
+    dispatch(contactAction.setNewContact(contact))
 
     Notify.success(response.data.message)
   } catch (e) {
     Notify.failure(e.response?.data?.message || "Request failure")
   }
 }
+
+export default { listContacts, addContact }

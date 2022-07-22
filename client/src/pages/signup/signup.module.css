@@ -1,4 +1,4 @@
-.signup {
+.auth {
   background-color: white;
   border-radius: 20px;
 
@@ -10,26 +10,14 @@
   flex-direction: column;
 }
 
-.signup__header {
-  text-align: center;
-
-  margin-bottom: 20px;
-}
-
-input {
-  margin-bottom: 25px;
-}
-
-.signup__btn {
-  font-weight: 700;
+.btn__resend {
+  font-size: small;
 
   border: none;
-  border-radius: 8px;
+  background: transparent;
+  color: blue;
 
-  background-color: var(--primary-text-color);
-  color: var(--primary-bg-color);
+  margin-top: 10px;
 
-  padding: 5px 10px;
-
-  align-self: flex-end;
+  align-self: flex-start;
 }

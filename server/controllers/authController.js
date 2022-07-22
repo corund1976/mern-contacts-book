@@ -1,4 +1,3 @@
-import ApiError from '../exceptions/apiError.js'
 import authService from '../service/authService.js'
 
 const signup = async (req, res, next) => {
@@ -23,7 +22,7 @@ const signup = async (req, res, next) => {
         .json({
           status: 'Created',
           code: 201,
-          message: 'Signup successful',
+          message: 'Signup successful. Confirm verify email...',
           user,
         })
       // res.send({ user, redirectPath: "/login" });
@@ -48,42 +47,37 @@ const login = async (req, res, next) => {
   const { email, password } = req.body
 
   try {
-    const user = await authService.login(email, password)
+    const userData = await authService.login(email, password)
 
-    if (user) {
-      const { refreshToken, accessToken, ...userData } = user
+    const { refreshToken, accessToken, user } = userData
 
-      res.cookie(
-        'refreshToken',
-        refreshToken,
-        { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+    res.cookie(
+      'refreshToken',
+      refreshToken,
+      { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
 
-      return res
-        .status(200)
-        .json({
-          status: 'Ok',
-          code: 200,
-          message: 'Login successfull',
-          accessToken,
-          ...userData // user = {
-          //   id: "62cf18a2defbc4941cbd50f6",
-          //   email: "test7@mail.ua",
-          //   subscription: "starter",
-          //   avatarURL: "http://localhost:5000/avatars/62cf18a2defbc4941cbd50f6-3240d8c8d5b323a6965585f8d4422260.jpeg",
-          //   role: "user",
-          //   verified: true }
-        })
-    }
+    return res
+      .status(200)
+      .json({
+        status: 'Ok',
+        code: 200,
+        message: 'Login successfull',
+        accessToken,
+        user
+        // user = {
+        //   id: "62cf18a2defbc4941cbd50f6",
+        //   email: "test7@mail.ua",
+        //   subscription: "starter",
+        //   avatarURL: "http://localhost:5000/avatars/62cf18a2defbc4941cbd50f6-3240d8c8d5b323a6965585f8d4422260.jpeg",
+        //   role: "user",
+        //   verified: true }
+      })
   } catch (e) {
     next(e)
   }
 }
 
 const logout = async (req, res, next) => {
-  if (!req.user) {
-    throw ApiError.BadRequest('Токена нет или не прошел валидацию')
-  }
-
   const { id } = req.user
 
   try {
@@ -98,14 +92,43 @@ const logout = async (req, res, next) => {
   }
 }
 
+const refresh = async (req, res, next) => {
+  try {
+    const { refreshToken: token } = req.cookies
+
+    const userData = await authService.refresh(token)
+
+    const { refreshToken, accessToken, user } = userData
+
+    res.cookie(
+      'refreshToken',
+      refreshToken,
+      { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+    )
+
+    return res
+      .status(200)
+      .json({
+        status: 'Ok',
+        code: 200,
+        message: 'Refresh successfull',
+        accessToken,
+        user
+      })
+  } catch (e) {
+    next(e)
+  }
+}
+
 const verify = async (req, res, next) => {
   const { verifyToken } = req.params
 
   try {
-    const user = await authService.verify(verifyToken)
+    const response = await authService.verify(verifyToken)
 
-    if (user) {
+    if (response) {
       return res.redirect(process.env.CLIENT_URL)
+      // return res.redirect(`${process.env.CLIENT_URL}/signup`)
       // return res
       //   .status(200)
       //   .json({
@@ -119,7 +142,7 @@ const verify = async (req, res, next) => {
   }
 }
 
-const resend = async (req, res, next) => {
+const resendVerifyEmail = async (req, res, next) => {
   // Получает body в формате { email }
   // Если в body нет обязательного поля email, возвращает json с ключом 
   // { 'message': 'missing required field email' } и статусом 400
@@ -139,45 +162,59 @@ const resend = async (req, res, next) => {
 
   try {
     const { email } = req.body
-    const sendResult = await authService.resend(email)
 
-    if (sendResult) {
-      return res
-        .status(200)
-        .json({
-          status: 'ok',
-          code: 200,
-          message: 'Verification email sent'
-        })
-    }
+    const sendResult = await authService.resendVerifyEmail(email)
+
+    return res
+      .status(200)
+      .json({
+        status: 'ok',
+        code: 200,
+        message: `Verification email to ${email} sent again`,
+        sendResult
+      })
   } catch (e) {
     next(e)
   }
 }
 
-const refresh = async (req, res, next) => {
-  const { refreshToken } = req.cookies
+const sendResetEmail = async (req, res, next) => {
+  if (!('email' in req.body) || !('password' in req.body)) {
+    return res
+      .status(400)
+      .json({
+        status: 'Bad request',
+        code: 400,
+        message: 'Missing required fields *email* or *password*'
+      })
+  }
+
+  const { email, password } = req.body
 
   try {
-    const user = await authService.refresh(refreshToken)
+    const sendResult = await authService.sendResetEmail(email, password)
 
-    if (user) {
-      const { refreshToken, accessToken, ...userData } = user
+    return res
+      .status(200)
+      .json({
+        status: 'ok',
+        code: 200,
+        message: 'Reset password email sent',
+        sendResult
+      })
+  } catch (e) {
+    next(e)
+  }
+}
 
-      res.cookie(
-        'refreshToken',
-        refreshToken,
-        { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+const resetPassword = async (req, res, next) => {
+  const { resetToken } = req.params
 
-      return res
-        .status(200)
-        .json({
-          status: 'Ok',
-          code: 200,
-          message: 'Refresh token successfull',
-          accessToken,
-          ...userData
-        })
+  try {
+    const response = await authService.resetPassword(resetToken)
+
+    if (response) {
+      return res.redirect(process.env.CLIENT_URL)
     }
   } catch (e) {
     next(e)
@@ -188,8 +225,9 @@ export default {
   signup,
   login,
   logout,
-  current,
+  refresh,
   verify,
-  resend,
-  refresh
+  resendVerifyEmail,
+  sendResetEmail,
+  resetPassword,
 }

@@ -1,12 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 
-import userSelectors from 'redux/user/userSelectors'
-import {
-  uploadAvatar,
-  deleteAvatar,
-  updateSubscription,
-  deleteUser,
-} from 'redux/user/userOperations'
+import userSelector from 'redux/user/userSelectors'
+import userOperation from 'redux/user/userOperations'
 
 import AvatarDefault from 'assets/img/user.svg'
 import AvatarDelete from 'assets/img/trash-2.svg'
@@ -16,17 +11,19 @@ import s from './profile.module.css'
 
 function Profile() {
   const dispatch = useDispatch()
-  const email = useSelector(userSelectors.getEmail)
-  const subscription = useSelector(userSelectors.getSubscription)
-  const avatarUrl = useSelector(userSelectors.getAvatarUrl)
+  const email = useSelector(userSelector.getEmail)
+  const subscription = useSelector(userSelector.getSubscription)
+  const avatarUrl = useSelector(userSelector.getAvatarUrl)
 
   const avatar = avatarUrl ? `${avatarUrl}` : AvatarDefault
 
-  const handlerUploadAvatar = (e) => dispatch(uploadAvatar(e.target.files[0]))
-  const handlerDeleteAvatar = () => dispatch(deleteAvatar(AvatarDefault))
+  const handlerUploadAvatar = (e) =>
+    dispatch(userOperation.uploadAvatar(e.target.files[0]))
+  const handlerDeleteAvatar = () =>
+    dispatch(userOperation.deleteAvatar(AvatarDefault))
   const handlerChangeSubscription = (e) =>
-    dispatch(updateSubscription(e.target.value))
-  const handlerRemoveProfile = () => dispatch(deleteUser())
+    dispatch(userOperation.updateSubscription(e.target.value))
+  const handlerRemoveProfile = () => dispatch(userOperation.deleteUser())
 
   return (
     <div className={s.profile}>

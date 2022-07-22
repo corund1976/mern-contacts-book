@@ -1,41 +1,29 @@
-import { useState } from 'react'
+import authOperation from 'redux/auth/authOperations'
 
-import { signup } from 'redux/auth/authOperations'
-import Input from 'components/input'
+import AuthForm from 'components/authForm'
 
 import s from './signup.module.css'
 
 function Signup() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  let email = ''
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    signup({ email, password })
-    setEmail('')
-    setPassword('')
+  const signup = (credentials) => {
+    authOperation.signup(credentials)
+    email = credentials.email
+  }
+
+  const resendVerify = () => {
+    authOperation.resendVerify(email)
+    email = ''
   }
 
   return (
-    <form onSubmit={handleSubmit} className={s.signup}>
-      <h2 className={s.signup__header}>Signup</h2>
-      <Input
-        value={email}
-        setValue={setEmail}
-        type="email"
-        placeholder="email..."
-      />
-      <Input
-        value={password}
-        setValue={setPassword}
-        type="password"
-        placeholder="password..."
-        autoComplete="current-password"
-      />
-      <button type="submit" className={s.signup__btn}>
-        Enter
+    <div className={s.auth}>
+      <AuthForm header="Signup" handlerSubmit={signup} />
+      <button className={s.btn__resend} type="button" onClick={resendVerify}>
+        resend verify email
       </button>
-    </form>
+    </div>
   )
 }
 

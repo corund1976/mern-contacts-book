@@ -2,9 +2,9 @@ import mongoose from 'mongoose'
 
 const { Schema, SchemaTypes, model } = mongoose
 
-const tokenSchema = new Schema(
+const refreshTokenSchema = new Schema(
   {
-    userId: {
+    ownerId: {
       type: SchemaTypes.ObjectId,
       ref: 'user',
     },
@@ -16,6 +16,6 @@ const tokenSchema = new Schema(
   { versionKey: false, timestamps: false },
 )
 
-const Token = model('token', tokenSchema)
+const RefreshToken = model('refreshToken', refreshTokenSchema)
 
-export default Token
+export default RefreshToken

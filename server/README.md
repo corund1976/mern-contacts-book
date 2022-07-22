@@ -50,7 +50,7 @@ npm install
 ### Go ahead...
 
 ```
-cd /express-mongoose-server
+cd /server
 ```
 
 - `cp .env.example .env`
@@ -67,15 +67,14 @@ npm run dev // dev mode
 
 #### /auth
 
-| Path                      | Method | Description       | Access        |
-| ------------------------- | ------ | ----------------- | ------------- |
-| /auth/signup              | POST   | SignUp            | Public route  |
-| /auth/login               | POST   | LogIn             | Public route  |
-| /auth/logout              | GET    | LogOut            | Private route |
-| /auth/current             | GET    | Get CurUser       | Private route |
-| /auth/verify/:verifyToken | GET    | Activation Link   | Public route  |
-| /auth/verify/             | POST   | Resend Activation | Public route  |
-| /auth/refresh             | GET    | Refresh Tokens    | Private route |
+| Path                      | Method | Description           | Access        |
+| ------------------------- | ------ | --------------------- | ------------- |
+| /auth/signup              | POST   | SignUp                | Public route  |
+| /auth/login               | POST   | LogIn                 | Public route  |
+| /auth/logout              | GET    | LogOut                | Private route |
+| /auth/refresh             | GET    | Refresh Tokens & User | Private route |
+| /auth/verify/:verifyToken | GET    | Activation Link       | Public route  |
+| /auth/verify/             | POST   | Resend Activation     | Public route  |
 
 #### /users
 
@@ -89,11 +88,11 @@ npm run dev // dev mode
 | /users/                          | DELETE | Remove CurrUser              | Authenticated |
 | /users/avatars                   | DELETE | Remove CurrUser Avatar       | Authenticated |
 | /users/:id                       | DELETE | Remove User By Id            | Admin         |
-| /users/change-password           | POST   | Change Password              |
-| /users/send-reset-password-email | POST   | SendResetPasswordEmail       |
-| /users/reset-password            | POST   | Reset Password               |
-| /users/change-email              | POST   | Change Email                 |
-| /users/cancel-email-changing     | POST   | Cancel Email Changing        |
+| /users/change-password           | POST   | Change Password              | Authenticated |
+| /users/send-reset-password-email | POST   | SendResetPasswordEmail       | Authenticated |
+| /users/reset-password            | POST   | Reset Password               | Authenticated |
+| /users/change-email              | POST   | Change Email                 | Authenticated |
+| /users/cancel-email-changing     | POST   | Cancel Email Changing        | Authenticated |
 
 #### /contacts
 
