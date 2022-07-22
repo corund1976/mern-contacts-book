@@ -2,13 +2,13 @@ import mongoose from 'mongoose'
 
 const { Schema, SchemaTypes, model } = mongoose
 
-const verifySchema = new Schema(
+const refreshTokenSchema = new Schema(
   {
     ownerId: {
       type: SchemaTypes.ObjectId,
       ref: 'user',
     },
-    verifyToken: {
+    refreshToken: {
       type: String,
       required: true,
     }
@@ -16,6 +16,6 @@ const verifySchema = new Schema(
   { versionKey: false, timestamps: false },
 )
 
-const Verification = model('verification', verifySchema)
+const RefreshToken = model('refreshToken', refreshTokenSchema)
 
-export default Verification
+export default RefreshToken

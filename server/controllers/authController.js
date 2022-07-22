@@ -1,5 +1,4 @@
 import authService from '../service/authService.js'
-import tokenService from '../service/tokenService.js'
 
 const signup = async (req, res, next) => {
   if (!('email' in req.body) || !('password' in req.body)) {
@@ -143,7 +142,7 @@ const verify = async (req, res, next) => {
   }
 }
 
-const resend = async (req, res, next) => {
+const resendVerifyEmail = async (req, res, next) => {
   // Получает body в формате { email }
   // Если в body нет обязательного поля email, возвращает json с ключом 
   // { 'message': 'missing required field email' } и статусом 400
@@ -164,7 +163,7 @@ const resend = async (req, res, next) => {
   try {
     const { email } = req.body
 
-    const sendResult = await authService.resend(email)
+    const sendResult = await authService.resendVerifyEmail(email)
 
     return res
       .status(200)
@@ -179,7 +178,7 @@ const resend = async (req, res, next) => {
   }
 }
 
-const sendReset = async (req, res, next) => {
+const sendResetEmail = async (req, res, next) => {
   if (!('email' in req.body) || !('password' in req.body)) {
     return res
       .status(400)
@@ -193,7 +192,7 @@ const sendReset = async (req, res, next) => {
   const { email, password } = req.body
 
   try {
-    const sendResult = await authService.sendReset(email, password)
+    const sendResult = await authService.sendResetEmail(email, password)
 
     return res
       .status(200)
@@ -216,7 +215,6 @@ const resetPassword = async (req, res, next) => {
 
     if (response) {
       return res.redirect(process.env.CLIENT_URL)
-      // return res.redirect(`${process.env.CLIENT_URL}/signup`)
     }
   } catch (e) {
     next(e)
@@ -229,7 +227,7 @@ export default {
   logout,
   refresh,
   verify,
-  resend,
-  sendReset,
+  resendVerifyEmail,
+  sendResetEmail,
   resetPassword,
 }

@@ -2,13 +2,13 @@ import mongoose from 'mongoose'
 
 const { Schema, SchemaTypes, model } = mongoose
 
-const tokenSchema = new Schema(
+const verifyTokenSchema = new Schema(
   {
     ownerId: {
       type: SchemaTypes.ObjectId,
       ref: 'user',
     },
-    refreshToken: {
+    verifyToken: {
       type: String,
       required: true,
     }
@@ -16,6 +16,6 @@ const tokenSchema = new Schema(
   { versionKey: false, timestamps: false },
 )
 
-const Token = model('token', tokenSchema)
+const VerifyToken = model('verifyToken', verifyTokenSchema)
 
-export default Token
+export default VerifyToken

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
-import Token from './models/tokenSchema.js'
-import Verification from './models/verifySchema.js'
+import RefreshToken from './models/refreshTokenSchema.js'
+import VerifyToken from './models/verifyTokenSchema.js'
 import ResetToken from './models/resetTokenSchema.js'
 
 const generate = (tokenType, payload) => {
@@ -65,14 +65,14 @@ const validate = (token) => {
 
 const saveRefresh = async (ownerId, refreshToken) => {
   // ownerId =  new ObjectId("62d1b0e0bfde815a5f0690d8")
-  const tokenFoundInDB = await Token.findOne({ ownerId })
+  const tokenFoundInDB = await RefreshToken.findOne({ ownerId })
   // Token.findOne(ownerId) = {
   //   _id: new ObjectId("62d55de24f476f467a56668e"),
   //   ownerId: new ObjectId("62d1b0e0bfde815a5f0690d8"),
   //   refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ.....Y'
   // }
   if (!tokenFoundInDB) {
-    const newTokenInDB = await Token.create({ ownerId, refreshToken })
+    const newTokenInDB = await RefreshToken.create({ ownerId, refreshToken })
     // newTokenInDB= {
     //   _id: new ObjectId("62d68b206b8f5394a062a7f7"),
     //   ownerId: new ObjectId("62d1b0e0bfde815a5f0690d8"),
@@ -92,17 +92,17 @@ const saveRefresh = async (ownerId, refreshToken) => {
 }
 
 const findRefresh = async (refreshToken) => {
-  const tokenFoundInDB = await Token.findOne({ refreshToken })
+  const tokenFoundInDB = await RefreshToken.findOne({ refreshToken })
   return tokenFoundInDB
 }
 
 const deleteRefresh = async (ownerId) => {
-  const response = await Token.deleteOne({ ownerId })
+  const response = await RefreshToken.deleteOne({ ownerId })
   return response
 }
 
 const saveVerification = async (ownerId, verifyToken) => {
-  const verification = await Verification.create({ ownerId, verifyToken })
+  const verification = await VerifyToken.create({ ownerId, verifyToken })
   // verification = {
   //   _id: new ObjectId("62d6ab51ae9a3e0ca5eb5d36"),
   //   ownerId: new ObjectId("62d6ab51ae9a3e0ca5eb5d34"),
@@ -112,7 +112,7 @@ const saveVerification = async (ownerId, verifyToken) => {
 }
 
 const findVerification = async ({ searchParam }) => {
-  const verification = await Verification.findOne({ searchParam })
+  const verification = await VerifyToken.findOne({ searchParam })
   // verification = {
   //   _id: new ObjectId("62d6ab51ae9a3e0ca5eb5d36"),
   //   ownerId: new ObjectId("62d6ab51ae9a3e0ca5eb5d34"),
@@ -122,7 +122,7 @@ const findVerification = async ({ searchParam }) => {
 }
 
 const deleteVerification = async (id) => {
-  const verification = await Verification.findByIdAndDelete(id)
+  const verification = await VerifyToken.findByIdAndDelete(id)
   // verification = {
   //   _id: new ObjectId("62d6ab51ae9a3e0ca5eb5d36"),
   //   ownerId: new ObjectId("62d6ab51ae9a3e0ca5eb5d34"),
@@ -132,28 +132,28 @@ const deleteVerification = async (id) => {
 }
 
 const saveReset = async (ownerId, resetToken) => {
-  const reset = await ResetToken.create({ ownerId, resetToken })
+  const resetTokenData = await ResetToken.create({ ownerId, resetToken })
   // reset = {
   //   _id: new ObjectId("62d9bb82c81426bda867719d")  
   //   ownerId: new ObjectId("62d964e9e9461c17df990070"),
   //   resetToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNvcnVuZDE5NzZAZ21haWwuY29tIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJpYXQiOjE2NTg0MzY0ODIsImV4cCI6MTY1ODQzNzM4Mn0.IyB7FtUcgLVyMEf5rA0Bpi3vmtEfzKRoSXl6N91Uhpg',
   // }
-  return reset
+  return resetTokenData
 }
 
 const findReset = async (resetToken) => {
-  const reset = await ResetToken.findOne({ resetToken })
-  // reset = {
+  const resetTokenData = await ResetToken.findOne({ resetToken })
+  // resetTokenData = {
   //   _id: new ObjectId("62d9bb82c81426bda867719d")  
   //   ownerId: new ObjectId("62d964e9e9461c17df990070"),
   //   resetToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNvcnVuZDE5NzZAZ21haWwuY29tIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJpYXQiOjE2NTg0MzY0ODIsImV4cCI6MTY1ODQzNzM4Mn0.IyB7FtUcgLVyMEf5rA0Bpi3vmtEfzKRoSXl6N91Uhpg',
   // }
-  return reset
+  return resetTokenData
 }
 
 const deleteReset = async (id) => {
-  const reset = await ResetToken.findByIdAndDelete(id)
-  return reset
+  const result = await ResetToken.findByIdAndDelete(id)
+  return result
 }
 
 export default {

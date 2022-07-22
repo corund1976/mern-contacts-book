@@ -179,7 +179,7 @@ const verify = async (verifyToken) => {
   return user
 }
 
-const resend = async (email) => {
+const resendVerifyEmail = async (email) => {
   const user = await User.findOne({ email })
   // user = {
   //   _id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
@@ -217,7 +217,7 @@ const resend = async (email) => {
   return
 }
 
-const sendReset = async (email, password) => {
+const sendResetEmail = async (email, password) => {
   const user = await User.findOne({ email })
   // user = {
   //   _id: new ObjectId("62d1b0e0bfde815a5f0690d8"),
@@ -234,8 +234,8 @@ const sendReset = async (email, password) => {
 
   user.setPassword(password) // делаю hash пароля, но пока не сохраняю в User
 
-  const hashPassword = user.password
-  const payload = { hashPassword }
+  const hashedPassword = user.password
+  const payload = { hashedPassword }
 
   const resetToken = tokenService.generate('resetToken', payload)
 
@@ -248,30 +248,30 @@ const sendReset = async (email, password) => {
 }
 
 const resetPassword = async (resetToken) => {
-  const resetData = await tokenService.findReset(resetToken)
-  // resetData = {
+  const resetTokenData = await tokenService.findReset(resetToken)
+  // resetTokenData = {
   //   _id: new ObjectId("62d9bb82c81426bda867719d")  
   //   ownerId: new ObjectId("62d964e9e9461c17df990070"),
   //   resetToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNvcnVuZDE5NzZAZ21haWwuY29tIiwicGFzc3dvcmQiOiIxMjM0NTYiLCJpYXQiOjE2NTg0MzY0ODIsImV4cCI6MTY1ODQzNzM4Mn0.IyB7FtUcgLVyMEf5rA0Bpi3vmtEfzKRoSXl6N91Uhpg',
   // }
 
-  if (!resetData) {
+  if (!resetTokenData) {
     throw ApiError.NotFound('Reset token not found in DB')
   }
 
-  const { _id, ownerId } = resetData
+  const { _id, ownerId } = resetTokenData
 
   await tokenService.deleteReset(_id)
 
   const tokenData = tokenService.validate({ resetToken })
   // tokenData = {
-  //   password: '123456',
+  //   hashedPassword: '123456',
   //   iat: 1658436482,
   //   exp: 1658437382
   // }
   const user = await User.findByIdAndUpdate(
     ownerId,
-    { password: tokenData.password },
+    { password: tokenData.hashedPassword },
     { new: true }
   )
 
@@ -288,8 +288,8 @@ export default {
   logout,
   refresh,
   verify,
-  resend,
-  sendReset,
+  resendVerifyEmail,
+  sendResetEmail,
   resetPassword,
 }
 
