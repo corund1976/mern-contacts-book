@@ -1,13 +1,23 @@
 import contactService from '../service/contactService.js'
 
-const getAll = async (req, res, next) => {
+const getContacts = async (req, res, next) => {
   // ничего не получает
   // вызывает функцию listContacts
   // возвращает массив всех контактов в json - формате со статусом 200
+  const { page, limit } = req.query
+
   try {
+    const totalContacts = await contactService.list({}, req.user.id)
+    const totalPages = Math.ceil(totalContacts.length / limit)
     const contacts = await contactService.list(req.query, req.user.id)
 
     return res
+      .append('X-Total-Count', totalContacts.length)
+      .append('Access-Control-Expose-Headers', 'X-Total-Count')
+      .append('X-Total-Pages', totalPages)
+      .append('Access-Control-Expose-Headers', 'X-Total-Pages')
+      .append('X-Page-Index', page)
+      .append('Access-Control-Expose-Headers', 'X-Page-Index')
       .status(200)
       .json({
         status: 'Ok',
@@ -15,6 +25,7 @@ const getAll = async (req, res, next) => {
         message: 'Get List contacts successful',
         contacts
       })
+
   } catch (e) {
     next(e)
   }
@@ -191,7 +202,7 @@ const remove = async (req, res, next) => {
 // Для маршрутов, что принимают данные(POST и PUT), продумайте проверку(валидацию) 
 // принимаемых данных.Для валидации принимаемых данных используйте пакет joi
 export default {
-  getAll,
+  getContacts,
   getById,
   create,
   update,

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import authOperation from 'redux/auth/authOperations'
@@ -14,6 +14,7 @@ import s from './navbar.module.css'
 
 function Navbar() {
   const dispatch = useDispatch()
+  const location = useLocation()
   const isAuth = useSelector(authSelector.getIsAuth)
   const avatarUrl = useSelector(userSelector.getAvatarUrl)
 
@@ -29,12 +30,12 @@ function Navbar() {
             <img src={Logo} alt="logo" className={s.navbar__logo} />
             <div className={s.navbar__header}>Contacts</div>
           </Link>
-          {!isAuth && (
+          {!isAuth && location.pathname === '/signup' && (
             <Link to="/login" className={s.navbar__login}>
               Login
             </Link>
           )}
-          {!isAuth && (
+          {!isAuth && location.pathname === '/login' && (
             <Link to="/signup" className={s.navbar__signup}>
               Signup
             </Link>

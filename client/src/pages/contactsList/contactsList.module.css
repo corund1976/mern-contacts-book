@@ -8,16 +8,19 @@
 .contactsList__header {
   text-align: center;
 
-  margin-bottom: 0;
+  margin-bottom: 10px;
 }
 
-.tableHeader {
-  border-bottom: solid 1px var(--primary-text-color);
-
-  margin-bottom: 10px;
+.top__wrapper {
+  margin-bottom: 17px;
 
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.totalContacts {
+  font-weight: bold;
 }
 
 .newContact__button {
@@ -29,5 +32,32 @@
   padding: 7px 13px;
 
   margin-left: auto;
-  margin-bottom: 15px;
+}
+
+.tableHeader {
+  border-bottom: solid 1px var(--primary-text-color);
+
+  margin-bottom: 10px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.pagination {
+  margin: 15px 0;
+
+  display: flex;
+  justify-content: space-between;
+}
+.pagination__button {
+  border: solid 1px var(--primary-text-color);
+  border-radius: 8px;
+  color: var(--primary-text-color);
+  background: transparent;
+
+  padding: 7px 7px;
+}
+
+.pageIndex {
+  text-align: center;
 }

@@ -2,7 +2,7 @@ import Contact from './models/contactSchema.js'
 import ContactDto from '../dtos/contactDto.js'
 
 const list = async (query, userId) => {
-  const { page = 1, limit = 10, favorite } = query
+  const { page = 1, limit = 20, favorite } = query
 
   const queryCriteria =
     favorite

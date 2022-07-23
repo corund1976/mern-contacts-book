@@ -37,7 +37,8 @@ const login = credentials => async dispatch => {
 
 const logout = () => async dispatch => {
   try {
-    dispatch(contactAction.unsetContacts())
+    dispatch(contactAction.unsetAllContacts())
+    dispatch(contactAction.unsetPaginatedContacts())
     dispatch(userActions.unsetUser())
     dispatch(authAction.unsetIsAuth())
 
