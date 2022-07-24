@@ -19,10 +19,13 @@ function Profile() {
 
   const handlerUploadAvatar = (e) =>
     dispatch(userOperation.uploadAvatar(e.target.files[0]))
+
   const handlerDeleteAvatar = () =>
     dispatch(userOperation.deleteAvatar(AvatarDefault))
+
   const handlerChangeSubscription = (e) =>
     dispatch(userOperation.updateSubscription(e.target.value))
+
   const handlerRemoveProfile = () => dispatch(userOperation.deleteUser())
 
   return (

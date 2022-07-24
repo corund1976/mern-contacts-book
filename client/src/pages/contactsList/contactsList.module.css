@@ -23,6 +23,12 @@
   font-weight: bold;
 }
 
+.select__pagination {
+  border: none;
+  border-radius: 7px;
+  padding: 0 5px;
+}
+
 .newContact__button {
   border: solid 1px var(--primary-text-color);
   border-radius: 8px;

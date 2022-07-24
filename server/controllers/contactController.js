@@ -1,23 +1,37 @@
 import contactService from '../service/contactService.js'
 
-const getContacts = async (req, res, next) => {
+const get = async (req, res, next) => {
   // ничего не получает
   // вызывает функцию listContacts
   // возвращает массив всех контактов в json - формате со статусом 200
-  const { page, limit } = req.query
+  const { query, user } = req
 
   try {
-    const totalContacts = await contactService.list({}, req.user.id)
-    const totalPages = Math.ceil(totalContacts.length / limit)
-    const contacts = await contactService.list(req.query, req.user.id)
+    const response = await contactService.get(query, user.id)
+
+    const { contacts, totalContacts, totalPages, currentPage, prevPage, nextPage, hasPrevPage, hasNextPage } = response
+
+    res
+      .append('X-Total-Count', totalContacts)
+      .append('Access-Control-Expose-Headers', 'X-Total-Count')
+
+    if (totalPages && currentPage) {
+      res
+        .append('X-Total-Pages', totalPages)
+        .append('Access-Control-Expose-Headers', 'X-Total-Pages')
+        .append('X-Page-Index', currentPage)
+        .append('Access-Control-Expose-Headers', 'X-Page-Index')
+        .append('X-Page-Prev', prevPage)
+        .append('Access-Control-Expose-Headers', 'X-Page-Prev')
+        .append('X-Page-Next', nextPage)
+        .append('Access-Control-Expose-Headers', 'X-Page-Next')
+        .append('X-Has-Page-Prev', hasPrevPage)
+        .append('Access-Control-Expose-Headers', 'X-Has-Page-Prev')
+        .append('X-Has-Page-Next', hasNextPage)
+        .append('Access-Control-Expose-Headers', 'X-Has-Page-Next')
+    }
 
     return res
-      .append('X-Total-Count', totalContacts.length)
-      .append('Access-Control-Expose-Headers', 'X-Total-Count')
-      .append('X-Total-Pages', totalPages)
-      .append('Access-Control-Expose-Headers', 'X-Total-Pages')
-      .append('X-Page-Index', page)
-      .append('Access-Control-Expose-Headers', 'X-Page-Index')
       .status(200)
       .json({
         status: 'Ok',
@@ -202,7 +216,7 @@ const remove = async (req, res, next) => {
 // Для маршрутов, что принимают данные(POST и PUT), продумайте проверку(валидацию) 
 // принимаемых данных.Для валидации принимаемых данных используйте пакет joi
 export default {
-  getContacts,
+  get,
   getById,
   create,
   update,
