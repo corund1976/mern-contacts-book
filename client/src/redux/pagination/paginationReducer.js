@@ -6,8 +6,8 @@ const setTotalPages = createAction("pagination/setTotalPages")
 const setPageIndex = createAction("pagination/setPageIndex")
 const setPagePrev = createAction("pagination/setPagePrev")
 const setPageNext = createAction("pagination/setPageNext")
-const setHasPagePrev = createAction("pagination/setHasPagePrev")
-const setHasPageNext = createAction("pagination/setHasPageNext")
+const setHasPrevPage = createAction("pagination/setHasPrevPage")
+const setHasNextPage = createAction("pagination/setHasNextPage")
 
 export default {
   setTotalContacts,
@@ -15,8 +15,8 @@ export default {
   setPageIndex,
   setPagePrev,
   setPageNext,
-  setHasPagePrev,
-  setHasPageNext,
+  setHasPrevPage,
+  setHasNextPage,
 }
 
 // Reducer
@@ -26,8 +26,8 @@ const defaultState = {
   pageIndex: 1,
   pagePrev: 1,
   pageNext: 2,
-  hasPagePrev: false,
-  hasPageNext: true,
+  hasPrevPage: false,
+  hasNextPage: false,
 }
 
 export const paginationReducer = createReducer(defaultState, {
@@ -36,6 +36,6 @@ export const paginationReducer = createReducer(defaultState, {
   [setPageIndex]: (state, action) => ({ ...state, pageIndex: action.payload }),
   [setPagePrev]: (state, action) => ({ ...state, pagePrev: action.payload }),
   [setPageNext]: (state, action) => ({ ...state, pageNext: action.payload }),
-  [setHasPagePrev]: (state, action) => ({ ...state, hasPagePrev: action.payload }),
-  [setHasPageNext]: (state, action) => ({ ...state, hasPageNext: action.payload }),
+  [setHasPrevPage]: (state, action) => ({ ...state, hasPrevPage: action.payload }),
+  [setHasNextPage]: (state, action) => ({ ...state, hasNextPage: action.payload }),
 })

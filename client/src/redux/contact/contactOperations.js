@@ -37,8 +37,8 @@ const getContacts = (params) => async dispatch => {
     dispatch(paginationAction.setPageIndex(pageIndex))
     dispatch(paginationAction.setPagePrev(prevPage))
     dispatch(paginationAction.setPageNext(nextPage))
-    dispatch(paginationAction.setHasPagePrev(hasPrevPage))
-    dispatch(paginationAction.setHasPageNext(hasNextPage))
+    dispatch(paginationAction.setHasPrevPage(hasPrevPage))
+    dispatch(paginationAction.setHasNextPage(hasNextPage))
 
     Notify.success(response.data.message)
   } catch (e) {

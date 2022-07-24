@@ -19,8 +19,8 @@ function ContactsList() {
   const pageIndex = useSelector(paginationSelector.getPageIndex)
   const pagePrev = useSelector(paginationSelector.getPagePrev)
   const pageNext = useSelector(paginationSelector.getPageNext)
-  const hasPagePrev = useSelector(paginationSelector.getHasPagePrev)
-  const hasPageNext = useSelector(paginationSelector.getHasPageNext)
+  const hasPrevPage = useSelector(paginationSelector.getHasPrevPage)
+  const hasNextPage = useSelector(paginationSelector.getHasNextPage)
 
   const perPageDefault = process.env.REACT_APP_PAGINATION_PER_PAGE
 
@@ -42,13 +42,13 @@ function ContactsList() {
   const handlerAddContact = () =>
     dispatch(contactAction.setDisplayPopup('flex'))
 
-  const handlePaginateFirst = () => setPage(1)
+  const handlePageFirst = () => setPage(1)
 
-  const handlePaginateLast = () => setPage(totalPages)
+  const handlePageLast = () => setPage(totalPages)
 
-  const handlePaginatePrev = () => hasPagePrev && setPage(pagePrev)
+  const handlePagePrev = () => hasPrevPage && setPage(pagePrev)
 
-  const handlePaginateNext = () => hasPageNext && setPage(pageNext)
+  const handlePageNext = () => hasNextPage && setPage(pageNext)
 
   return (
     <div className={s.contactsList__section}>
@@ -110,28 +110,28 @@ function ContactsList() {
         <button
           type="button"
           className={s.pagination__button}
-          onClick={handlePaginateFirst}
+          onClick={handlePageFirst}
         >
           FirstPage
         </button>
         <button
           type="button"
           className={s.pagination__button}
-          onClick={handlePaginatePrev}
+          onClick={handlePagePrev}
         >
           PrevPage
         </button>
         <button
           type="button"
           className={s.pagination__button}
-          onClick={handlePaginateNext}
+          onClick={handlePageNext}
         >
           NextPage
         </button>
         <button
           type="button"
           className={s.pagination__button}
-          onClick={handlePaginateLast}
+          onClick={handlePageLast}
         >
           LastPage
         </button>
