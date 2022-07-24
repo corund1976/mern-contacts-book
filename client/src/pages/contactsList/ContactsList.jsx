@@ -32,7 +32,10 @@ function ContactsList() {
     dispatch(contactOperation.getContacts({ page, limit, filter }))
   }, [dispatch, page, limit, filter])
 
-  const handleChangePafination = (e) => setLimit(e.target.value)
+  const handleChangeLimit = (e) => {
+    setLimit(e.target.value)
+    setPage(1)
+  }
 
   const handleChangeFilter = (e) => setFilter(e.target.value)
 
@@ -60,7 +63,7 @@ function ContactsList() {
             <select
               id="selectLimit"
               value={limit}
-              onChange={(e) => handleChangePafination(e)}
+              onChange={(e) => handleChangeLimit(e)}
               className={s.select__pagination}
             >
               <option value="5">5</option>
