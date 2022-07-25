@@ -1,7 +1,7 @@
 import Contact from './models/contactSchema.js'
 
 const get = async (query, userId) => {
-  const { page = 1, limit = 30, filter = '' } = query
+  const { page = 1, limit = 30, filter = '', sort = '' } = query
 
   const queryCriteria =
     filter === 'favorite'
@@ -16,7 +16,7 @@ const get = async (query, userId) => {
     page: 'currentPage',
   }
 
-  const options = { select, page, limit, customLabels }
+  const options = { select, sort, page, limit, customLabels }
 
   const result = await Contact.paginate(queryCriteria, options)
   return result

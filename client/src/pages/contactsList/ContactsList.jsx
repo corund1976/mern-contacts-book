@@ -27,17 +27,26 @@ function ContactsList() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(perPageDefault)
   const [filter, setFilter] = useState('')
+  const [sort, setSort] = useState('')
 
   useEffect(() => {
-    dispatch(contactOperation.getContacts({ page, limit, filter }))
-  }, [dispatch, page, limit, filter])
+    dispatch(contactOperation.getContacts({ page, limit, filter, sort }))
+  }, [dispatch, page, limit, filter, sort])
 
   const handleChangeLimit = (e) => {
     setLimit(e.target.value)
     setPage(1)
   }
 
-  const handleChangeFilter = (e) => setFilter(e.target.value)
+  const handleChangeFilter = (e) => {
+    setFilter(e.target.value)
+    setPage(1)
+  }
+
+  const handleChangeSort = (e) => {
+    setSort(e.target.value)
+    setPage(1)
+  }
 
   const handlerAddContact = () =>
     dispatch(contactAction.setDisplayPopup('flex'))
@@ -53,38 +62,10 @@ function ContactsList() {
   return (
     <div className={s.contactsList__section}>
       <h2 className={s.contactsList__header}>
-        Contacts List ({totalContacts})
+        Contacts List (total {totalContacts})
       </h2>
 
       <div className={s.top__wrapper}>
-        <div>
-          show:
-          <label htmlFor="selectLimit">
-            <select
-              id="selectLimit"
-              value={limit}
-              onChange={(e) => handleChangeLimit(e)}
-              className={s.select__pagination}
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="30">30</option>
-            </select>
-          </label>
-        </div>
-
-        <label htmlFor="selectFilter">
-          <select
-            id="selectFilter"
-            value={filter}
-            onChange={(e) => handleChangeFilter(e)}
-            className={s.select__pagination}
-          >
-            <option value="">all</option>
-            <option value="favorite">favorite</option>
-          </select>
-        </label>
-
         <button
           type="button"
           className={s.newContact__button}
@@ -92,6 +73,50 @@ function ContactsList() {
         >
           + new contact
         </button>
+
+        <ul className={s.top__btns}>
+          <li className={s.select__top_btns}>
+            per page:
+            <label htmlFor="selectLimit">
+              <select
+                id="selectLimit"
+                value={limit}
+                onChange={(e) => handleChangeLimit(e)}
+              >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="30">30</option>
+              </select>
+            </label>
+          </li>
+          <li className={s.select__top_btns}>
+            show:
+            <label htmlFor="selectFilter">
+              <select
+                id="selectFilter"
+                value={filter}
+                onChange={(e) => handleChangeFilter(e)}
+              >
+                <option value="">all</option>
+                <option value="favorite">favorite</option>
+              </select>
+            </label>
+          </li>
+          <li className={s.select__top_btns}>
+            sort by:
+            <label htmlFor="selectSort">
+              <select
+                id="selectSort"
+                value={sort}
+                onChange={(e) => handleChangeSort(e)}
+              >
+                <option value="email">email</option>
+                <option value="name">name</option>
+                <option value="">no sort</option>
+              </select>
+            </label>
+          </li>
+        </ul>
       </div>
 
       <div className={s.tableHeader}>
@@ -106,36 +131,44 @@ function ContactsList() {
           <Contact contact={contact} key={contact._id} />
         ))}
 
-      <div className={s.pagination}>
-        <button
-          type="button"
-          className={s.pagination__button}
-          onClick={handlePageFirst}
-        >
-          FirstPage
-        </button>
-        <button
-          type="button"
-          className={s.pagination__button}
-          onClick={handlePagePrev}
-        >
-          PrevPage
-        </button>
-        <button
-          type="button"
-          className={s.pagination__button}
-          onClick={handlePageNext}
-        >
-          NextPage
-        </button>
-        <button
-          type="button"
-          className={s.pagination__button}
-          onClick={handlePageLast}
-        >
-          LastPage
-        </button>
-      </div>
+      <ul className={s.pagination}>
+        <li>
+          <button
+            type="button"
+            className={s.pagination__button}
+            onClick={handlePageFirst}
+          >
+            first
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            className={s.pagination__button}
+            onClick={handlePagePrev}
+          >
+            prev
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            className={s.pagination__button}
+            onClick={handlePageNext}
+          >
+            next
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            className={s.pagination__button}
+            onClick={handlePageLast}
+          >
+            last
+          </button>
+        </li>
+      </ul>
 
       <div className={s.pageIndex}>
         page {pageIndex} of {totalPages}

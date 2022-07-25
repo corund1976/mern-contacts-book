@@ -6,9 +6,9 @@ const listContacts = async () => {
 }
 
 const getContacts = async (params) => {
-  const { page, limit, filter } = params
+  const { page, limit, filter, sort } = params
 
-  const result = await $api.get(`/contacts?page=${page}&limit=${limit}&filter=${filter}`)
+  const result = await $api.get(`/contacts?page=${page}&limit=${limit}&filter=${filter}&sort=${sort}`)
   return result
 }
 
