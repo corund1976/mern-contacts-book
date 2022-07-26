@@ -2,7 +2,7 @@ import ApiError from '../exceptions/apiError.js'
 import User from './models/userSchema.js'
 import tokenService from './tokenService.js'
 
-const listUsers = async () => {
+const getList = async () => {
   return await User.find()
 }
 
@@ -17,7 +17,7 @@ const update = async (id, update) => {
     { new: true })
 }
 
-const changePassword = async (id, credentials) => {
+const updatePassword = async (id, credentials) => {
   const { password, newPassword } = credentials
 
   const user = await User.findById(id)
@@ -47,9 +47,9 @@ const remove = async (id) => {
 }
 
 export default {
-  listUsers,
+  getList,
   getById,
   update,
-  changePassword,
+  updatePassword,
   remove,
 }

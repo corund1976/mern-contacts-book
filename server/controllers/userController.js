@@ -1,7 +1,7 @@
 import userService from '../service/userService.js'
 import UserDto from '../dtos/userDto.js'
 
-const getAll = async (req, res, next) => {
+const getList = async (req, res, next) => {
   try {
     const listAllUsers = await userService.listUsers()
 
@@ -118,7 +118,7 @@ const updateSubscription = async (req, res, next) => {
   }
 }
 
-const changePassword = async (req, res, next) => {
+const updatePassword = async (req, res, next) => {
   if (!('password' in req.body) || !('newPassword' in req.body)
     || Object.keys(req.body).length > 2) {
     return res
@@ -131,7 +131,7 @@ const changePassword = async (req, res, next) => {
   }
 
   try {
-    const userData = await userService.changePassword(req.user.id, req.body)
+    const userData = await userService.updatePassword(req.user.id, req.body)
 
     if (userData) {
       const user = new UserDto(userData)
@@ -237,10 +237,10 @@ const remove = async (req, res, next) => {
 }
 
 export default {
-  getAll,
+  getList,
   getById,
   update,
-  changePassword,
+  updatePassword,
   updateSubscription,
   updateAvatar,
   deleteAvatar,
