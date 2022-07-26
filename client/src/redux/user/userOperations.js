@@ -45,6 +45,16 @@ const deleteAvatar = (AvatarDefault) => async dispatch => {
   }
 }
 
+const changePassword = async (credentials) => {
+  try {
+    const response = await userService.changePassword(credentials)
+
+    Notify.success(response.data.message);
+  } catch (e) {
+    Notify.failure(e.response?.data?.message || "Request failure")
+  }
+}
+
 const updateSubscription = subscriptionUpdate => async dispatch => {
   try {
     const response = await userService.updateSubscription({ subscription: subscriptionUpdate })
@@ -71,4 +81,4 @@ const deleteUser = () => async dispatch => {
   }
 }
 
-export default { uploadAvatar, deleteAvatar, updateSubscription, deleteUser }
+export default { uploadAvatar, deleteAvatar, changePassword, updateSubscription, deleteUser }

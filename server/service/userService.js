@@ -17,21 +17,28 @@ const update = async (id, update) => {
     { new: true })
 }
 
+const changePassword = async (id, credentials) => {
+  const { password, newPassword } = credentials
+
+  const user = await User.findById(id)
+
+  if (!user || !user.validPassword(password)) {
+    throw ApiError.BadRequest(`Current password is wrong // User with Current password not exist `)
+  }
+
+  user.setPassword(newPassword)
+
+  const updatedUser = await user.save()
+
+  return updatedUser
+}
+
 const remove = async (id) => {
   const result = await User.findByIdAndDelete(id)
-  // result = {
-  //   _id: new ObjectId("62d3e4e7487d2ee8063dc48b"),
-  //   email: 'test2@mail.ua',
-  //   subscription: 'business',
-  //   avatarURL: 'http://www.gravatar.com/avatar/2f3a78daf1cfe00021345df4160d7f34?s=200&d=mp',
-  //   role: 'user',
-  //   verified: true,
-  //   verifyToken: '5aedc7fb-fcb2-45cb-a8d2-12ecfb931732',
-  //   password: '$2a$06$lrA12YK2pC2Eb0.9Aa4aqOYN.NkdVoy8nUWmWDSxbia4eU7tCWYmG'
-  // }
+
   if (!result) throw ApiError.NotFound('User not found in DB')
 
-  const response = await tokenService.deleteRefresh(id)  // response = { acknowledged: true, deletedCount: 1 }
+  const response = await tokenService.deleteRefresh(id)
   const { deletedCount } = response
 
   if (!deletedCount) throw ApiError.NotFound('Token not found in DB')
@@ -43,5 +50,6 @@ export default {
   listUsers,
   getById,
   update,
+  changePassword,
   remove,
 }

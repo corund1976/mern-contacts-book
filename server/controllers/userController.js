@@ -118,6 +118,38 @@ const updateSubscription = async (req, res, next) => {
   }
 }
 
+const changePassword = async (req, res, next) => {
+  if (!('password' in req.body) || !('newPassword' in req.body)
+    || Object.keys(req.body).length > 2) {
+    return res
+      .status(400)
+      .json({
+        status: 'Bad request',
+        code: 400,
+        message: 'Missing field *Password* / Another fields not allowed',
+      })
+  }
+
+  try {
+    const userData = await userService.changePassword(req.user.id, req.body)
+
+    if (userData) {
+      const user = new UserDto(userData)
+
+      return res
+        .status(200)
+        .json({
+          status: 'Ok',
+          code: 200,
+          message: 'Update ~Password~ user successful',
+          user
+        })
+    }
+  } catch (e) {
+    next(e)
+  }
+}
+
 const updateAvatar = async (req, res, next) => {
   const { id } = req.user
   const { filename } = req.file
@@ -208,6 +240,7 @@ export default {
   getAll,
   getById,
   update,
+  changePassword,
   updateSubscription,
   updateAvatar,
   deleteAvatar,
