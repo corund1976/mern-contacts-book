@@ -1,7 +1,7 @@
 import $api from '../http'
 
-const uploadAvatar = async (formData) => {
-  const result = await $api.patch('/users/avatars', formData);
+const updateAvatar = async (formData, onUploadProgress) => {
+  const result = await $api.patch('/users/avatars', formData, { onUploadProgress })
   return result
 }
 
@@ -10,9 +10,8 @@ const deleteAvatar = async () => {
   return result
 }
 
-const changePassword = async (credentials) => {
+const updatePassword = async (credentials) => {
   const result = await $api.patch('/users/password', credentials);
-  // credentials =  {password: '111111', newPassword: '222222'}
   return result
 }
 
@@ -26,4 +25,4 @@ const deleteUser = async () => {
   return result
 }
 
-export default { uploadAvatar, deleteAvatar, changePassword, updateSubscription, deleteUser }
+export default { updateAvatar, deleteAvatar, updatePassword, updateSubscription, deleteUser }

@@ -2,29 +2,30 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import userService from 'services/userService';
 import userActions from 'redux/user/userReducer';
+import uploaderAction from 'redux/uploader/uploaderReducer'
 
-const uploadAvatar = file => async dispatch => {
+const updateAvatar = (file) => async dispatch => {
   try {
+    dispatch(uploaderAction.setShowUploader())
+    dispatch(uploaderAction.setFileName(file.name))
+
     const formData = new FormData
     formData.append('avatar', file)
 
-    const response = await userService.uploadAvatar(formData)
-    // {
-    // onUploadProgress: progressEvent => {
-    //   const totalLength = progressEvent.lengthComputable
-    //     ? progressEvent.total
-    //     : progressEvent.target.getResponseHeader('content-length')
-    //     || progressEvent.target.getResponseHeader('x-decompressed-content-length')
-    //   // eslint-disable-next-line no-console
-    //   console.log('totalLength = ', totalLength);
+    const onUploadProgress = (progressEvent) => {
+      const totalLength = progressEvent.lengthComputable
+        ? progressEvent.total
+        : progressEvent.target.getResponseHeader('content-length')
+        || progressEvent.target.getResponseHeader('x-decompressed-content-length')
 
-    //   if (totalLength) {
-    //     const progress = Math.round(progressEvent.loaded * 100 / totalLength)
-    //     // eslint-disable-next-line no-console
-    //     console.log('progress = ', progress);
-    //   }
-    // }
-    // }
+      if (totalLength) {
+        const progress = Math.round(progressEvent.loaded * 100 / totalLength)
+        dispatch(uploaderAction.setFileProgress(progress))
+      }
+    }
+
+    const response = await userService.updateAvatar(formData, onUploadProgress)
+
     dispatch(userActions.setAvatar(response.data.user.avatarURL))
 
     Notify.success(response.data.message);
@@ -45,9 +46,9 @@ const deleteAvatar = (AvatarDefault) => async dispatch => {
   }
 }
 
-const changePassword = async (credentials) => {
+const updatePassword = async (credentials) => {
   try {
-    const response = await userService.changePassword(credentials)
+    const response = await userService.updatePassword(credentials)
 
     Notify.success(response.data.message);
   } catch (e) {
@@ -55,7 +56,7 @@ const changePassword = async (credentials) => {
   }
 }
 
-const updateSubscription = subscriptionUpdate => async dispatch => {
+const updateSubscription = (subscriptionUpdate) => async dispatch => {
   try {
     const response = await userService.updateSubscription({ subscription: subscriptionUpdate })
 
@@ -81,4 +82,10 @@ const deleteUser = () => async dispatch => {
   }
 }
 
-export default { uploadAvatar, deleteAvatar, changePassword, updateSubscription, deleteUser }
+export default {
+  updateAvatar,
+  deleteAvatar,
+  updatePassword,
+  updateSubscription,
+  deleteUser
+}

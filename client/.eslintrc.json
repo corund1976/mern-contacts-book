@@ -35,8 +35,17 @@
     "no-restricted-exports": [
       "error",
       {
-        "restrictedNamedExports": ["then", "default"],
-        "allowDefaultFrom": true
+        "restrictedNamedExports": [
+          "then"
+          // no "default" here
+        ],
+        "restrictDefaultExports": {
+          "direct": false, // 1. export default foo; export default 42; export default function foo() {}
+          "named": true, // 2. export { foo as default };
+          "defaultFrom": false, // 3. export { default } from "mod"; export { default as default } from "mod";
+          "namedFrom": false, // 4. export { foo as default } from "mod";
+          "namespaceFrom": true // 5. export * as default from "mod"
+        }
       }
     ],
     "no-underscore-dangle": ["error", { "allow": ["_id"] }]

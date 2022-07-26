@@ -12,6 +12,7 @@ import s from './contactsList.module.css'
 
 function ContactsList() {
   const dispatch = useDispatch()
+
   const contacts = useSelector(contactSelector.getContacts)
   const totalContacts = useSelector(contactSelector.getTotalContacts)
   const firstPage = useSelector(contactSelector.getFirstPage)
@@ -102,6 +103,7 @@ function ContactsList() {
               >
                 <option value="email">email</option>
                 <option value="name">name</option>
+                <option value="">created</option>
                 <option value="">no sort</option>
               </select>
             </label>
@@ -116,7 +118,7 @@ function ContactsList() {
         <div>--favorite--</div>
       </div>
 
-      {contacts.length &&
+      {contacts.length > 1 &&
         contacts.map((contact) => (
           <Contact contact={contact} key={contact._id} />
         ))}

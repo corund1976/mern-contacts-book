@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import userSelector from 'redux/user/userSelectors'
+import uploaderSelector from 'redux/uploader/uploaderSelectors'
 import userOperation from 'redux/user/userOperations'
 
+import Uploader from 'components/uploader'
 import Input from 'components/subcomponents/input'
 
 import AvatarDefault from 'assets/img/user.svg'
@@ -14,9 +16,12 @@ import s from './profile.module.css'
 
 function Profile() {
   const dispatch = useDispatch()
+
   const email = useSelector(userSelector.getEmail)
   const subscription = useSelector(userSelector.getSubscription)
   const avatarUrl = useSelector(userSelector.getAvatarUrl)
+  const showUploader = useSelector(uploaderSelector.getShowUploader)
+  const file = useSelector(uploaderSelector.getFile)
 
   const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -24,7 +29,7 @@ function Profile() {
   const avatar = avatarUrl ? `${avatarUrl}` : AvatarDefault
 
   const handleUploadAvatar = (e) =>
-    dispatch(userOperation.uploadAvatar(e.target.files[0]))
+    dispatch(userOperation.updateAvatar(e.target.files[0]))
 
   const handleDeleteAvatar = () =>
     dispatch(userOperation.deleteAvatar(AvatarDefault))
@@ -32,7 +37,7 @@ function Profile() {
   const handleChangePassword = (e) => {
     e.preventDefault()
     const credentials = { password, newPassword }
-    userOperation.changePassword(credentials)
+    userOperation.updatePassword(credentials)
   }
 
   const handleChangeSubscription = (e) =>
@@ -127,6 +132,8 @@ function Profile() {
           />
         </button>
       </div>
+
+      {showUploader && <Uploader file={file} />}
     </div>
   )
 }
