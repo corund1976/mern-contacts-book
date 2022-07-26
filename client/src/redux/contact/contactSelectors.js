@@ -1,15 +1,19 @@
-const getAllContacts = (state) => state.contact.allContacts
-const getPaginatedContacts = (state) => state.contact.paginatedContacts
+const getContacts = (state) => state.contact.contacts
 const getTotalContacts = (state) => state.contact.totalContacts
-const getTotalPages = (state) => state.contact.totalPages
-const getPageIndex = (state) => state.contact.pageIndex
+
+const getFirstPage = (state) => state.contact.pagination.firstPage
+const getPrevPage = (state) => state.contact.pagination.prevPage
+const getNextPage = (state) => state.contact.pagination.nextPage
+const getLastPage = (state) => state.contact.pagination.lastPage
+
 const getDisplayPopup = (state) => state.contact.displayPopup
 
 export default {
-  getAllContacts,
-  getPaginatedContacts,
+  getContacts,
   getTotalContacts,
-  getTotalPages,
-  getPageIndex,
+  getFirstPage,
+  getPrevPage,
+  getNextPage,
+  getLastPage,
   getDisplayPopup,
 }

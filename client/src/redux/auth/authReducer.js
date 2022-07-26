@@ -2,9 +2,9 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 
 // Action creators
 const setIsAuth = createAction("auth/setIsAuth")
-const unsetIsAuth = createAction("auth/unsetIsAuth")
+const resetStateAuth = createAction("auth/resetStateAuth")
 
-export default { setIsAuth, unsetIsAuth }
+export default { setIsAuth, resetStateAuth }
 
 // Reducer
 const defaultState = {
@@ -13,5 +13,5 @@ const defaultState = {
 
 export const authReducer = createReducer(defaultState, {
   [setIsAuth]: (state,) => ({ ...state, isAuth: true }),
-  [unsetIsAuth]: (state,) => ({ ...state, isAuth: false }),
+  [resetStateAuth]: () => ({ ...defaultState }),
 })

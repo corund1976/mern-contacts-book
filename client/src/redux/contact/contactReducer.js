@@ -1,34 +1,50 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
 // Action creators
-const setAllContacts = createAction("contact/setAllContacts")
-const unsetAllContacts = createAction("contact/unsetAllContacts")
-const setPaginatedContacts = createAction("contact/setPaginatedContacts")
-const unsetPaginatedContacts = createAction("contact/unsetPaginatedContacts")
+const setContacts = createAction("contact/setContacts")
+const setTotalContacts = createAction("contact/setTotalContacts")
 const setNewContact = createAction("contact/addNewContact")
+
+const setFirstPage = createAction("pagination/setFirstPage")
+const setPrevPage = createAction("pagination/setPrevPage")
+const setNextPage = createAction("pagination/setNextPage")
+const setLastPage = createAction("pagination/setLastPage")
+
 const setDisplayPopup = createAction("contact/setDisplayPopup")
 
+const resetStateContact = createAction("contact/resetStateContact")
+
 export default {
-  setAllContacts,
-  unsetAllContacts,
-  setPaginatedContacts,
-  unsetPaginatedContacts,
+  setContacts,
+  setTotalContacts,
   setNewContact,
-  setDisplayPopup
+  setFirstPage,
+  setPrevPage,
+  setNextPage,
+  setLastPage,
+  setDisplayPopup,
+  resetStateContact,
 }
 
 // Reducer
 const defaultState = {
-  allContacts: [],
-  paginatedContacts: [],
+  contacts: [{}],
+  totalContacts: 0,
+  pagination: {},
   displayPopup: 'none'
 }
 
 export const contactReducer = createReducer(defaultState, {
-  [setAllContacts]: (state, action) => ({ ...state, allContacts: action.payload }),
-  [unsetAllContacts]: (state,) => ({ ...state, allContacts: [] }),
-  [setPaginatedContacts]: (state, action) => ({ ...state, paginatedContacts: action.payload }),
-  [unsetPaginatedContacts]: (state,) => ({ ...state, paginatedContacts: [] }),
+  [setContacts]: (state, action) => ({ ...state, contacts: action.payload }),
+  [setTotalContacts]: (state, action) => ({ ...state, totalContacts: action.payload }),
   [setNewContact]: (state, action) => ({ ...state, contacts: [...state.contacts, action.payload] }),
+
+  [setFirstPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, firstPage: action.payload } }),
+  [setPrevPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, prevPage: action.payload } }),
+  [setNextPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, nextPage: action.payload } }),
+  [setLastPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, lastPage: action.payload } }),
+
   [setDisplayPopup]: (state, action) => ({ ...state, displayPopup: action.payload }),
+
+  [resetStateContact]: () => ({ ...defaultState }),
 })

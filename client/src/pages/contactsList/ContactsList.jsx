@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import contactOperation from 'redux/contact/contactOperations'
 import contactAction from 'redux/contact/contactReducer'
 import contactSelector from 'redux/contact/contactSelectors'
-import paginationSelector from 'redux/pagination/paginationSelectors'
 
 import Contact from 'components/contact'
 import Popup from 'components/popup'
@@ -13,19 +12,17 @@ import s from './contactsList.module.css'
 
 function ContactsList() {
   const dispatch = useDispatch()
-  const contacts = useSelector(contactSelector.getPaginatedContacts)
-  const totalContacts = useSelector(paginationSelector.getTotalContacts)
-  const totalPages = useSelector(paginationSelector.getTotalPages)
-  const pageIndex = useSelector(paginationSelector.getPageIndex)
-  const pagePrev = useSelector(paginationSelector.getPagePrev)
-  const pageNext = useSelector(paginationSelector.getPageNext)
-  const hasPrevPage = useSelector(paginationSelector.getHasPrevPage)
-  const hasNextPage = useSelector(paginationSelector.getHasNextPage)
+  const contacts = useSelector(contactSelector.getContacts)
+  const totalContacts = useSelector(contactSelector.getTotalContacts)
+  const firstPage = useSelector(contactSelector.getFirstPage)
+  const prevPage = useSelector(contactSelector.getPrevPage)
+  const nextPage = useSelector(contactSelector.getNextPage)
+  const lastPage = useSelector(contactSelector.getLastPage)
 
-  const perPageDefault = process.env.REACT_APP_PAGINATION_PER_PAGE
+  const limitDefault = process.env.REACT_APP_PAGINATION_PER_PAGE
 
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(perPageDefault)
+  const [limit, setLimit] = useState(limitDefault)
   const [filter, setFilter] = useState('')
   const [sort, setSort] = useState('')
 
@@ -35,29 +32,21 @@ function ContactsList() {
 
   const handleChangeLimit = (e) => {
     setLimit(e.target.value)
-    setPage(1)
+    setPage(firstPage)
   }
 
   const handleChangeFilter = (e) => {
     setFilter(e.target.value)
-    setPage(1)
+    setPage(firstPage)
   }
 
   const handleChangeSort = (e) => {
     setSort(e.target.value)
-    setPage(1)
+    setPage(firstPage)
   }
 
   const handlerAddContact = () =>
     dispatch(contactAction.setDisplayPopup('flex'))
-
-  const handlePageFirst = () => setPage(1)
-
-  const handlePageLast = () => setPage(totalPages)
-
-  const handlePagePrev = () => hasPrevPage && setPage(pagePrev)
-
-  const handlePageNext = () => hasNextPage && setPage(pageNext)
 
   return (
     <div className={s.contactsList__section}>
@@ -86,6 +75,7 @@ function ContactsList() {
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="30">30</option>
+                <option value={totalContacts}>all</option>
               </select>
             </label>
           </li>
@@ -136,7 +126,7 @@ function ContactsList() {
           <button
             type="button"
             className={s.pagination__button}
-            onClick={handlePageFirst}
+            onClick={() => setPage(firstPage)}
           >
             first
           </button>
@@ -145,7 +135,7 @@ function ContactsList() {
           <button
             type="button"
             className={s.pagination__button}
-            onClick={handlePagePrev}
+            onClick={() => setPage(prevPage)}
           >
             prev
           </button>
@@ -154,7 +144,7 @@ function ContactsList() {
           <button
             type="button"
             className={s.pagination__button}
-            onClick={handlePageNext}
+            onClick={() => setPage(nextPage)}
           >
             next
           </button>
@@ -163,7 +153,7 @@ function ContactsList() {
           <button
             type="button"
             className={s.pagination__button}
-            onClick={handlePageLast}
+            onClick={() => setPage(lastPage)}
           >
             last
           </button>
@@ -171,7 +161,7 @@ function ContactsList() {
       </ul>
 
       <div className={s.pageIndex}>
-        page {pageIndex} of {totalPages}
+        page {page} of {lastPage}
       </div>
 
       <Popup />

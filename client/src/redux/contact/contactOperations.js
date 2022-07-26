@@ -1,45 +1,38 @@
+import { parseLinkHeader } from '@web3-storage/parse-link-header'
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import contactService from 'services/contactService';
 import contactAction from 'redux/contact/contactReducer';
-import paginationAction from 'redux/pagination/paginationReducer'
-
-const listContacts = () => async dispatch => {
-  try {
-    const response = await contactService.listContacts()
-    const { contacts } = response.data
-
-    dispatch(contactAction.setAllContacts(contacts))
-
-    Notify.success(response.data.message)
-  } catch (e) {
-    Notify.failure(e.response?.data?.message || "Request failure")
-  }
-}
 
 const getContacts = (params) => async dispatch => {
   try {
     const response = await contactService.getContacts(params)
+
     const { contacts } = response.data
+    dispatch(contactAction.setContacts(contacts))
 
     const totalContacts = JSON.parse(response.headers["x-total-count"])
-    const totalPages = JSON.parse(response.headers["x-total-pages"])
-    const pageIndex = JSON.parse(response.headers["x-page-index"])
-    const prevPage = JSON.parse(response.headers["x-page-prev"])
-    const nextPage = JSON.parse(response.headers["x-page-next"])
-    const hasPrevPage = JSON.parse(response.headers["x-has-page-prev"])
-    const hasNextPage = JSON.parse(response.headers["x-has-page-next"])
+    dispatch(contactAction.setTotalContacts(totalContacts))
 
-    dispatch(contactAction.setPaginatedContacts(contacts))
-
-    dispatch(paginationAction.setTotalContacts(totalContacts))
-    dispatch(paginationAction.setTotalPages(totalPages))
-    dispatch(paginationAction.setPageIndex(pageIndex))
-    dispatch(paginationAction.setPagePrev(prevPage))
-    dispatch(paginationAction.setPageNext(nextPage))
-    dispatch(paginationAction.setHasPrevPage(hasPrevPage))
-    dispatch(paginationAction.setHasNextPage(hasNextPage))
-
+    const linkHeader = response.headers.link
+    const parsed = parseLinkHeader(linkHeader)
+    const { first, prev, next, last } = parsed
+    dispatch(contactAction.setFirstPage(first.page))
+    dispatch(contactAction.setPrevPage(prev.page))
+    dispatch(contactAction.setNextPage(next.page))
+    dispatch(contactAction.setLastPage(last.page))
+    // {
+    //  {first:
+    //     {filter: ""}
+    //     {limit: "5"}
+    //     {page: "1"}
+    //     {rel: "first"}
+    //     {sort: ""}
+    //     {url: "http://localhost:5000/contacts?page=1&limit=5&filter=&sort=" }}
+    //  {last: { page: '3', limit: '5', filter: '', sort: '', rel: 'last', … }}
+    //  {next: { page: '2', limit: '5', filter: '', sort: '', rel: 'next', … }}
+    //  {prev: { page: '1', limit: '5', filter: '', sort: '', rel: 'prev', … }}
+    // }
     Notify.success(response.data.message)
   } catch (e) {
     Notify.failure(e.response?.data?.message || "Request failure")
@@ -59,4 +52,4 @@ const addContact = newContact => async dispatch => {
   }
 }
 
-export default { listContacts, getContacts, addContact }
+export default { getContacts, addContact }

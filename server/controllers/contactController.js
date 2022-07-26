@@ -15,21 +15,22 @@ const get = async (req, res, next) => {
       .append('X-Total-Count', totalContacts)
       .append('Access-Control-Expose-Headers', 'X-Total-Count')
 
-    if (totalPages && currentPage) {
-      res
-        .append('X-Total-Pages', totalPages)
-        .append('Access-Control-Expose-Headers', 'X-Total-Pages')
-        .append('X-Page-Index', currentPage)
-        .append('Access-Control-Expose-Headers', 'X-Page-Index')
-        .append('X-Page-Prev', prevPage)
-        .append('Access-Control-Expose-Headers', 'X-Page-Prev')
-        .append('X-Page-Next', nextPage)
-        .append('Access-Control-Expose-Headers', 'X-Page-Next')
-        .append('X-Has-Page-Prev', hasPrevPage)
-        .append('Access-Control-Expose-Headers', 'X-Has-Page-Prev')
-        .append('X-Has-Page-Next', hasNextPage)
-        .append('Access-Control-Expose-Headers', 'X-Has-Page-Next')
-    }
+    const { limit, filter, sort } = query
+
+    const firstURI = `<${process.env.API_URL}/contacts?page=1&limit=${limit}&filter${filter}=&sort=${sort}>; rel="first", `
+    const prevURI = `<${process.env.API_URL}/contacts?page=${hasPrevPage ? prevPage : currentPage}&limit=${limit}&filter${filter}=&sort=${sort}>; rel="prev", `
+    const nextURI = `<${process.env.API_URL}/contacts?page=${hasNextPage ? nextPage : currentPage}&limit=${limit}&filter${filter}=&sort=${sort}>; rel="next", `
+    const lastURI = `<${process.env.API_URL}/contacts?page=${totalPages}&limit=${limit}&filter${filter}=&sort=${sort}>; rel="last"`
+
+    res
+      .append('Link', firstURI + prevURI + nextURI + lastURI)
+      .append('Access-Control-Expose-Headers', 'Link')
+
+    // Link:
+    // <http://localhost:5000/contacts?page=1&limit=5&filter=&sort=>; rel="first", 
+    // <http://localhost:5000/contacts?page=1&limit=5&filter=&sort=>; rel="prev", 
+    // <http://localhost:5000/contacts?page=2&limit=5&filter=&sort=>; rel="next", 
+    // <http://localhost:5000/contacts?page=3&limit=5&filter=&sort=>; rel="last"
 
     return res
       .status(200)

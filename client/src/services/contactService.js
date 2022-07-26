@@ -1,10 +1,5 @@
 import $api from '../http'
 
-const listContacts = async () => {
-  const result = await $api.get('/contacts')
-  return result
-}
-
 const getContacts = async (params) => {
   const { page, limit, filter, sort } = params
 
@@ -17,4 +12,4 @@ const addContact = async (newContact) => {
   return result
 }
 
-export default { listContacts, getContacts, addContact }
+export default { getContacts, addContact };

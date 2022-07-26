@@ -63,7 +63,7 @@ const deleteUser = () => async dispatch => {
 
     if (response) { window.location.href = '/login' }
 
-    dispatch(userActions.unsetUser())
+    dispatch(userActions.resetStateUser())
 
     Notify.success(response.data.message);
   } catch (e) {
