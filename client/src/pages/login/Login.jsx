@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 
-import authOperation from 'redux/auth/authOperations'
+import authOperation from 'operations/authOperations'
 
 import AuthForm from 'components/authForm'
 

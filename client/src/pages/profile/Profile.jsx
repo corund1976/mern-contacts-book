@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import userSelector from 'redux/user/userSelectors'
 import uploaderSelector from 'redux/uploader/uploaderSelectors'
-import userOperation from 'redux/user/userOperations'
+import userOperation from 'operations/userOperations'
 
 import Uploader from 'components/uploader'
 import Input from 'components/subcomponents/input'

@@ -1,6 +1,6 @@
 import contactService from '../service/contactService.js'
 
-const get = async (req, res, next) => {
+const getList = async (req, res, next) => {
   // ничего не получает
   // вызывает функцию listContacts
   // возвращает массив всех контактов в json - формате со статусом 200
@@ -52,9 +52,9 @@ const getById = async (req, res, next) => {
   // если такой id есть, возвращает объект контакта в json - формате со статусом 200
   // если такого id нет, возвращает json с ключом "message": "Not found" и статусом 404
   try {
-    const contactById = await contactService.getById(req.params.id, req.user.id)
+    const contact = await contactService.getById(req.params.id, req.user.id)
 
-    if (!contactById) {
+    if (!contact) {
       return res
         .status(404)
         .json({
@@ -70,7 +70,7 @@ const getById = async (req, res, next) => {
         status: 'Ok',
         code: 200,
         message: `Get Contact by Id: ${req.params.id} successful`,
-        contactById,
+        contact
       })
   } catch (e) {
     next(e)
@@ -160,9 +160,9 @@ const updateFavorite = async (req, res, next) => {
   }
 
   try {
-    const contactUpdStatus = await contactService.updateStatus(req.params.id, req.user.id, req.body)
+    const updatedContact = await contactService.updateStatus(req.params.id, req.user.id, req.body)
 
-    if (!contactUpdStatus) {
+    if (!updatedContact) {
       return res
         .status(404)
         .json({
@@ -178,7 +178,7 @@ const updateFavorite = async (req, res, next) => {
         status: 'Ok',
         code: 200,
         message: 'Update ~Favorite~ contact successful',
-        contactUpdStatus
+        updatedContact
       })
   } catch (e) {
     next(e)
@@ -208,7 +208,7 @@ const remove = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        message: `Delete contact id: ${req.params.id} successful`
+        message: `Delete contact id: ${req.params.id} successful`,
       })
   } catch (e) {
     next(e)
@@ -217,7 +217,7 @@ const remove = async (req, res, next) => {
 // Для маршрутов, что принимают данные(POST и PUT), продумайте проверку(валидацию) 
 // принимаемых данных.Для валидации принимаемых данных используйте пакет joi
 export default {
-  get,
+  getList,
   getById,
   create,
   update,

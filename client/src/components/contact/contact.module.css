@@ -1,4 +1,32 @@
 .contact {
+  position: relative;
+
+  display: flex;
+}
+.contact:hover .btns {
+  display: flex;
+}
+.contact:hover .data {
+  padding-right: 75px;
+}
+
+.data {
+  padding: 0 15px;
+  width: 100%;
+
   display: flex;
   justify-content: space-between;
+}
+
+.btns {
+  position: absolute;
+  right: 0;
+
+  display: none;
+}
+.btns_item:not(:last-child) {
+  margin-right: 5px;
+}
+.btn {
+  border: none;
 }

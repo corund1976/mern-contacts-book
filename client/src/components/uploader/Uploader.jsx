@@ -12,7 +12,7 @@ function Uploader({ file }) {
     dispatch(uploaderAction.resetStateUploader())
 
   return (
-    <div className={s.uploader}>
+    <div className={s.section}>
       <p className={s.header}>Uploading progress</p>
 
       <p className={s.title}>{file.name}</p>

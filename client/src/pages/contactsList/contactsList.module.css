@@ -1,24 +1,27 @@
-.contactsList__section {
-  padding: 5px 10px;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.contactsList__header {
+.section {
+  padding: 10px 20px;
   text-align: center;
-
-  margin-bottom: 10px;
 }
-.totalContacts {
-  font-weight: bold;
+@media screen and (min-width: 1280px) {
+  .section {
+    padding: 25px 100px;
+  }
 }
 
-.top__wrapper {
+.header {
+  text-align: center;
+}
+
+.title {
+  font-style: italic;
+}
+
+/* Блок верхних кнопок */
+.controls {
   display: block;
 }
 @media screen and (min-width: 768px) {
-  .top__wrapper {
+  .controls {
     margin-bottom: 17px;
 
     display: flex;
@@ -27,21 +30,8 @@
   }
 }
 
-.top__btns {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-select {
-  border: none;
-  border-radius: 7px;
-  padding: 0 5px;
-}
-.select__top_btns:not(:last-child) {
-  margin-right: 25px;
-}
-
-.newContact__button {
+/* Кнопка 'New contact' */
+.btn_newContact {
   border: solid 1px var(--primary-text-color);
   border-radius: 8px;
   color: var(--primary-text-color);
@@ -53,11 +43,29 @@ select {
   margin-right: auto;
 }
 @media screen and (min-width: 768px) {
-  .newContact__button {
+  .btn_newContact {
     margin-left: unset;
   }
 }
 
+/* Селекторы фильтров  */
+.selectors {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selectors_item:not(:last-child) {
+  margin-right: 25px;
+}
+
+.selectors select {
+  border: none;
+  border-radius: 7px;
+  padding: 0 5px;
+}
+
+/* Таблица контактов */
 .tableHeader {
   border-bottom: solid 1px var(--primary-text-color);
 
@@ -67,26 +75,26 @@ select {
   justify-content: space-between;
 }
 
+/* Блок кнопок пагинации */
 .pagination {
   margin: 15px 0;
 
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 }
-.pagination__button {
-  border: solid 1px var(--primary-text-color);
+.pagination__item:not(:last-child) {
+  margin-right: 15px;
+}
+.pagination__btn {
+  border: none;
   border-radius: 8px;
-  color: var(--primary-text-color);
-  background: transparent;
+  color: var(--primary-bg-color);
+  background: var(--primary-text-color);
 
   padding: 7px 20px;
 }
 
-.pageIndex {
-  text-align: center;
-}
-
-.links {
-  display: flex;
-  justify-content: space-between;
+/* Индекс текущей траницы */
+.page {
+  font-style: italic;
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import contactOperation from 'redux/contact/contactOperations'
+import contactOperation from 'operations/contactOperations'
 import contactAction from 'redux/contact/contactReducer'
 import contactSelector from 'redux/contact/contactSelectors'
 
@@ -28,7 +28,7 @@ function ContactsList() {
   const [sort, setSort] = useState('')
 
   useEffect(() => {
-    dispatch(contactOperation.getContacts({ page, limit, filter, sort }))
+    dispatch(contactOperation.getList({ page, limit, filter, sort }))
   }, [dispatch, page, limit, filter, sort])
 
   const handleChangeLimit = (e) => {
@@ -46,26 +46,30 @@ function ContactsList() {
     setPage(firstPage)
   }
 
-  const handlerAddContact = () =>
-    dispatch(contactAction.setDisplayPopup('flex'))
+  const handleAddContact = () => dispatch(contactAction.setDisplayPopup('flex'))
+
+  const handleEditFavorite = (id, update) =>
+    dispatch(contactOperation.updateFavorite(id, update))
+
+  const handleDeleteContact = (id) => dispatch(contactOperation.remove(id))
 
   return (
-    <div className={s.contactsList__section}>
-      <h2 className={s.contactsList__header}>
-        Contacts List (total {totalContacts})
-      </h2>
+    <div className={s.section}>
+      <h2 className={s.header}>Contacts List</h2>
 
-      <div className={s.top__wrapper}>
+      <p className={s.title}>total: {totalContacts} contacts</p>
+
+      <div className={s.controls}>
         <button
           type="button"
-          className={s.newContact__button}
-          onClick={handlerAddContact}
+          className={s.btn_newContact}
+          onClick={handleAddContact}
         >
           + new contact
         </button>
 
-        <ul className={s.top__btns}>
-          <li className={s.select__top_btns}>
+        <ul className={s.selectors}>
+          <li className={s.selectors_item}>
             per page:
             <label htmlFor="selectLimit">
               <select
@@ -80,7 +84,7 @@ function ContactsList() {
               </select>
             </label>
           </li>
-          <li className={s.select__top_btns}>
+          <li className={s.selectors_item}>
             show:
             <label htmlFor="selectFilter">
               <select
@@ -93,7 +97,7 @@ function ContactsList() {
               </select>
             </label>
           </li>
-          <li className={s.select__top_btns}>
+          <li className={s.selectors_item}>
             sort by:
             <label htmlFor="selectSort">
               <select
@@ -118,43 +122,51 @@ function ContactsList() {
         <div>--favorite--</div>
       </div>
 
-      {contacts.length > 1 &&
-        contacts.map((contact) => (
-          <Contact contact={contact} key={contact._id} />
-        ))}
+      <ul>
+        {contacts.length >= 1 &&
+          contacts.map((contact) => (
+            <li key={contact._id}>
+              <Contact
+                contact={contact}
+                onEdit={handleEditFavorite}
+                onDelete={handleDeleteContact}
+              />
+            </li>
+          ))}
+      </ul>
 
       <ul className={s.pagination}>
-        <li>
+        <li className={s.pagination__item}>
           <button
             type="button"
-            className={s.pagination__button}
+            className={s.pagination__btn}
             onClick={() => setPage(firstPage)}
           >
             first
           </button>
         </li>
-        <li>
+        <li className={s.pagination__item}>
           <button
             type="button"
-            className={s.pagination__button}
+            className={s.pagination__btn}
             onClick={() => setPage(prevPage)}
           >
             prev
           </button>
         </li>
-        <li>
+        <li className={s.pagination__item}>
           <button
             type="button"
-            className={s.pagination__button}
+            className={s.pagination__btn}
             onClick={() => setPage(nextPage)}
           >
             next
           </button>
         </li>
-        <li>
+        <li className={s.pagination__item}>
           <button
             type="button"
-            className={s.pagination__button}
+            className={s.pagination__btn}
             onClick={() => setPage(lastPage)}
           >
             last
@@ -162,9 +174,9 @@ function ContactsList() {
         </li>
       </ul>
 
-      <div className={s.pageIndex}>
+      <p className={s.page}>
         page {page} of {lastPage}
-      </div>
+      </p>
 
       <Popup />
     </div>

@@ -3,7 +3,10 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 // Action creators
 const setContacts = createAction("contact/setContacts")
 const setTotalContacts = createAction("contact/setTotalContacts")
-const setNewContact = createAction("contact/addNewContact")
+
+const addContact = createAction("contact/addContact")
+const updateContact = createAction("contact/updateContact")
+const removeContact = createAction("contact/removeContact")
 
 const setFirstPage = createAction("pagination/setFirstPage")
 const setPrevPage = createAction("pagination/setPrevPage")
@@ -17,7 +20,9 @@ const resetStateContact = createAction("contact/resetStateContact")
 export default {
   setContacts,
   setTotalContacts,
-  setNewContact,
+  addContact,
+  updateContact,
+  removeContact,
   setFirstPage,
   setPrevPage,
   setNextPage,
@@ -37,7 +42,20 @@ const defaultState = {
 export const contactReducer = createReducer(defaultState, {
   [setContacts]: (state, action) => ({ ...state, contacts: action.payload }),
   [setTotalContacts]: (state, action) => ({ ...state, totalContacts: action.payload }),
-  [setNewContact]: (state, action) => ({ ...state, contacts: [...state.contacts, action.payload] }),
+
+  [addContact]: (state, action) => ({
+    ...state,
+    contacts: [...state.contacts, action.payload]
+  }),
+  [updateContact]: (state, action) => ({
+    ...state,
+    contacts: [...state.contacts.filter(contact => contact._id !== action.payload._id), action.payload]
+  }),
+  [removeContact]: (state, action) => ({
+    ...state,
+    contacts: [...state.contacts.filter(contact => contact._id !== action.payload)],
+    totalContacts: (state.totalContacts - 1)
+  }),
 
   [setFirstPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, firstPage: action.payload } }),
   [setPrevPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, prevPage: action.payload } }),

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import contactSelectors from 'redux/contact/contactSelectors'
 import contactAction from 'redux/contact/contactReducer'
-import contactOperation from 'redux/contact/contactOperations'
+import contactOperation from 'operations/contactOperations'
 import Input from 'components/subcomponents/input'
 
 import s from './popup.module.css'
@@ -16,7 +16,7 @@ function Popup() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
 
-  const handlerClosePopup = (e) => {
+  const handleClosePopup = (e) => {
     e.preventDefault()
 
     dispatch(contactAction.setDisplayPopup('none'))
@@ -25,23 +25,24 @@ function Popup() {
     setEmail('')
     setPhone('')
   }
-  const handlerStopPropagation = (e) => e.stopPropagation()
-  const handlerAddContact = () =>
-    dispatch(contactOperation.addContact({ name, email, phone }))
+  const handleStopPropagation = (e) => e.stopPropagation()
+
+  const handleAddContact = () =>
+    dispatch(contactOperation.add({ name, email, phone }))
 
   return (
     <div
       className={s.popup}
       style={{ display: displayPopup }}
-      onClick={handlerClosePopup}
-      onKeyPress={handlerClosePopup}
+      onClick={handleClosePopup}
+      onKeyPress={handleClosePopup}
       role="button"
       tabIndex="0"
     >
       <div
         className={s.popup__content}
-        onClick={handlerStopPropagation}
-        onKeyPress={handlerStopPropagation}
+        onClick={handleStopPropagation}
+        onKeyPress={handleStopPropagation}
         role="button"
         tabIndex="0"
       >
@@ -50,12 +51,12 @@ function Popup() {
           <button
             type="button"
             className={s.popup__close}
-            onClick={handlerClosePopup}
+            onClick={handleClosePopup}
           >
             X
           </button>
         </div>
-        <form className={s.popup__form} onSubmit={handlerAddContact}>
+        <form className={s.popup__form} onSubmit={handleAddContact}>
           <Input
             type="text"
             value={name}

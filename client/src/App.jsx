@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import authSelector from 'redux/auth/authSelectors'
-import authOperation from 'redux/auth/authOperations'
+import authOperation from 'operations/authOperations'
 
 import LoaderSpinner from 'components/loaderSpinner'
 import Navbar from 'components/navbar'
