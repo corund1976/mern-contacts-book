@@ -1,4 +1,4 @@
-import authOperation from 'operations/authOperations'
+import authOperation from 'redux/auth/authOperations'
 
 import AuthForm from 'components/authForm'
 

@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import authOperation from 'operations/authOperations'
+import authOperation from 'redux/auth/authOperations'
 import authSelector from 'redux/auth/authSelectors'
 import userSelector from 'redux/user/userSelectors'
 import Container from 'components/subcomponents/container'

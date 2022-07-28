@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import contactOperation from 'operations/contactOperations'
+import contactOperation from 'redux/contact/contactOperations'
 import contactAction from 'redux/contact/contactReducer'
 import contactSelector from 'redux/contact/contactSelectors'
 
@@ -52,6 +52,16 @@ function ContactsList() {
     dispatch(contactOperation.updateFavorite(id, update))
 
   const handleDeleteContact = (id) => dispatch(contactOperation.remove(id))
+
+  const contactsListItems = contacts.map((contact) => (
+    <li key={contact._id}>
+      <Contact
+        contact={contact}
+        onEdit={handleEditFavorite}
+        onDelete={handleDeleteContact}
+      />
+    </li>
+  ))
 
   return (
     <div className={s.section}>
@@ -115,25 +125,14 @@ function ContactsList() {
         </ul>
       </div>
 
-      <div className={s.tableHeader}>
-        <div>--name--</div>
-        <div>--phone--</div>
-        <div>--email--</div>
-        <div>--favorite--</div>
-      </div>
-
-      <ul>
-        {contacts.length >= 1 &&
-          contacts.map((contact) => (
-            <li key={contact._id}>
-              <Contact
-                contact={contact}
-                onEdit={handleEditFavorite}
-                onDelete={handleDeleteContact}
-              />
-            </li>
-          ))}
+      <ul className={s.tableHeader}>
+        <li>--name--</li>
+        <li>--phone--</li>
+        <li>--email--</li>
+        <li>--favorite--</li>
       </ul>
+
+      {!!contacts.length && <ul>{contactsListItems}</ul>}
 
       <ul className={s.pagination}>
         <li className={s.pagination__item}>

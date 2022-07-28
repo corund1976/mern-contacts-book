@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import contactSelectors from 'redux/contact/contactSelectors'
 import contactAction from 'redux/contact/contactReducer'
-import contactOperation from 'operations/contactOperations'
+import contactOperation from 'redux/contact/contactOperations'
 import Input from 'components/subcomponents/input'
 
 import s from './popup.module.css'

@@ -1,6 +1,6 @@
 import ResetForm from 'components/resetForm'
 
-import authOperations from 'operations/authOperations'
+import authOperations from 'redux/auth/authOperations'
 
 import s from './resetPassword.module.css'
 
