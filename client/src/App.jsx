@@ -15,7 +15,7 @@ const Login = lazy(() => import('pages/login'))
 const Signup = lazy(() => import('pages/signup'))
 const ResetPassword = lazy(() => import('pages/resetPassword'))
 const Profile = lazy(() => import('pages/profile'))
-const ContactsList = lazy(() => import('pages/contactsList'))
+const Contacts = lazy(() => import('pages/contacts'))
 
 function App() {
   const dispatch = useDispatch()
@@ -38,7 +38,7 @@ function App() {
           </Routes>
         ) : (
           <Routes>
-            <Route exact path="/" element={<ContactsList />} />
+            <Route exact path="/" element={<Contacts />} />
             <Route exact path="/profile" element={<Profile />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

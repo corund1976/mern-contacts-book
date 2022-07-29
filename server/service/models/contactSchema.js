@@ -24,7 +24,7 @@ const contactSchema = new Schema(
       ref: 'user',
     },
   },
-  { versionKey: false, timestamps: false },
+  { versionKey: false, timestamps: true },
 )
 
 contactSchema.plugin(mongoosePaginate)

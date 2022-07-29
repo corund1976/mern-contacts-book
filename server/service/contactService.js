@@ -8,7 +8,7 @@ const get = async (query, userId) => {
       ? { owner: userId, favorite: true }
       : { owner: userId }
 
-  const select = 'id name phone email favorite'
+  const select = 'id name phone email favorite createdAt updatedAt'
 
   const customLabels = {
     docs: 'contacts',

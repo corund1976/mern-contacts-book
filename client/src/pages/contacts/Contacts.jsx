@@ -8,7 +8,7 @@ import contactSelector from 'redux/contact/contactSelectors'
 import Contact from 'components/contact'
 import Popup from 'components/popup'
 
-import s from './contactsList.module.css'
+import s from './contacts.module.css'
 
 function ContactsList() {
   const dispatch = useDispatch()
@@ -25,7 +25,7 @@ function ContactsList() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(limitDefault)
   const [filter, setFilter] = useState('')
-  const [sort, setSort] = useState('')
+  const [sort, setSort] = useState('-updatedAt')
 
   useEffect(() => {
     dispatch(contactOperation.getList({ page, limit, filter, sort }))
@@ -65,9 +65,7 @@ function ContactsList() {
 
   return (
     <div className={s.section}>
-      <h2 className={s.header}>Contacts List</h2>
-
-      <p className={s.title}>total: {totalContacts} contacts</p>
+      <h2 className={s.header}>{totalContacts} Contacts</h2>
 
       <div className={s.controls}>
         <button
@@ -115,10 +113,12 @@ function ContactsList() {
                 value={sort}
                 onChange={(e) => handleChangeSort(e)}
               >
+                <option value="-updatedAt">updated</option>
                 <option value="email">email</option>
-                <option value="name">name</option>
-                <option value="">created</option>
-                <option value="">no sort</option>
+                <option value="name">name A-Z</option>
+                <option value="-name">name Z-A</option>
+                <option value="phone">phone</option>
+                <option value="-createdAt">created</option>
               </select>
             </label>
           </li>
