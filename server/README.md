@@ -67,32 +67,34 @@ npm run dev // dev mode
 
 #### /auth
 
-| Path                      | Method | Description           | Access        |
-| ------------------------- | ------ | --------------------- | ------------- |
-| /auth/signup              | POST   | SignUp                | Public route  |
-| /auth/login               | POST   | LogIn                 | Public route  |
-| /auth/logout              | GET    | LogOut                | Private route |
-| /auth/refresh             | GET    | Refresh Tokens & User | Private route |
-| /auth/verify/:verifyToken | GET    | Activation Link       | Public route  |
-| /auth/verify/             | POST   | Resend Activation     | Public route  |
+| Path                      | Method | Description                 | Access        |
+| ------------------------- | ------ | --------------------------- | ------------- |
+| /auth/signup              | POST   | SignUp                      | Public route  |
+| /auth/login               | POST   | LogIn                       | Public route  |
+| /auth/logout              | GET    | LogOut                      | Private route |
+| /auth/refresh             | GET    | Refresh Tokens & User       | Private route |
+| /auth/verify/:verifyToken | GET    | Activation Link             | Public route  |
+| /auth/verify/             | POST   | Resend Activation           | Public route  |
+| /auth/reset/:resetToken   | GET    | Reset password              | Public route  |
+| /auth/reset               | POST   | Send 'reset password email' | Public route  |
 
 #### /users
 
-| Path                             | Method | Description                  | Access        |
-| -------------------------------- | ------ | ---------------------------- | ------------- |
-| /users                           | GET    | List Users                   | Admin         |
-| /users/:id                       | GET    | Get User By Id               | Admin         |
-| /users/subscription              | PATCH  | Update CurrUser Subscription | Authenticated |
-| /users/avatars                   | PATCH  | Update CurrUser Avatar       | Authenticated |
-| /users/:id                       | PATCH  | Update User By Id            | Admin         |
-| /users/                          | DELETE | Remove CurrUser              | Authenticated |
-| /users/avatars                   | DELETE | Remove CurrUser Avatar       | Authenticated |
-| /users/:id                       | DELETE | Remove User By Id            | Admin         |
-| /users/change-password           | POST   | Change Password              | Authenticated |
-| /users/send-reset-password-email | POST   | SendResetPasswordEmail       | Authenticated |
-| /users/reset-password            | POST   | Reset Password               | Authenticated |
-| /users/change-email              | POST   | Change Email                 | Authenticated |
-| /users/cancel-email-changing     | POST   | Cancel Email Changing        | Authenticated |
+| Path                               | Method | Description                  | Access        |
+| ---------------------------------- | ------ | ---------------------------- | ------------- |
+| /users                             | GET    | List Users                   | Admin         |
+| /users/:id                         | GET    | Get User By Id               | Admin         |
+| /users/subscription                | PATCH  | Update CurrUser Subscription | Authenticated |
+| /users/avatars                     | PATCH  | Update CurrUser Avatar       | Authenticated |
+| /users/:id                         | PATCH  | Update User By Id            | Admin         |
+| /users/                            | DELETE | Remove CurrUser              | Authenticated |
+| /users/avatars                     | DELETE | Remove CurrUser Avatar       | Authenticated |
+| /users/:id                         | DELETE | Remove User By Id            | Admin         |
+| /users/password                    | POST   | Change Password              | Authenticated |
+| \*/users/send-reset-password-email | POST   | SendResetPasswordEmail       | Authenticated |
+| \*/users/reset-password            | POST   | Reset Password               | Authenticated |
+| \*/users/change-email              | POST   | Change Email                 | Authenticated |
+| \*/users/cancel-email-changing     | POST   | Cancel Email Changing        | Authenticated |
 
 #### /contacts
 

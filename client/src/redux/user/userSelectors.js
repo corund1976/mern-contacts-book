@@ -1,6 +1,6 @@
-const getCurrentUser = (state) => state.user.currentUser
-const getEmail = (state) => state.user.currentUser.email
-const getSubscription = (state) => state.user.currentUser.subscription
-const getAvatarUrl = (state) => state.user.currentUser.avatarURL
+const getCurrentUser = (state) => state.user
+const getEmail = (state) => state.user.email
+const getSubscription = (state) => state.user.subscription
+const getAvatarUrl = (state) => state.user.avatarURL
 
 export default { getCurrentUser, getEmail, getSubscription, getAvatarUrl }

@@ -6,7 +6,7 @@ import contactCtrl from '../controllers/contactController.js'
 
 const router = Router()
 
-router.get('/', auth, contactCtrl.getAll)
+router.get('/', auth, contactCtrl.getList)
 router.get('/:id', auth, validateId, contactCtrl.getById)
 router.post('/', auth, validateContact, contactCtrl.create)
 router.put('/:id', auth, validateId, validateContact, contactCtrl.update)

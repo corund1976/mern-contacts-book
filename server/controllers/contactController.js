@@ -1,11 +1,36 @@
 import contactService from '../service/contactService.js'
 
-const getAll = async (req, res, next) => {
+const getList = async (req, res, next) => {
   // ничего не получает
   // вызывает функцию listContacts
   // возвращает массив всех контактов в json - формате со статусом 200
+  const { query, user } = req
+
   try {
-    const contacts = await contactService.list(req.query, req.user.id)
+    const response = await contactService.get(query, user.id)
+
+    const { contacts, totalContacts, totalPages, currentPage, prevPage, nextPage, hasPrevPage, hasNextPage } = response
+
+    res
+      .append('X-Total-Count', totalContacts)
+      .append('Access-Control-Expose-Headers', 'X-Total-Count')
+
+    const { limit, filter, sort } = query
+
+    const firstURI = `<${process.env.API_URL}/contacts?page=1&limit=${limit}&filter${filter}=&sort=${sort}>; rel="first", `
+    const prevURI = `<${process.env.API_URL}/contacts?page=${hasPrevPage ? prevPage : currentPage}&limit=${limit}&filter${filter}=&sort=${sort}>; rel="prev", `
+    const nextURI = `<${process.env.API_URL}/contacts?page=${hasNextPage ? nextPage : currentPage}&limit=${limit}&filter${filter}=&sort=${sort}>; rel="next", `
+    const lastURI = `<${process.env.API_URL}/contacts?page=${totalPages}&limit=${limit}&filter${filter}=&sort=${sort}>; rel="last"`
+
+    res
+      .append('Link', firstURI + prevURI + nextURI + lastURI)
+      .append('Access-Control-Expose-Headers', 'Link')
+
+    // Link:
+    // <http://localhost:5000/contacts?page=1&limit=5&filter=&sort=>; rel="first", 
+    // <http://localhost:5000/contacts?page=1&limit=5&filter=&sort=>; rel="prev", 
+    // <http://localhost:5000/contacts?page=2&limit=5&filter=&sort=>; rel="next", 
+    // <http://localhost:5000/contacts?page=3&limit=5&filter=&sort=>; rel="last"
 
     return res
       .status(200)
@@ -15,6 +40,7 @@ const getAll = async (req, res, next) => {
         message: 'Get List contacts successful',
         contacts
       })
+
   } catch (e) {
     next(e)
   }
@@ -26,9 +52,9 @@ const getById = async (req, res, next) => {
   // если такой id есть, возвращает объект контакта в json - формате со статусом 200
   // если такого id нет, возвращает json с ключом "message": "Not found" и статусом 404
   try {
-    const contactById = await contactService.getById(req.params.id, req.user.id)
+    const contact = await contactService.getById(req.params.id, req.user.id)
 
-    if (!contactById) {
+    if (!contact) {
       return res
         .status(404)
         .json({
@@ -44,7 +70,7 @@ const getById = async (req, res, next) => {
         status: 'Ok',
         code: 200,
         message: `Get Contact by Id: ${req.params.id} successful`,
-        contactById,
+        contact
       })
   } catch (e) {
     next(e)
@@ -58,14 +84,38 @@ const create = async (req, res, next) => {
   // По результату работы функции возвращает объект с добавленным id { id, name, email, phone } и статусом 201
   try {
     const contact = await contactService.add(req.body, req.user.id)
-
+    const {
+      name, email, phone, favorite, _id, createdAt, updatedAt
+    } = contact
+    const newcontact = {
+      name, email, phone, favorite, _id: _id.toString(), createdAt, updatedAt
+    }
+    // contact = {
+    //   name: 'ertert',
+    //   email: 'ertert@mail.com',
+    //   phone: '987987',
+    //   favorite: false,
+    //   owner: new ObjectId("62daad2a7ec12c7464da2150"),
+    //   _id: new ObjectId("62e373056de2c98e641a258c"),
+    //   createdAt: 2022 - 07 - 29T05: 41: 25.734Z,
+    //   updatedAt: 2022 - 07 - 29T05: 41: 25.734Z
+    // }
+    // newcontact = {
+    //   name: 'erty',
+    //   email: 'rty@mail.ua',
+    //   phone: '312897',
+    //   favorite: false,
+    //   _id: '62e3f6d6c255e84d496fdb03',
+    //   createdAt: 2022 - 07 - 29T15: 03: 50.718Z,
+    //   updatedAt: 2022 - 07 - 29T15: 03: 50.718Z
+    // }
     res
       .status(201)
       .json({
         status: 'Created',
         code: 201,
         message: 'Add contact successful',
-        contact,
+        newcontact,
       })
   } catch (e) {
     next(e)
@@ -134,9 +184,9 @@ const updateFavorite = async (req, res, next) => {
   }
 
   try {
-    const contactUpdStatus = await contactService.updateStatus(req.params.id, req.user.id, req.body)
+    const updatedContact = await contactService.updateStatus(req.params.id, req.user.id, req.body)
 
-    if (!contactUpdStatus) {
+    if (!updatedContact) {
       return res
         .status(404)
         .json({
@@ -152,7 +202,7 @@ const updateFavorite = async (req, res, next) => {
         status: 'Ok',
         code: 200,
         message: 'Update ~Favorite~ contact successful',
-        contactUpdStatus
+        updatedContact
       })
   } catch (e) {
     next(e)
@@ -182,7 +232,7 @@ const remove = async (req, res, next) => {
       .json({
         status: 'Ok',
         code: 200,
-        message: `Delete contact id: ${req.params.id} successful`
+        message: `Delete contact id: ${req.params.id} successful`,
       })
   } catch (e) {
     next(e)
@@ -191,7 +241,7 @@ const remove = async (req, res, next) => {
 // Для маршрутов, что принимают данные(POST и PUT), продумайте проверку(валидацию) 
 // принимаемых данных.Для валидации принимаемых данных используйте пакет joi
 export default {
-  getAll,
+  getList,
   getById,
   create,
   update,

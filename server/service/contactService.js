@@ -1,29 +1,30 @@
 import Contact from './models/contactSchema.js'
-import ContactDto from '../dtos/contactDto.js'
 
-const list = async (query, userId) => {
-  const { page = 1, limit = 10, favorite } = query
+const get = async (query, userId) => {
+  const { page = 1, limit = 30, filter = '', sort = '' } = query
 
   const queryCriteria =
-    favorite
-      ? { owner: userId, favorite }
+    filter === 'favorite'
+      ? { owner: userId, favorite: true }
       : { owner: userId }
 
-  const result = await Contact.paginate(
-    queryCriteria,
-    { page, limit }
-  )
+  const select = 'id name phone email favorite createdAt updatedAt'
 
-  const contacts = result.docs.map(contact => {
-    const contactDto = new ContactDto(contact)
-    return { ...contactDto }
-  })
+  const customLabels = {
+    docs: 'contacts',
+    totalDocs: 'totalContacts',
+    page: 'currentPage',
+  }
 
-  return contacts
+  const options = { select, sort, page, limit, customLabels }
+
+  const result = await Contact.paginate(queryCriteria, options)
+  return result
 }
 
 const getById = async (contactId, userId) => {
-  return await Contact.findOne({ _id: contactId, owner: userId })
+  const result = await Contact.findOne({ _id: contactId, owner: userId })
+  return result
 }
 
 const add = async (newContact, userId) => {
@@ -35,29 +36,32 @@ const add = async (newContact, userId) => {
 }
 
 const update = async (contactId, userId, update) => {
-  return await Contact.findOneAndUpdate(
+  const result = await Contact.findOneAndUpdate(
     { _id: contactId, owner: userId },
     update,
     { new: true }
   )
+  return result
 }
 
 const updateStatus = async (contactId, userId, favoriteUpdate) => {
-  return await Contact.findOneAndUpdate(
+  const result = await Contact.findOneAndUpdate(
     { _id: contactId, owner: userId },
     favoriteUpdate,
     { new: true }
   )
+  return result
 }
 
 const remove = async (contactId, userId) => {
-  return await Contact.findOneAndRemove(
+  const result = await Contact.findOneAndRemove(
     { _id: contactId, owner: userId }
   )
+  return result
 }
 
 export default {
-  list,
+  get,
   getById,
   add,
   update,

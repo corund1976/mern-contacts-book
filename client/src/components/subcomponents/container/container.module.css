@@ -8,8 +8,8 @@
 
 @media screen and (min-width: 768px) {
   .container {
-    padding-left: 51px;
-    padding-right: 52px;
+    padding-left: 50px;
+    padding-right: 50px;
 
     max-width: 768px;
   }

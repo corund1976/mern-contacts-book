@@ -37,9 +37,9 @@ const login = credentials => async dispatch => {
 
 const logout = () => async dispatch => {
   try {
-    dispatch(contactAction.unsetContacts())
-    dispatch(userActions.unsetUser())
-    dispatch(authAction.unsetIsAuth())
+    dispatch(contactAction.resetStateContact())
+    dispatch(userActions.resetStateUser())
+    dispatch(authAction.resetStateAuth())
 
     const res = await authService.logout()
 

@@ -28,7 +28,7 @@ const resendVerify = async (email) => {
 }
 
 const resetPassword = async (credentials) => {
-  const response = await axios.post('/auth/reset', credentials)  // credentials = { email, password }
+  const response = await axios.post('/auth/reset', credentials)
   return response
 }
 

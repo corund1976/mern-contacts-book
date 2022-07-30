@@ -1,7 +1,12 @@
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import userSelector from 'redux/user/userSelectors'
+import uploaderSelector from 'redux/uploader/uploaderSelectors'
 import userOperation from 'redux/user/userOperations'
+
+import Uploader from 'components/uploader'
+import Input from 'components/subcomponents/input'
 
 import AvatarDefault from 'assets/img/user.svg'
 import AvatarDelete from 'assets/img/trash-2.svg'
@@ -11,19 +16,34 @@ import s from './profile.module.css'
 
 function Profile() {
   const dispatch = useDispatch()
+
   const email = useSelector(userSelector.getEmail)
   const subscription = useSelector(userSelector.getSubscription)
   const avatarUrl = useSelector(userSelector.getAvatarUrl)
+  const showUploader = useSelector(uploaderSelector.getShowUploader)
+  const file = useSelector(uploaderSelector.getFile)
+
+  const [password, setPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
 
   const avatar = avatarUrl ? `${avatarUrl}` : AvatarDefault
 
-  const handlerUploadAvatar = (e) =>
-    dispatch(userOperation.uploadAvatar(e.target.files[0]))
-  const handlerDeleteAvatar = () =>
+  const handleUploadAvatar = (e) =>
+    dispatch(userOperation.updateAvatar(e.target.files[0]))
+
+  const handleDeleteAvatar = () =>
     dispatch(userOperation.deleteAvatar(AvatarDefault))
-  const handlerChangeSubscription = (e) =>
+
+  const handleChangePassword = (e) => {
+    e.preventDefault()
+    const credentials = { password, newPassword }
+    userOperation.updatePassword(credentials)
+  }
+
+  const handleChangeSubscription = (e) =>
     dispatch(userOperation.updateSubscription(e.target.value))
-  const handlerRemoveProfile = () => dispatch(userOperation.deleteUser())
+
+  const handleRemoveProfile = () => dispatch(userOperation.deleteUser())
 
   return (
     <div className={s.profile}>
@@ -35,7 +55,7 @@ function Profile() {
           id="uploadAvatar"
           accept="image/*"
           name="file"
-          onChange={(e) => handlerUploadAvatar(e)}
+          onChange={(e) => handleUploadAvatar(e)}
           className={s.avatar__input}
         />
         <img src={avatar} alt="avatar" className={s.avatar__img} />
@@ -46,7 +66,7 @@ function Profile() {
         <button
           type="button"
           className={s.avatar__removeBtn}
-          onClick={handlerDeleteAvatar}
+          onClick={handleDeleteAvatar}
         >
           <img
             src={AvatarDelete}
@@ -56,16 +76,40 @@ function Profile() {
         </button>
       </div>
 
-      <div className={s.profile__email}>email: {email}</div>
+      <div className={s.email}>email: {email}</div>
 
-      <div className={s.profile__subscription}>
+      <div className={s.password}>
+        password:
+        <form
+          onSubmit={handleChangePassword}
+          className={s.changePassword__form}
+        >
+          <Input
+            value={password}
+            setValue={setPassword}
+            type="password"
+            placeholder="current password..."
+          />
+          <Input
+            value={newPassword}
+            setValue={setNewPassword}
+            type="password"
+            placeholder="new password..."
+          />
+          <button type="submit" className={s.changePassword__btn}>
+            change
+          </button>
+        </form>
+      </div>
+
+      <div className={s.subscription}>
         subscription:
         <label htmlFor="selectSubscription">
           <select
             name="subscription"
             id="selectSubscription"
             value={subscription}
-            onChange={(e) => handlerChangeSubscription(e)}
+            onChange={(e) => handleChangeSubscription(e)}
           >
             <option value="starter">starter</option>
             <option value="business">business</option>
@@ -79,7 +123,7 @@ function Profile() {
         <button
           type="button"
           className={s.profile__removeBtn}
-          onClick={handlerRemoveProfile}
+          onClick={handleRemoveProfile}
         >
           <img
             src={UserDelete}
@@ -88,6 +132,8 @@ function Profile() {
           />
         </button>
       </div>
+
+      {showUploader && <Uploader file={file} />}
     </div>
   )
 }
