@@ -56,9 +56,9 @@ const getById = async (contactId) => {
 const add = (newContact) => async dispatch => {
   try {
     const response = await contactService.add(newContact)
-    const { contact } = response.data
+    const { newcontact } = response.data
 
-    dispatch(contactAction.addContact(contact))
+    dispatch(contactAction.addContact(newcontact))
 
     Notify.success(response.data.message)
   } catch (e) {

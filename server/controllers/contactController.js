@@ -84,6 +84,12 @@ const create = async (req, res, next) => {
   // По результату работы функции возвращает объект с добавленным id { id, name, email, phone } и статусом 201
   try {
     const contact = await contactService.add(req.body, req.user.id)
+    const {
+      name, email, phone, favorite, _id, createdAt, updatedAt
+    } = contact
+    const newcontact = {
+      name, email, phone, favorite, _id: _id.toString(), createdAt, updatedAt
+    }
     // contact = {
     //   name: 'ertert',
     //   email: 'ertert@mail.com',
@@ -93,14 +99,23 @@ const create = async (req, res, next) => {
     //   _id: new ObjectId("62e373056de2c98e641a258c"),
     //   createdAt: 2022 - 07 - 29T05: 41: 25.734Z,
     //   updatedAt: 2022 - 07 - 29T05: 41: 25.734Z
-    // }    
+    // }
+    // newcontact = {
+    //   name: 'erty',
+    //   email: 'rty@mail.ua',
+    //   phone: '312897',
+    //   favorite: false,
+    //   _id: '62e3f6d6c255e84d496fdb03',
+    //   createdAt: 2022 - 07 - 29T15: 03: 50.718Z,
+    //   updatedAt: 2022 - 07 - 29T15: 03: 50.718Z
+    // }
     res
       .status(201)
       .json({
         status: 'Created',
         code: 201,
         message: 'Add contact successful',
-        contact,
+        newcontact,
       })
   } catch (e) {
     next(e)

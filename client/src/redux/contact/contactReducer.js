@@ -40,12 +40,18 @@ const defaultState = {
 }
 
 export const contactReducer = createReducer(defaultState, {
-  [setContacts]: (state, action) => ({ ...state, contacts: action.payload }),
-  [setTotalContacts]: (state, action) => ({ ...state, totalContacts: action.payload }),
+  [setContacts]: (state, action) => ({
+    ...state,
+    contacts: action.payload
+  }),
+  [setTotalContacts]: (state, action) => ({
+    ...state,
+    totalContacts: action.payload
+  }),
 
   [addContact]: (state, action) => ({
     ...state,
-    contacts: [...state.contacts, action.payload]
+    contacts: [...state.contacts, action.payload],
   }),
   [updateContact]: (state, action) => ({
     ...state,
@@ -54,15 +60,29 @@ export const contactReducer = createReducer(defaultState, {
   [removeContact]: (state, action) => ({
     ...state,
     contacts: [...state.contacts.filter(contact => contact._id !== action.payload)],
-    totalContacts: (state.totalContacts - 1)
   }),
 
-  [setFirstPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, firstPage: action.payload } }),
-  [setPrevPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, prevPage: action.payload } }),
-  [setNextPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, nextPage: action.payload } }),
-  [setLastPage]: (state, action) => ({ ...state, pagination: { ...state.pagination, lastPage: action.payload } }),
+  [setFirstPage]: (state, action) => ({
+    ...state,
+    pagination: { ...state.pagination, firstPage: action.payload }
+  }),
+  [setPrevPage]: (state, action) => ({
+    ...state,
+    pagination: { ...state.pagination, prevPage: action.payload }
+  }),
+  [setNextPage]: (state, action) => ({
+    ...state,
+    pagination: { ...state.pagination, nextPage: action.payload }
+  }),
+  [setLastPage]: (state, action) => ({
+    ...state,
+    pagination: { ...state.pagination, lastPage: action.payload }
+  }),
 
-  [setDisplayPopup]: (state, action) => ({ ...state, displayPopup: action.payload }),
+  [setDisplayPopup]: (state, action) => ({
+    ...state,
+    displayPopup: action.payload
+  }),
 
   [resetStateContact]: () => ({ ...defaultState }),
 })

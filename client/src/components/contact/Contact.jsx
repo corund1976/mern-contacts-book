@@ -40,12 +40,22 @@ export default Contact
 
 Contact.propTypes = {
   contact: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    phone: PropTypes.string.isRequired,
-    favorite: PropTypes.bool.isRequired,
-  }).isRequired,
+    _id: PropTypes.string,
+    name: PropTypes.string,
+    email: PropTypes.string,
+    phone: PropTypes.string,
+    favorite: PropTypes.bool,
+  }),
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+}
+
+Contact.defaultProps = {
+  contact: PropTypes.shape({
+    _id: '',
+    name: '',
+    email: '',
+    phone: null,
+    favorite: false,
+  }),
 }

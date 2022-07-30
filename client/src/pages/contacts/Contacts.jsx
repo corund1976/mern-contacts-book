@@ -5,12 +5,12 @@ import contactOperation from 'redux/contact/contactOperations'
 import contactAction from 'redux/contact/contactReducer'
 import contactSelector from 'redux/contact/contactSelectors'
 
-import Contact from 'components/contact'
+import ContactsList from 'components/contactsList'
 import Popup from 'components/popup'
 
 import s from './contacts.module.css'
 
-function ContactsList() {
+function Contacts() {
   const dispatch = useDispatch()
 
   const contacts = useSelector(contactSelector.getContacts)
@@ -29,7 +29,12 @@ function ContactsList() {
 
   useEffect(() => {
     dispatch(contactOperation.getList({ page, limit, filter, sort }))
-  }, [dispatch, page, limit, filter, sort])
+  }, [dispatch, page, limit, filter, sort, contacts.length])
+
+  useEffect(() => {
+    if (page > lastPage) setPage(lastPage)
+    // eslint-disable-next-line
+  }, [lastPage])
 
   const handleChangeLimit = (e) => {
     setLimit(e.target.value)
@@ -47,21 +52,6 @@ function ContactsList() {
   }
 
   const handleAddContact = () => dispatch(contactAction.setDisplayPopup('flex'))
-
-  const handleEditFavorite = (id, update) =>
-    dispatch(contactOperation.updateFavorite(id, update))
-
-  const handleDeleteContact = (id) => dispatch(contactOperation.remove(id))
-
-  const contactsListItems = contacts.map((contact) => (
-    <li key={contact._id}>
-      <Contact
-        contact={contact}
-        onEdit={handleEditFavorite}
-        onDelete={handleDeleteContact}
-      />
-    </li>
-  ))
 
   return (
     <div className={s.section}>
@@ -132,7 +122,7 @@ function ContactsList() {
         <li>--favorite--</li>
       </ul>
 
-      {!!contacts.length && <ul>{contactsListItems}</ul>}
+      {!!contacts.length && <ContactsList />}
 
       <ul className={s.pagination}>
         <li className={s.pagination__item}>
@@ -182,4 +172,4 @@ function ContactsList() {
   )
 }
 
-export default ContactsList
+export default Contacts
