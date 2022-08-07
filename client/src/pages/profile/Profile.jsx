@@ -5,6 +5,7 @@ import userSelector from 'redux/user/userSelectors'
 import uploaderSelector from 'redux/uploader/uploaderSelectors'
 import userOperation from 'redux/user/userOperations'
 
+import Container from 'components/subcomponents/container'
 import Uploader from 'components/uploader'
 import Input from 'components/subcomponents/input'
 
@@ -46,95 +47,97 @@ function Profile() {
   const handleRemoveProfile = () => dispatch(userOperation.deleteUser())
 
   return (
-    <div className={s.profile}>
-      <h2>User profile</h2>
+    <Container>
+      <div className={s.profile}>
+        <h2>User profile</h2>
 
-      <label htmlFor="uploadAvatar" className={s.profile__avatar}>
-        <input
-          type="file"
-          id="uploadAvatar"
-          accept="image/*"
-          name="file"
-          onChange={(e) => handleUploadAvatar(e)}
-          className={s.avatar__input}
-        />
-        <img src={avatar} alt="avatar" className={s.avatar__img} />
-      </label>
-
-      <div className={s.avatar__remove}>
-        delete avatar:
-        <button
-          type="button"
-          className={s.avatar__removeBtn}
-          onClick={handleDeleteAvatar}
-        >
-          <img
-            src={AvatarDelete}
-            alt="avatar delete"
-            className={s.profile__removeImg}
+        <label htmlFor="uploadAvatar" className={s.profile__avatar}>
+          <input
+            type="file"
+            id="uploadAvatar"
+            accept="image/*"
+            name="file"
+            onChange={(e) => handleUploadAvatar(e)}
+            className={s.avatar__input}
           />
-        </button>
-      </div>
-
-      <div className={s.email}>email: {email}</div>
-
-      <div className={s.password}>
-        password:
-        <form
-          onSubmit={handleChangePassword}
-          className={s.changePassword__form}
-        >
-          <Input
-            value={password}
-            setValue={setPassword}
-            type="password"
-            placeholder="current password..."
-          />
-          <Input
-            value={newPassword}
-            setValue={setNewPassword}
-            type="password"
-            placeholder="new password..."
-          />
-          <button type="submit" className={s.changePassword__btn}>
-            change
-          </button>
-        </form>
-      </div>
-
-      <div className={s.subscription}>
-        subscription:
-        <label htmlFor="selectSubscription">
-          <select
-            name="subscription"
-            id="selectSubscription"
-            value={subscription}
-            onChange={(e) => handleChangeSubscription(e)}
-          >
-            <option value="starter">starter</option>
-            <option value="business">business</option>
-            <option value="pro">pro</option>
-          </select>
+          <img src={avatar} alt="avatar" className={s.avatar__img} />
         </label>
-      </div>
 
-      <div className={s.profile__remove}>
-        remove account:
-        <button
-          type="button"
-          className={s.profile__removeBtn}
-          onClick={handleRemoveProfile}
-        >
-          <img
-            src={UserDelete}
-            alt="profile delete"
-            className={s.profile__removeImg}
-          />
-        </button>
-      </div>
+        <div className={s.avatar__remove}>
+          delete avatar:
+          <button
+            type="button"
+            className={s.avatar__removeBtn}
+            onClick={handleDeleteAvatar}
+          >
+            <img
+              src={AvatarDelete}
+              alt="avatar delete"
+              className={s.profile__removeImg}
+            />
+          </button>
+        </div>
 
-      {showUploader && <Uploader file={file} />}
-    </div>
+        <div className={s.email}>email: {email}</div>
+
+        <div className={s.password}>
+          password:
+          <form
+            onSubmit={handleChangePassword}
+            className={s.changePassword__form}
+          >
+            <Input
+              value={password}
+              setValue={setPassword}
+              type="password"
+              placeholder="current password..."
+            />
+            <Input
+              value={newPassword}
+              setValue={setNewPassword}
+              type="password"
+              placeholder="new password..."
+            />
+            <button type="submit" className={s.changePassword__btn}>
+              change
+            </button>
+          </form>
+        </div>
+
+        <div className={s.subscription}>
+          subscription:
+          <label htmlFor="selectSubscription">
+            <select
+              name="subscription"
+              id="selectSubscription"
+              value={subscription}
+              onChange={(e) => handleChangeSubscription(e)}
+            >
+              <option value="starter">starter</option>
+              <option value="business">business</option>
+              <option value="pro">pro</option>
+            </select>
+          </label>
+        </div>
+
+        <div className={s.profile__remove}>
+          remove account:
+          <button
+            type="button"
+            className={s.profile__removeBtn}
+            onClick={handleRemoveProfile}
+          >
+            <img
+              src={UserDelete}
+              alt="profile delete"
+              className={s.profile__removeImg}
+            />
+          </button>
+        </div>
+
+        {showUploader && <Uploader file={file} />}
+      </div>
+    </Container>
   )
 }
 

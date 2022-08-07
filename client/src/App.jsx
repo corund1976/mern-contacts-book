@@ -5,7 +5,6 @@ import authOperation from 'redux/auth/authOperations'
 
 import LoaderSpinner from 'components/loaderSpinner'
 import Navbar from 'components/navbar'
-import Container from 'components/subcomponents/container'
 import Router from 'components/router'
 
 import 'app.module.css'
@@ -20,9 +19,7 @@ function App() {
   return (
     <Suspense fallback={<LoaderSpinner />}>
       <Navbar />
-      <Container>
-        <Router />
-      </Container>
+      <Router />
     </Suspense>
   )
 }
