@@ -8,9 +8,9 @@ import routes from 'routes'
 function Router() {
   const isAuth = useSelector(authSelector.getIsAuth)
 
-  return !isAuth ? (
+  return isAuth ? (
     <Routes>
-      {routes.publicRoutes.map((route) => (
+      {routes.privateRoutes.map((route) => (
         <Route
           key={route.path}
           path={route.path}
@@ -21,7 +21,7 @@ function Router() {
     </Routes>
   ) : (
     <Routes>
-      {routes.privateRoutes.map((route) => (
+      {routes.publicRoutes.map((route) => (
         <Route
           key={route.path}
           path={route.path}
