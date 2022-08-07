@@ -1,5 +1,5 @@
-import { useEffect, Suspense, lazy } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect, Suspense } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import authSelector from 'redux/auth/authSelectors'
@@ -9,13 +9,9 @@ import LoaderSpinner from 'components/loaderSpinner'
 import Navbar from 'components/navbar'
 import Container from 'components/subcomponents/container'
 
-import 'app.module.css'
+import { publicRoutes, privateRoutes } from './router/routes'
 
-const Login = lazy(() => import('pages/login'))
-const Signup = lazy(() => import('pages/signup'))
-const ResetPassword = lazy(() => import('pages/resetPassword'))
-const Profile = lazy(() => import('pages/profile'))
-const Contacts = lazy(() => import('pages/contacts'))
+import 'app.module.css'
 
 function App() {
   const dispatch = useDispatch()
@@ -31,16 +27,25 @@ function App() {
       <Container>
         {!isAuth ? (
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/resetPassword" element={<ResetPassword />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            {publicRoutes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                exact={route.exact}
+                element={route.element}
+              />
+            ))}
           </Routes>
         ) : (
           <Routes>
-            <Route exact path="/" element={<Contacts />} />
-            <Route exact path="/profile" element={<Profile />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {privateRoutes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                exact={route.exact}
+                element={route.element}
+              />
+            ))}
           </Routes>
         )}
       </Container>
@@ -49,4 +54,3 @@ function App() {
 }
 
 export default App
-// To keep the history clean, you should set replace prop. This will avoid extra redirects after the user click back.
