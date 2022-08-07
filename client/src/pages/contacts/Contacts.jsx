@@ -5,6 +5,7 @@ import contactOperation from 'redux/contact/contactOperations'
 import contactAction from 'redux/contact/contactReducer'
 import contactSelector from 'redux/contact/contactSelectors'
 
+import Container from 'components/subcomponents/container'
 import ContactsList from 'components/contactsList'
 import Popup from 'components/popup'
 
@@ -55,119 +56,121 @@ function Contacts() {
 
   return (
     <div className={s.section}>
-      <h2 className={s.header}>{totalContacts} Contacts</h2>
+      <Container>
+        <h2 className={s.header}>{totalContacts} Contacts</h2>
 
-      <div className={s.controls}>
-        <button
-          type="button"
-          className={s.btn_newContact}
-          onClick={handleAddContact}
-        >
-          + new contact
-        </button>
+        <div className={s.controls}>
+          <button
+            type="button"
+            className={s.btn_newContact}
+            onClick={handleAddContact}
+          >
+            + new contact
+          </button>
 
-        <ul className={s.selectors}>
-          <li className={s.selectors_item}>
-            per page:
-            <label htmlFor="selectLimit">
-              <select
-                id="selectLimit"
-                value={limit}
-                onChange={(e) => handleChangeLimit(e)}
-              >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="30">30</option>
-                <option value={totalContacts}>all</option>
-              </select>
-            </label>
+          <ul className={s.selectors}>
+            <li className={s.selectors_item}>
+              per page:
+              <label htmlFor="selectLimit">
+                <select
+                  id="selectLimit"
+                  value={limit}
+                  onChange={(e) => handleChangeLimit(e)}
+                >
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="30">30</option>
+                  <option value={totalContacts}>all</option>
+                </select>
+              </label>
+            </li>
+            <li className={s.selectors_item}>
+              show:
+              <label htmlFor="selectFilter">
+                <select
+                  id="selectFilter"
+                  value={filter}
+                  onChange={(e) => handleChangeFilter(e)}
+                >
+                  <option value="">all</option>
+                  <option value="favorite">favorite</option>
+                </select>
+              </label>
+            </li>
+            <li className={s.selectors_item}>
+              sort by:
+              <label htmlFor="selectSort">
+                <select
+                  id="selectSort"
+                  value={sort}
+                  onChange={(e) => handleChangeSort(e)}
+                >
+                  <option value="-updatedAt">updated</option>
+                  <option value="email">email</option>
+                  <option value="name">name A-Z</option>
+                  <option value="-name">name Z-A</option>
+                  <option value="phone">phone</option>
+                  <option value="-createdAt">created</option>
+                </select>
+              </label>
+            </li>
+          </ul>
+        </div>
+
+        <ul className={s.tableHeader}>
+          <li>--name--</li>
+          <li>--phone--</li>
+          <li>--email--</li>
+          <li>--favorite--</li>
+        </ul>
+
+        {!!contacts.length && <ContactsList />}
+
+        <ul className={s.pagination}>
+          <li className={s.pagination__item}>
+            <button
+              type="button"
+              className={s.pagination__btn}
+              onClick={() => setPage(firstPage)}
+            >
+              first
+            </button>
           </li>
-          <li className={s.selectors_item}>
-            show:
-            <label htmlFor="selectFilter">
-              <select
-                id="selectFilter"
-                value={filter}
-                onChange={(e) => handleChangeFilter(e)}
-              >
-                <option value="">all</option>
-                <option value="favorite">favorite</option>
-              </select>
-            </label>
+          <li className={s.pagination__item}>
+            <button
+              type="button"
+              className={s.pagination__btn}
+              onClick={() => setPage(prevPage)}
+            >
+              prev
+            </button>
           </li>
-          <li className={s.selectors_item}>
-            sort by:
-            <label htmlFor="selectSort">
-              <select
-                id="selectSort"
-                value={sort}
-                onChange={(e) => handleChangeSort(e)}
-              >
-                <option value="-updatedAt">updated</option>
-                <option value="email">email</option>
-                <option value="name">name A-Z</option>
-                <option value="-name">name Z-A</option>
-                <option value="phone">phone</option>
-                <option value="-createdAt">created</option>
-              </select>
-            </label>
+          <li className={s.pagination__item}>
+            <button
+              type="button"
+              className={s.pagination__btn}
+              onClick={() => setPage(nextPage)}
+            >
+              next
+            </button>
+          </li>
+          <li className={s.pagination__item}>
+            <button
+              type="button"
+              className={s.pagination__btn}
+              onClick={() => setPage(lastPage)}
+            >
+              last
+            </button>
           </li>
         </ul>
-      </div>
 
-      <ul className={s.tableHeader}>
-        <li>--name--</li>
-        <li>--phone--</li>
-        <li>--email--</li>
-        <li>--favorite--</li>
-      </ul>
+        <p className={s.page}>
+          page {page} of {lastPage}
+        </p>
 
-      {!!contacts.length && <ContactsList />}
-
-      <ul className={s.pagination}>
-        <li className={s.pagination__item}>
-          <button
-            type="button"
-            className={s.pagination__btn}
-            onClick={() => setPage(firstPage)}
-          >
-            first
-          </button>
-        </li>
-        <li className={s.pagination__item}>
-          <button
-            type="button"
-            className={s.pagination__btn}
-            onClick={() => setPage(prevPage)}
-          >
-            prev
-          </button>
-        </li>
-        <li className={s.pagination__item}>
-          <button
-            type="button"
-            className={s.pagination__btn}
-            onClick={() => setPage(nextPage)}
-          >
-            next
-          </button>
-        </li>
-        <li className={s.pagination__item}>
-          <button
-            type="button"
-            className={s.pagination__btn}
-            onClick={() => setPage(lastPage)}
-          >
-            last
-          </button>
-        </li>
-      </ul>
-
-      <p className={s.page}>
-        page {page} of {lastPage}
-      </p>
-
-      <Popup />
+        <Popup />
+      </Container>
     </div>
   )
 }
