@@ -16,21 +16,23 @@ const RouteNames = {
   PROFILE: "/profile",
 }
 
-export const publicRoutes = [
-  { path: RouteNames.LOGIN, exact: false, element: <Login /> },
-  { path: RouteNames.SIGNUP, exact: false, element: <Signup /> },
-  { path: RouteNames.RESET, exact: false, element: <ResetPassword /> },
+const publicRoutes = [
+  { path: RouteNames.LOGIN, exact: true, element: <Login /> },
+  { path: RouteNames.SIGNUP, exact: true, element: <Signup /> },
+  { path: RouteNames.RESET, exact: true, element: <ResetPassword /> },
   {
-    path: RouteNames.ANY, exact: false, element: < Navigate to="/login" replace />
+    path: RouteNames.ANY, exact: false, element: < Navigate to={RouteNames.LOGIN} replace />
   }
 
 ]
 
-export const privateRoutes = [
+const privateRoutes = [
   { path: RouteNames.CONTACTS, exact: true, element: <Contacts /> },
   { path: RouteNames.PROFILE, exact: true, element: < Profile /> },
-  { path: RouteNames.ANY, exact: false, element: < Navigate to="/" replace /> }
-
+  { path: RouteNames.ANY, exact: false, element: < Navigate to={RouteNames.CONTACTS} replace /> }
 ]
 
-// To keep the history clean, you should set replace prop. This will avoid extra redirects after the user click back.
+export default { publicRoutes, privateRoutes }
+
+// To keep the history clean, you should set replace prop.
+// This will avoid extra redirects after the user click back.
