@@ -5,7 +5,7 @@ const setDisplayPopup = createAction("popup/setDisplayPopup")
 
 const setFormTitle = createAction("popup/setFormTitle")
 const setButtonTitle = createAction("popup/setButtonTitle")
-const setContactId = createAction("popup/setContactId")
+const setContactToEdit = createAction("popup/setContactToEdit")
 const setSubmitHandler = createAction("popup/setSubmitHandler")
 
 const resetStatePopup = createAction("popup/resetStatePopup")
@@ -14,7 +14,7 @@ export default {
   setDisplayPopup,
   setFormTitle,
   setButtonTitle,
-  setContactId,
+  setContactToEdit,
   setSubmitHandler,
   resetStatePopup,
 }
@@ -24,7 +24,12 @@ const defaultState = {
   displayPopup: 'none',
   formTitle: '',
   buttonTitle: '',
-  contactId: '',
+  contact: {
+    id: '',
+    name: '',
+    email: '',
+    phone: ''
+  },
   submitHandler: '',
 }
 
@@ -42,9 +47,15 @@ export const popupReducer = createReducer(defaultState, {
     ...state,
     buttonTitle: action.payload
   }),
-  [setContactId]: (state, action) => ({
+  [setContactToEdit]: (state, action) => ({
     ...state,
-    contactId: action.payload
+    contact: {
+      ...state.contact,
+      id: action.payload._id,
+      name: action.payload.name,
+      email: action.payload.email,
+      phone: action.payload.phone,
+    }
   }),
 
   [setSubmitHandler]: (state, action) => ({
