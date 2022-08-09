@@ -1,0 +1,21 @@
+.first_cell {
+  position: relative;
+}
+
+.first_cell:hover .buttons {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons {
+  position: absolute;
+
+  display: none;
+}
+
+.btn {
+  border: none;
+  background: transparent;
+}

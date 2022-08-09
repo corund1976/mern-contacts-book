@@ -6,8 +6,6 @@ const getPrevPage = (state) => state.contact.pagination.prevPage
 const getNextPage = (state) => state.contact.pagination.nextPage
 const getLastPage = (state) => state.contact.pagination.lastPage
 
-const getDisplayPopup = (state) => state.contact.displayPopup
-
 export default {
   getContacts,
   getTotalContacts,
@@ -15,5 +13,4 @@ export default {
   getPrevPage,
   getNextPage,
   getLastPage,
-  getDisplayPopup,
 }

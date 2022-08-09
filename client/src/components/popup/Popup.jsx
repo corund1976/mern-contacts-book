@@ -1,16 +1,21 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import contactSelector from 'redux/contact/contactSelectors'
-import contactAction from 'redux/contact/contactReducer'
-import contactOperation from 'redux/contact/contactOperations'
+import popupSelector from 'redux/popup/popupSelectors'
+import popupAction from 'redux/popup/popupReducer'
+
 import Input from 'components/subcomponents/input'
 
 import s from './popup.module.css'
 
 function Popup() {
   const dispatch = useDispatch()
-  const displayPopup = useSelector(contactSelector.getDisplayPopup)
+  const displayPopup = useSelector(popupSelector.getDisplayPopup)
+  const formTitle = useSelector(popupSelector.getFormTitle)
+  const buttonTitle = useSelector(popupSelector.getButtonTitle)
+  const contactId = useSelector(popupSelector.getContactId)
+
+  const submitHandler = useSelector(popupSelector.getSubmitHandler)
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -23,13 +28,13 @@ function Popup() {
   }
 
   const closePopup = () => {
-    dispatch(contactAction.setDisplayPopup('none'))
+    dispatch(popupAction.resetStatePopup())
     resetState()
   }
 
-  const addContact = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault() // чтобы не перезагружать страницу при отправке формы
-    dispatch(contactOperation.add({ name, email, phone }))
+    submitHandler({ name, email, phone }, contactId) // contactId вторым, т.к. при addContact он не используется
     closePopup()
   }
 
@@ -52,12 +57,12 @@ function Popup() {
         tabIndex="0"
       >
         <div className={s.popup__header}>
-          <h2>Create new contact</h2>
+          <h2>{formTitle}</h2>
           <button type="button" className={s.popup__close} onClick={closePopup}>
             X
           </button>
         </div>
-        <form className={s.popup__form} onSubmit={(e) => addContact(e)}>
+        <form className={s.popup__form} onSubmit={(e) => handleSubmit(e)}>
           <Input
             type="text"
             value={name}
@@ -77,7 +82,7 @@ function Popup() {
             placeholder="phone..."
           />
           <button type="submit" className={s.popup__create}>
-            Create
+            {buttonTitle}
           </button>
         </form>
       </div>

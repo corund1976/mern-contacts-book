@@ -13,8 +13,6 @@ const setPrevPage = createAction("pagination/setPrevPage")
 const setNextPage = createAction("pagination/setNextPage")
 const setLastPage = createAction("pagination/setLastPage")
 
-const setDisplayPopup = createAction("contact/setDisplayPopup")
-
 const resetStateContact = createAction("contact/resetStateContact")
 
 export default {
@@ -27,7 +25,6 @@ export default {
   setPrevPage,
   setNextPage,
   setLastPage,
-  setDisplayPopup,
   resetStateContact,
 }
 
@@ -36,7 +33,6 @@ const defaultState = {
   contacts: [{}],
   totalContacts: 0,
   pagination: {},
-  displayPopup: 'none'
 }
 
 export const contactReducer = createReducer(defaultState, {
@@ -77,11 +73,6 @@ export const contactReducer = createReducer(defaultState, {
   [setLastPage]: (state, action) => ({
     ...state,
     pagination: { ...state.pagination, lastPage: action.payload }
-  }),
-
-  [setDisplayPopup]: (state, action) => ({
-    ...state,
-    displayPopup: action.payload
   }),
 
   [resetStateContact]: () => ({ ...defaultState }),

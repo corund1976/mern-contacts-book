@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import contactOperation from 'redux/contact/contactOperations'
-import contactAction from 'redux/contact/contactReducer'
 import contactSelector from 'redux/contact/contactSelectors'
+import popupAction from 'redux/popup/popupReducer'
 
 import Container from 'components/subcomponents/container'
 import ContactsList from 'components/contactsList'
 import Popup from 'components/popup'
 
 import s from './contacts.module.css'
+
+const LIMIT = process.env.REACT_APP_PAGINATION_PER_PAGE
 
 function Contacts() {
   const dispatch = useDispatch()
@@ -21,10 +23,8 @@ function Contacts() {
   const nextPage = useSelector(contactSelector.getNextPage)
   const lastPage = useSelector(contactSelector.getLastPage)
 
-  const limitDefault = process.env.REACT_APP_PAGINATION_PER_PAGE
-
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(limitDefault)
+  const [limit, setLimit] = useState(LIMIT)
   const [filter, setFilter] = useState('')
   const [sort, setSort] = useState('-updatedAt')
 
@@ -52,13 +52,19 @@ function Contacts() {
     setPage(firstPage)
   }
 
-  const handleAddContact = () => dispatch(contactAction.setDisplayPopup('flex'))
+  const addContact = (contact) => dispatch(contactOperation.add(contact))
+
+  const handleAddContact = () => {
+    dispatch(popupAction.setDisplayPopup('flex'))
+    dispatch(popupAction.setFormTitle('Create new contact'))
+    dispatch(popupAction.setButtonTitle('Add contact'))
+    dispatch(popupAction.setSubmitHandler(addContact))
+  }
 
   return (
     <div className={s.section}>
       <Container>
         <h2 className={s.header}>{totalContacts} Contacts</h2>
-
         <div className={s.controls}>
           <button
             type="button"
@@ -117,14 +123,7 @@ function Contacts() {
           </ul>
         </div>
 
-        <ul className={s.tableHeader}>
-          <li>--name--</li>
-          <li>--phone--</li>
-          <li>--email--</li>
-          <li>--favorite--</li>
-        </ul>
-
-        {!!contacts.length && <ContactsList />}
+        <ContactsList />
 
         <ul className={s.pagination}>
           <li className={s.pagination__item}>
@@ -164,7 +163,6 @@ function Contacts() {
             </button>
           </li>
         </ul>
-
         <p className={s.page}>
           page {page} of {lastPage}
         </p>
