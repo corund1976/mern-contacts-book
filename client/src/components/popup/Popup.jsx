@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import popupSelector from 'redux/popup/popupSelectors'
@@ -13,13 +13,18 @@ function Popup() {
   const displayPopup = useSelector(popupSelector.getDisplayPopup)
   const formTitle = useSelector(popupSelector.getFormTitle)
   const buttonTitle = useSelector(popupSelector.getButtonTitle)
-  const contactId = useSelector(popupSelector.getContactId)
-
+  const contact = useSelector(popupSelector.getContact)
   const submitHandler = useSelector(popupSelector.getSubmitHandler)
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+
+  useEffect(() => {
+    setName(contact.name)
+    setEmail(contact.email)
+    setPhone(contact.phone)
+  }, [contact])
 
   const resetState = () => {
     setName('')
@@ -34,7 +39,7 @@ function Popup() {
 
   const handleSubmit = (e) => {
     e.preventDefault() // чтобы не перезагружать страницу при отправке формы
-    submitHandler({ name, email, phone }, contactId) // contactId вторым, т.к. при addContact он не используется
+    submitHandler({ name, email, phone }, contact.id) // contactId вторым, т.к. при addContact он не используется
     closePopup()
   }
 
@@ -62,6 +67,7 @@ function Popup() {
             X
           </button>
         </div>
+
         <form className={s.popup__form} onSubmit={(e) => handleSubmit(e)}>
           <Input
             type="text"

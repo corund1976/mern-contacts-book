@@ -14,14 +14,14 @@ function ContactsList() {
   const handleEditFavorite = (id, update) =>
     dispatch(contactOperation.updateFavorite(id, update))
 
-  const editContact = (contact, contactId) =>
-    dispatch(contactOperation.update(contactId, contact))
+  const editContact = (update, contactId) =>
+    dispatch(contactOperation.update(contactId, update))
 
-  const handleEditContact = (id) => {
+  const handleEditContact = (contact) => {
     dispatch(popupAction.setDisplayPopup('flex'))
     dispatch(popupAction.setFormTitle('Edit contact'))
     dispatch(popupAction.setButtonTitle('Edit contact'))
-    dispatch(popupAction.setContactId(id))
+    dispatch(popupAction.setContactToEdit(contact))
     dispatch(popupAction.setSubmitHandler(editContact))
   }
 
@@ -41,7 +41,7 @@ function ContactsList() {
           <button
             className={s.btn}
             type="button"
-            onClick={() => handleEditContact(contact._id)}
+            onClick={() => handleEditContact(contact)}
           >
             <FaUserEdit size="20" color="green" />
           </button>
