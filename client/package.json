@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@web3-storage/parse-link-header": "^3.1.0",
     "axios": "^0.27.2",
+    "netlify-cli": "^10.15.0",
     "normalize.css": "^8.0.1",
     "notiflix": "^3.2.5",
     "prop-types": "^15.8.1",
@@ -44,7 +45,8 @@
     "start": "cross-env REACT_APP_NODE_ENV=development react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "netlify deploy -p"
   },
   "eslintConfig": {
     "extends": [
